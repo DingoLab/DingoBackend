@@ -1,0 +1,127 @@
+
+
+
+
+
+% Preamble.tex
+
+%%%
+%%% 导言区
+%%%
+
+% 防止重复引用
+\ifx \preambleInc \undefined
+\def \preamleInc{\relax}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Document Class 设置
+\makeatletter
+\ifx \@UseCTEX \undefined
+\def\doclass{
+\documentclass[UTF8]{\@DocType}
+\usepackage{xeCJK}
+\setCJKmainfont{WenQuanYi Zen Hei}
+}
+\else
+\def\doclass{
+\documentclass[UTF8]{\@DocTypeCTEX}
+}
+\makeatother
+
+% LiterateHaskell 设置
+\makeatletter
+\ifx \@NoLiterateHaskell \undefined
+\usepackage{listings}
+\usepackage{color}
+\newcounter{codeline}
+\setcounter{codeline}{1}
+\setcounter{lstnumber}{1}
+
+\def\lstcodebgcolor{\color[rgb]{1.00,0.90,1.00}}
+\def\lstcodekw{\bfseries\color[rgb]{0.16,0.53,0.53}}
+\def\lstcodecm{\rmfamily\itshape}
+\def\lstcodens{\tiny}
+\def\lstspecbgcolor{\color[rgb]{0.96,0.97,0.38}}
+\def\lstspeckw{\bfseries\color[rgb]{0.16,0.53,0.53}}
+\def\lstspeccm{\rmfamily\itshape}
+\def\lstspecns{\tiny}
+% code 环境
+\lstnewenivronment{code}
+{ \letset
+  { firstnumber=last
+  , language=Haskell
+  , breaklines
+  , backgroundcolor=\lstcodebgcolor
+  , basicstyle=\sffamily
+  , keywordstyle=\lstcodekw
+  , commentstyle=\lstcodecm
+  , flexiblecolumns
+  , numbers=left
+  , numberstyle=\lstcodens
+  , frame=trBL
+  , label=sourceCtr
+  }
+}
+{
+  \setcounter{codeline}{\value{lstnumber}}
+}
+% spec 环境
+\lstnewenivronment{spec}
+{ \letset
+  { firstnumber=last
+  , language=Haskell
+  , breaklines
+  , backgroundcolor=\lstspcebgcolor
+  , basicstyle=\sffamily
+  , keywordstyle=\lstspcekw
+  , commentstyle=\lstspcecm
+  , flexiblecolumns
+  , numbers=left
+  , numberstyle=\lstspcens
+  , frame=trBL
+  , label=sourceCtr
+  }
+}
+{
+  \setcounter{codeline}{\value{lstnumber}}
+}
+% ignore
+\long\def\ignore#1{\relax}
+\fi
+\makeatother
+
+% 连接的设置
+\usepackage[colorlinks,linkcolor=blue,anchorcolor=blue,citecolor=red,bookmarksnumbered]{hyperref}
+
+% 设置 section 格式
+\usepackage{titlesec,titletoc}
+\titleformat{\section}[display]{\Hug\bfseries}{\,\thesection\,}{1em}{}
+
+% 设置附录的格式
+\makeatletter
+\ifx \@UsingAppendix \undefined
+\usepackage[titletoc]{appendix}
+\renewcommand\appendixname{附录}
+\renewcommand\appendixname{附录}
+\appendixtitleon
+\fi
+\makeatother
+
+% 对版本的高亮
+\def\apiver#1{\colorbox[rgb]{0.92,0.72,0.42}{#1}}
+
+% 脚注随页码更新
+\makeatletter
+\ifx \@FnWithPage \undefined
+\relax
+\else
+\usepackage{chngcntr}
+\counterwithin{footnote}{page}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 如果重复引用
+\else
+\setcounter{lstnumber}{1}
+\endinput
+\fi

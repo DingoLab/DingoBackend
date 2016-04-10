@@ -1,6 +1,33 @@
-\documentclass[UTF8]{book}
-\def\ARCHITECTURETEX{\relax}
-\input{Preamble.tex}
+
+
+
+
+
+% Architecture.tex
+
+%%%% Architecture
+
+%%%%%%%%%%%%%%
+%%% 导言区
+%%%%%%%%%%%%%%
+
+% flag
+\makeatletter
+\def\@NoStyleChaper{\ralex} % 设置不适用章节
+\def\@ARCHDoc{\ralex} % 设置文档标签
+\def\@UsingAppendix{\ralex} % 使用附录
+\def\@DocType{article}
+\def\@DocTypeCTEX{ctexart}
+\makeatother
+
+% 导入导言区
+\input{Preamble} % Preamble.tex
+
+% documentclass
+\doclass
+
+\title{后端架构}
+\author{李约瀚 \\ qinka@live.com \\ DingoLab \\ 14130140331}
 
 %后端宏观架构
 \part{后端宏观架构}
@@ -28,4 +55,3 @@ Dingo 的后端的使用人数并不会多，而且这就是个大作业。然�
 定义标准 CPU 单位计算能力$c$，并使得该单位为离散的（即存在两个数值，其之间不存在任何合法数值）。设定函数
 $f_{Nginx}(c,m)$ 表示对一个 Docker容器“运行” Nginx 镜像，其中的容器所分配的 cpu 资源为 c，内存配大小为 m，
 并假定其他参数不影响。这个 Docker 容器，$f_{Nginx}$所表示的则是该情况之下 Nginx 的最大负载量。并设 $d_{Nginx}(c,m)$ 表示该情况下的延迟。
-

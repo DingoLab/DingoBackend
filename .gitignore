@@ -1,3 +1,22 @@
+# for Haskell
+
+*.hi
+*.o
+dist
+cabal.sandbox.config
+.cabal-sandbox
+ssl.csr
+ssl.key
+ssl.crt
+client_session_key.aes
+.DS_Store
+test.config
+.stack-work
+.cabal-sandbox.bak
+
+
+#for LaTeX
+
 ## Core latex/pdflatex auxiliary files:
 *.aux
 *.lof

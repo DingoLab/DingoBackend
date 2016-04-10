@@ -1,0 +1,66 @@
+
+
+
+
+
+% RCT.tex
+
+%%%% Readme & ChangeLog & TODOList
+
+%%%%%%%%%%%%%%
+%%% 导言区
+%%%%%%%%%%%%%%
+
+% flag
+\makeatletter
+\def\@NoStyleChaper{\ralex} % 设置不适用章节
+\def\@RTCDoc{\ralex} % 设置文档标签
+\def\@UsingAppendix{\ralex} % 使用附录
+\def\@DocType{article}
+\def\@DocTypeCTEX{ctexart}
+\makeatother
+
+% 导入导言区
+\input{Preamble} % Preamble.tex
+
+% documentclass
+\doclass
+
+\title{Dingo's ReadMe, ChangeLog, and Todo List}
+\author{李约瀚 \\ qinka@live.com \\ DingoLab \\ 14130140331}
+
+\begin{document}
+  \maketitle
+  \newpage
+  \Huge{Copyright (C) 2016 DingoLab}
+  \newpage
+  \begin{description}
+    \item[README] \ref{READMEref}
+    \item[CHANGELOG] \ref{CHANGELOGref}
+    \item[TODOLIST] \ref{TODOLISTref}
+  \end{description}
+  \section{Read Me} \label{READMEref}
+  Dingo 是西安电子科技大学软件学院2014级软件工程概论的大作业，任课老师是刘西洋教授。
+  Dingo 是一个 App，详见 Dingo 项目的介绍，此部分是 Dingo 项目的后端。
+  后端采用微服务架构，使用 Haskell 中的一个 Web Application 框架 Yesod 编写的。
+
+  这个文档是 Dingo Backend 的 readme，changelog 与 todo list。
+  \section{Change Log} \label{CHANGLOGref}
+
+  \subsection{Dingo 的微服务的框架}
+  \paragraph{\apiver{0.0.1.0}}
+  \begin{itemize}
+    \item 框架有了填充性的内容
+  \end{itemize}
+
+  \section{Todo List} \label{TODOLISTref}
+
+  \subsection{Dingo 的微服务的框架}
+  \begin{itemize}
+    \item 启用 Code Climate 与 Travis-CI 的服务
+  \end{itemize}
+  \paragraph{\apiver{未指定}}
+  \begin{itemize}
+    \item 完全对接一个正常的框架。
+  \end{itemize}
+\end{document}
