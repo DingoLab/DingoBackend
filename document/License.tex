@@ -16,18 +16,15 @@
 
 % flag
 \makeatletter
-\def\@NoStyleChaper{\ralex} % 设置不适用章节
-\def\@LicenseDoc{\ralex} % 设置文档标签
-\def\@UsingAppendix{\ralex} % 使用附录
+\def\@NoStyleChaper{\relax} % 设置不适用章节
+\def\@NoLiterateHaskell{\relax} %不用 list 环境
+\def\@LicenseDoc{\relax} % 设置文档标签
 \def\@DocType{article}
 \def\@DocTypeCTEX{ctexart}
 \makeatother
 
 % 导入导言区
 \input{Preamble} % Preamble.tex
-
-% documentclass
-\doclass
 
 \title{\Huge Dingo License}
 \author{DingoLab}
@@ -48,13 +45,16 @@
   {\huge 请仔细阅读本许可证（条款、协议）的内容，以免发生不必要的矛盾纠纷，同时本许可证尽到提示阅读者仔细
   阅读条款，尤其是强调内容、注释等的义务。必要时请致函询问。}
   \newpage
-
+  \tableofcontents
+  \newpage
+  
   \section{分发限制}
   在（再）分发或者使用的时候，无论是否有修改，无论是全部还是部分代码，
   无论是通过二进制文件\footnote{即可执行文件，动态库，共享库，静态库，等。该定义解释权归 DingoLab 所有。}
   还是源文件，还是 Docker 容器等其他方式\footnote{解释权归 Dingo Lab 所有。}，
   当且仅当满足如下条件（条款）才是被许可的合法行为，其他为未许可行为属违法行为。
 
+  \subsection{适用于非商业的}
   对于非商业性\footnote{商业性与非商业性的解释权为 DingoLab所有，下同}目的使用时适用的条款如下：
   \begin{itemize}
     \item 源码的再分发必须遵守上述版权通知、本条款列表\footnote{“本条款列表” 包含针对商业性的与非商业性的，同时此处的解释权归 DingoLab 所有，下同。}
@@ -72,6 +72,7 @@
       网名等有指向性的的内容用于支持或推广该软件的衍生内容与产品。
   \end{itemize}
 
+  \subsection{适用于商业的}
   对于商业性或商业目的适用的是条款如下：
   \begin{itemize}
     \item 在没有版权所有人及全体贡献者的附带签名及相关有效“签名”\footnote{此处所指签名，包括按手印等合理合法的方式，且其解释权归 DingoLab 所有，下同。}
@@ -97,12 +98,12 @@
   \end{itemize}
 
   \section{免责条款}
-  \subsection{适用于非商业目的}
+  \subsection{适用于非商业的}
   本软件为版权所有人及全体贡献者“按现状”为根据提供，不提供任何明确的或暗示的保证，包括但不限于对于本软件及相关内容的针对特定用途的适用性的暗示保证。
   在任何情况下，版权所有人及全体贡献者均不对使用本软件及相关内容而以任何形式、方式\footnote{此处的解释权归 DingoLab 所有，下同。}产生的
   任何直接的、间接地、偶然的、特殊的、典型的、或因此而生的损失\footnote{此处的解释权归 DingoLab，且此处包含但不限于采购替换产品或服务；使用价值、数据、或利润的损失；业务中断等。且下同。}
   而根据任何责任理论，包括合同、严格责任或侵权行为（含疏忽等\footnote{此处解释权，归 DingoLab 所有。}）承担任何责任，
   即使在已经提醒可能发生此类损失的情况下。同时本产品、软件及相关内容的版权所有者，不对使用者通过或因使用本产品而产生的不正当行为有监督的责任与义务，同时不承担任何连带责任。
-  \subsection{适用于商业目的的}
+  \subsection{适用于商业的}
   本软件、产品及相关内容的版权所有者与全体贡献者的免责条款，由于商业目的使用的使用方在签订相关授权协议时声明，并由使用方按授权协议在指定的方声明。
 \end{document}
