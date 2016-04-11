@@ -18,7 +18,7 @@ module Dingo.MicroFramework.API
 
 
 \begin{code}
-      import Yesod
+      import Yesod.Core
 \end{code}
 
 

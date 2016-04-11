@@ -20,6 +20,7 @@ module Dingo.MicroFramework.Register
 
 \begin{code}
       import Yesod.Core
+      import Control.Concurrent
 
       import Dingo.MicroFramework.API
       import Dingo.MicroFramework.Destory
@@ -42,7 +43,7 @@ module Dingo.MicroFramework.Register
             , Heartbeatable a
             ) => Registrable a where
         regAddr :: a -> String
-        refAddr = defRegAddr
+        regAddr = defRegAddr
         regPort :: a -> Int
         regPort = defRegPort
         regSvrAddr :: a -> String
@@ -62,10 +63,10 @@ module Dingo.MicroFramework.Register
 \end{code}
 
 注册服务实例的函数
-\begin{code}
+\begin{description}
   \item[False] 注册失败
   \item[True] 注册成功
-\end{code}
+\end{description}
 \begin{code}
       register :: Registrable a => a -> IO Bool
       register x = do
@@ -80,7 +81,7 @@ module Dingo.MicroFramework.Register
         putStrLn "被注册的实例的端口"
         print $ regPort x
         regAPI' $ regDestory' $ do
-          fokIO $ heartbeat x
+          forkIO $ heartbeat x
           return True
         where
           regAPI' a = do
