@@ -35,7 +35,7 @@
 \makeatletter
 \ifx \@NoLiterateHaskell \undefined
 \usepackage{listings}
-\usepackage{color}
+\usepackage{color,xcolor}
 \newcounter{codeline}
 \setcounter{codeline}{1}
 \setcounter{lstnumber}{1}
@@ -49,8 +49,8 @@
 \def\lstspeccm{\rmfamily\itshape}
 \def\lstspecns{\tiny}
 % code 环境
-\lstnewenvironment{code}
-{ \letset
+\lstnewenvironment{code}[1][]
+{ \lstset
   { firstnumber=last
   , language=Haskell
   , breaklines
@@ -63,14 +63,15 @@
   , numberstyle=\lstcodens
   , frame=trBL
   , label=sourceCtr
+  , #1
   }
 }
 {
   \setcounter{codeline}{\value{lstnumber}}
 }
 % spec 环境
-\lstnewenvironment{spec}
-{ \letset
+\lstnewenvironment{spec}[1][]
+{ \lstset
   { firstnumber=last
   , language=Haskell
   , breaklines
@@ -83,13 +84,36 @@
   , numberstyle=\lstspcens
   , frame=trBL
   , label=sourceCtr
+  , #1
   }
 }
 {
   \setcounter{codeline}{\value{lstnumber}}
 }
+% 设置SQL
+%\lstnewenvironment{sql}
+%{ \lstset
+%    { firstnumber=last
+%        , language=SQL
+%        , breaklines
+%        , backgroundcolor=\lstspcebgcolor
+%        , basicstyle=\sffamily
+%        , keywordstyle=\lstspcekw
+%        , commentstyle=\lstspcecm
+%        , flexiblecolumns
+%        , numbers=none
+%        , frame=trBL
+%        , label=sourceCtr
+%    }
+%}
+%{
+%    \setcounter{codeline}{\value{lstnumber}}
+%}
 % ignore
 \long\def\ignore#1{\relax}
+
+% 设置 SQL 环境
+\lstnewenvironment{sql}[1][]{\lstset{firstnumber=last, language=SQL, breaklines, basicstyle=\sffamily, keywordstyle=\lstcodekw, commentstyle=\lstcodecm, flexiblecolumns,#1}}{}
 \fi
 \makeatother
 
@@ -129,6 +153,9 @@
 \usepackage{chngcntr}
 \counterwithin{footnote}{page}
 \fi
+
+% caption
+\usepackage{caption}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
