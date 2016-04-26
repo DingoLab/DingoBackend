@@ -191,7 +191,19 @@ $key\_rname$是用户的真是姓名，$key\_prcid$ 是用户的身份证号，$
 $key\_uid$ 是一个外键，账户的id，
 $binary\_pic$ 是图片的二进制数据，
 $key\_type$ 是图片的类型\footnote{可为空，为空默认为0}。
-
+\begin{sql}[caption=创建用户收货地址表 table\_addr]
+	CREATE TABLE table_addr
+		( key_aid CHAR(64) NOT NULL PRIMARY KEY
+		, key_uid CHAR(64) NOT NULL REFERENCES table_account(key_uid)
+		, key_p CHAR(64) NOT NULL 
+		, key_c CHAR(64) NOT NULL
+		, key_d CHAR(64) NOT NULL
+		, key_b CHAR(64) NOT NULL
+		, key_v CHAR(64) NOT NULL
+		, key_zip INT NOT NULL CHECK(key_zip <1000000 AND key_zip > 99999)
+		)
+\end{sql}
+\subsection{任务管理部分的数据库设计（代收快递）}
 \begin{sql}[caption=创建任务关联表 table\_task]
     CREATE TABLE table_task
         ( key_tid CHAR(64) NOT NULL PRIMARY KEY
@@ -241,5 +253,20 @@ $key\_type$ 是图片的类型\footnote{可为空，为空默认为0}。
         , key_timeup TIMESTAMP WITH TIME ZONE NOT NULL
         , key_uid CHAR(64) NOT NULL REFERENCES table_account(key_uid)
         )
+    ;
+\end{sql}
+\subsection{数据库视图与索引的设计}
+\begin{sql}[caption=创建登陆视图 view_login]
+	CREATE VIEW view_login (uid,uname,utel,pash) AS
+		SELECT A.key_uid, U.key_name, U.key_tel, A.key_pash
+		FROM table_account AS a, table_usr AS u
+		WHERE A.key_tid = U.key_tid
+	;
+\end{sql}
+\begin{sql}[caption=创建登陆用的索引]
+	CREATE INDEX CONCURRENTLY index_login_tel ON table_usr(key_tel);
+	CREATE INDEX CONCURRENTLY index_login_name ON table_usr(key_name);
+\end{sql}
+\begin{sql}[caption=创建]
 \end{sql}
 \end{document}
