@@ -217,7 +217,7 @@ $key\_type$ 是图片的类型\footnote{可为空，为空默认为0}。
 \end{sql}
 
 \begin{sql}[caption=创建任务议价表 table\_task\_cost]
-    CREATE TABLE table_task_info
+    CREATE TABLE table_task_cost
         ( key_tid CHAR(64) NOT NULL PRIMARY KEY REFERENCES table_task(key_tid)
         , key_ad INT[] NOT NULL DEFAULT ARRAY[]
         , key_bd INT[] NOT NULL DEFAULT ARRAY[]
