@@ -24,6 +24,13 @@
 % 导入导言区
 \input{Preamble} % Preamble.tex
 
+    \makeatletter
+     \newcommand{\mcite}[1]{$^{\tiny\cite{#1}}$}
+     \newcommand{\mbibitem}[1]{\bibitem[#1]{#1}\addtocounter{myBib}{1}}
+     \newcounter{myBib}
+     \setcounter{myBib}{1}
+     \makeatother
+
 \title{后端架构}
 \author{李约瀚 \\ qinka@live.com \\ DingoLab \\ 14130140331}
 
@@ -134,6 +141,12 @@ Docker 与微服务在整个服务的热更新中有这很好的友好度。通�
 上述三种方法均是建立在“不允许响应时间减慢，不考虑负载平衡、服务发现，同时也不考虑数据库性能” 的条件下产生的。
 如果将上述因素考虑进去，则面对的是一个多维的优化问题或者类似的数学问题，需要建立一些数学模型，而由于软工大作业的重心在于软件工程的这方面，
 弹性计算的这方面暂且考虑这么多。而同时基于，或者应该用“寄”这个字，弹性计算这个方案还解决了热更新等问题。
+
+\subsection{微服务架构}
+为服务架构并不是最近兴起的东西，然而在为服务架构与其他工具适当结合的时则对软件的开发的质量有显著的提高\mcite{1}。
+
+\subsubsection{新时代的游击战——微架构}
+微架构不只是游击战，微架构首先带来的是解决通常单体架构带来的不同组件的依赖于编译等交叉约束所带来的一系列的痛苦。
 
 \subsection{API 与 服务的分割}
 API 与 服务的分割 类似于 并行计算中粒度的划分。API 划分的过于细小，容器、负载均衡、服务发现等方面的某些资源会发生浪费，但是划分过大，
@@ -256,7 +269,7 @@ $key\_type$ 是图片的类型\footnote{可为空，为空默认为0}。
     ;
 \end{sql}
 \subsection{数据库视图与索引的设计}
-\begin{sql}[caption=创建登陆视图 view_login]
+\begin{sql}[caption=创建登陆视图 view\_login]
 	CREATE VIEW view_login (uid,uname,utel,pash) AS
 		SELECT A.key_uid, U.key_name, U.key_tel, A.key_pash
 		FROM table_account AS a, table_usr AS u
@@ -269,4 +282,22 @@ $key\_type$ 是图片的类型\footnote{可为空，为空默认为0}。
 \end{sql}
 \begin{sql}[caption=创建]
 \end{sql}
+
+ \begin{thebibliography}{}
+     %\newcounter{myBib}
+     %\setcounter{myBib}{1}
+     %\newcommand\themycnt{\arabic{myBib}}
+     %\newcommand\mbib{\item\stepcounter{myBib}\themycnt}
+     %\bibitem[显示符号]{引用标签} Book Title, Author
+     \mbibitem{1} "Chris Richardson 为服务系列" 微服务架构的优势与不足， DaoCloud微信公众号，Chris Richardson[著]，DaoCloud[译]
+%    \makeatletter
+%     \renewcommand{\cite}{1}{$^{\tiny\cite{#1}}$}
+%     \renewcommand{\bibitem}{1}{\bibitem[#1]{#1}}
+%     \newcounter{myBib}
+%     \setcounter{myBib}{1}
+%     \makeatletter
+%     \newcommand{\myB}{\@ifnextchar[{\@myB}{\@myB[\themyBib]\addtocounter{myBib}{1}}}
+%     \newcommand{\@myB}[#1]{\bibitem{#1}}
+%     \makeatother
+ \end{thebibliography}
 \end{document}
