@@ -22,9 +22,3 @@ module Dingo.MicroFramework
       import Dingo.MicroFramework.Register as X
       import Paths_dingo_microframework
 \end{code}
-
-
-导出版本
-\begin{code}
-      dingo_microframework_version = version
-\end{code}
