@@ -6,18 +6,24 @@
 % src/Dingo/Common/Yesod/Config.lhs
 
 \begin{code}
+{-# LANGUAGE RecordWildCards
+           , OverloadedStrings
+           #-}
 \end{code}
 
 \begin{code}
 module Dingo.Common.Yesod.Config
     ( SvrConfig(..)
     , DbConfig(..)
+    , dbConfig2Str
     ) where
 \end{code}
 
 \begin{code}
       import Data.Yaml
       import Data.ByteString as B
+      import Data.ByteString.Lazy
+      import Data.String
 \end{code}
 
 
@@ -32,7 +38,8 @@ module Dingo.Common.Yesod.Config
         , dbPort :: String
         , dbUser :: String
         , dbName :: String
-        , dbConThd :: Int
+        , dbPsk  :: String
+        , dbConThd ::  Int
         }
 \end{code}
 
@@ -47,8 +54,10 @@ module Dingo.Common.Yesod.Config
         toJSON DbConfig{..} = object
           [ "addr" .= dbAddr
           , "port" .= dbPort
+          , "user" .= dbUser
           , "name" .= dbName
           , "con-limit" .= dbConThd
+          , "password" .= dbPsk
           ]
       instance FromJSON SvrConfig where
         parseJSON (Object v) = SvrConfig
@@ -58,7 +67,9 @@ module Dingo.Common.Yesod.Config
         parseJSON (Object v) =DbConfig
           <$> v .: "addr"
           <*> v .: "port"
+          <*> v .: "user"
           <*> v .: "name"
+          <*> v .: "password"
           <*> v .: "con-limit"
       dbConfig2Str :: DbConfig -> (B.ByteString,Int)
       dbConfig2Str DbConfig{..} = (str,dbConThd)
@@ -66,7 +77,7 @@ module Dingo.Common.Yesod.Config
           str = toStrict $
             fromString $    "host=\'" ++ dbAddr
                       ++ "\' port=\'" ++ dbPort
-                      ++ "\' user=\'" ++ dbPsk
+                      ++ "\' user=\'" ++ dbUser
                       ++ "\' password=\'" ++ dbPsk
                       ++ "\' dbname=\'" ++ dbName
                       ++ "\'"

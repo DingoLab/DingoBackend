@@ -1,0 +1,49 @@
+
+
+
+
+
+%  document/Dindo.tex
+
+%% Dingo 后端 Dindo 的手册性质的文档
+
+\documentclass{dingo}
+
+\title{Dindo Document}
+
+% 定义封面颜色
+\definecolor{dindoblue}{rgb}{0.00,0.60,1.00}
+
+% 定义字体颜色
+\definecolor{dindowhite}{rgb}{0.93,0.93,0.93}
+
+\titlebgcolor{dindoblue}
+\titlefontcolor{dindowhite}
+
+\coverpic{}
+\city{西安, Xi`an}
+\author{李约瀚\\qinka@live.com\\14130140331}
+\begin{document}
+	\makecover
+	\makecontent
+  \section{说明}
+  这个文档是关于 Dingo 后端 Dindo 的说明性质的、手册性质的文档。这个文档包含对后端的一些说明，事例代码，与后端的实际主要的 Haskell
+  代码。后端是采用 Haskell \footnote{\href{https://www.haskell.org}{Haskell} 是一门纯函数式的编程语言。}，与 Yesod 
+  \footnote{\href{http://www.yesodweb.com}{Yesod}Yesod 是一个使用 Haskell作为主要语言，的 RESTful API 的WEB 应用框架。}
+  编写。使用的是Haskell 的文学编程方式，源代码为 \LaTeX 与 Haskell 混排的方式组织的\footnote{但由于Haskell 编译器与\LaTeX 系统的一些特性，
+  	文学编程的代码并不需要特殊工具，而直接可以被识别。因此较方便的将后端的代码编入文档。}
+  
+  Dingo 后端的名称被确定为 Dindo，当然这个行为是后端的负责着\footnote{也就是笔者。}自己定的。其来源是 笔者在数模校赛期间使用
+  Lingo 是有个报错是关于 Lindo 的于是就开始称后端的程序为 Dindo。
+  
+  \section{Dindo 公共组件}
+  这部分是关于 Dindo 的公共组件的。由于 Dingo 后端采用的微服务架构\footnote{后面随时可能会称之为 微架构 。}，不同的微服务之间，会有包括
+  服务发现\footnote{目前的版本并没有开发实际的服务发现的内容，直接使用 Nginx 进行做均衡负载等。}、数据库
+  \footnote{这一部分单独出来的。}、授权认证等是共用的。所以为了减少代码的重复使用，则独立出这一部分。
+  
+  \section{Dindo 数据库}
+  
+  \section{Dindo Launcher}
+  
+  \section{Dindo 微服务组件——用户管理}
+\end{document}

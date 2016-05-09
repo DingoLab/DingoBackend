@@ -7,7 +7,7 @@
 
 \begin{code}
 module Dingo.Common.Yesod.Launch
-    (
+    ( Dindoble(..)
     ) where
 \end{code}
 
@@ -15,7 +15,8 @@ module Dingo.Common.Yesod.Launch
       import Dingo.MicroFramework.Register
       import Yesod
       import Dingo.Common.Yesod.Config
-      import Database.Persist.PostgreSQL
+      import Database.Persist.Postgresql
+      import Control.Monad.Logger
 \end{code}
 
 Dingo 后端的服务的“标准”
@@ -24,9 +25,10 @@ Dingo 后端的服务的“标准”
         fromPool :: ConnectionPool -> a
         warpDindo :: SvrConfig -> (Int -> a -> IO()) -> IO ()
         warpDindo x warpF =
-          runStdoutLogingT $ withPostgresqlPool connStr cT $
-            \pool -> do
+          runStdoutLoggingT $ withPostgresqlPool connStr cT $
+            \pool -> liftIO $ do
               let site = fromPool pool
+              register site
               warpF port site
           where
             (connStr,cT) = dbConfig2Str.svrDb $ x

@@ -30,5 +30,5 @@ import Data.Time as X
 persistFileWithC :: PersistSettings
                  -> FilePath
                  -> Q Exp
-persistFileWithC s = persistFileWith s.("config/"++)                         
+persistFileWithC s = persistFileWith s.("dingo-config/"++)                         
 \end{code}

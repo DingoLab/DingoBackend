@@ -6,7 +6,6 @@ resolver: lts-5.11
 
 # Local packages, usually specified by relative directory name
 packages:
-- dingo-microframework/
 - dingo-common/
 - dingo-database/
 
