@@ -6,8 +6,8 @@ resolver: lts-5.11
 
 # Local packages, usually specified by relative directory name
 packages:
-- dingo-common/
-- dingo-database/
+- dindo-common/
+- dindo-database/
 
 # Packages to be pulled from upstream that are not in the resolver (e.g., acme-missiles-0.3)
 extra-deps: []

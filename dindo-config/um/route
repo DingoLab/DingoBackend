@@ -1,0 +1,10 @@
+/regist RegistR POST
+/identify IdentifyR POST
+/identified Identified POST
+/login LoginR POST
+/logout LogoutR POST
+/usrinfo UsrinfoR POST
+/usrhimg UsrhimgR POST
+/usrinfochange UsrinfochangeR POST
+/changpash ChangpashR POST
+/upeaddr Upeaddr POST
