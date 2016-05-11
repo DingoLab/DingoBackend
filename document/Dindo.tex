@@ -60,4 +60,27 @@
   \section{Dindo Launcher}
   
   \section{Dindo 微服务组件——用户管理}
+  
+  %附录
+  \newpage
+  \begin{appendix}
+	  	% 备忘性质的
+	  	\section{Docker 中 Weave  的配置} % 参考 http://debugo.com/docker-weave/
+	  	Weave 是能将Docker 中每个物理主机中的连接起来一个工具，也就是能使的 Docker 容器跨主机互联。
+	  	下面是配置（安装）Weave 的Shell 脚本:
+	  	\begin{shell}[caption=Weave 安装]
+#!/bin/sh
+wget -O /usr/local/bin/weave \
+https://github.com/zettio/weave/releases/download/latest_release/weave
+chmod a+x /usr/local/bin/weave
+dao pull weaveworks/weave:1.5.1
+dao pull weaveworks/plugin:1.5.1
+dao pull weaveworks/weaveexec:1.5.1
+apt-get update
+apt-get install bridge-utils
+dao pull weaveworks/weavedb:latest
+weave launch 192.168.1.181
+	  	\end{shell}
+  \end{appendix} 
+  
 \end{document}
