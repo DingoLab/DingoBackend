@@ -63,11 +63,18 @@ module Dindo.Common.Auth
                  )
               => HandlerT site IO AuthResult
       pskAuth = do
-        uid' <-lookupPostParam "uid"
-        case uid' of
-          Just uid -> do
+        uid'  <- lookupPostParam "uid"
+        name' <- lookupPostParam "name"
+        tel'  <- lookupPostParam "tel"
+        case (uid',name',tel') of
+          (Nothing,Nothing,Nothing) -> return $ Unauthorized "Who are you!"
+          (uid,name,tel) -> do
             pash <- getPash
-            rt' <- liftHandlerT $ runDB $ selectList [AccountUid ==. uid] []
+            rt' <- liftHandlerT $ runDB $ selectList
+              (  fromMaybe' AccountUid  uid
+              ++ fromMaybe' AccountTel  tel
+              ++ fromMaybe' AccountName name
+              ) []
             case rt' of
               rt:_ -> do
                 let usrPash = runPash.accountPash.fromEntity $ rt
@@ -75,39 +82,12 @@ module Dindo.Common.Auth
                   then return Authorized
                   else return $ Unauthorized "Who are you!"
               _ -> return $ Unauthorized "Who are you!"
-          Nothing -> authByUn
         where
+          fromMaybe' _ Nothing = []
+          fromMaybe' x (Just y) = [x ==. y]
           getPash = do
             pash' <- lookupPostParam "pash"
             return $ maybe "" runPash pash'
-          authByUn = do
-            name' <- lookupPostParam "name"
-            case name' of
-              Just name -> do
-                pash <- getPash
-                rt' <- liftHandlerT $ runDB $ selectList [LoginUname ==. name] []
-                case rt' of
-                  rt:_ -> do
-                    let usrPash = runPash.loginPash.fromEntity $ rt
-                    if usrPash == pash
-                      then return Authorized
-                      else return $ Unauthorized "Who are you!"
-                  _ -> return $ Unauthorized "Who are you!"
-              Nothing -> authByTel
-          authByTel = do
-            tel' <- lookupPostParam "tel"
-            case tel' of
-              Just tel -> do
-                pash <- getPash
-                rt' <- liftHandlerT $ runDB $ selectList [LoginUtel ==. (read $ unpack $ tel)] []
-                case rt' of
-                  rt:_ -> do
-                    let usrPash = runPash.loginPash.fromEntity $ rt
-                    if usrPash == pash
-                      then return Authorized
-                      else return $ Unauthorized "Who are you!"
-                  _ -> return $ Unauthorized "Who are you!"
-              Nothing -> return $ Unauthorized "Who are you!"
       fromEntity :: Entity a -> a
       fromEntity (Entity _ x) = x
 \end{code}

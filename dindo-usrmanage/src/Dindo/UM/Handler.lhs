@@ -30,27 +30,23 @@ module Dindo.UM.Handler
 \begin{code}
       postRegistR :: Handler TypedContent
       postRegistR =
-        getParam $ checkName $ insertAItem insertUItem
+        getParam insertAItem
         where
           getParam f = do
             name' <- lookupPostParam "name"
             pash' <- lookupPostParam "pash"
+            tel'  <- lookupPostParam "tel"
             case (name',pash') of
-              (Just name,Just pash) -> f (name,pash)
-              _ -> returnR $ RtRegistFail "param: less and less"
-          checkName (name,pash) f = do
-            rt <- liftHandlerT $ runDB $ selectList [UsrName ==. name] []
-            if empty
-              then do
+              (Just name,Just pash) -> do
                 x <- getCurrentTime
                 let (time,p) = splitAt 10 $ show x
                 let uid = 'U':time++showDigest $ sha1 $ decodeUtf8 $ T.concat [pash,name]
                 f (pack uid,name,pash)
-              else returnR $ RtRegistFail "name repeated"
-          insertAItem (uid,name,pash) f = do
-            liftHandlerT $ runDB $ insert $ Account uid pash
-            f (uid,name)
-          insertUItem (uid,name) f = do
-            liftHandlerT $ runDB $ insert $ Usr uid 0 name "" "" "" "" "U"
-            returnR $ RtRegist uid
+              _ -> returnR $ RtRegistFail "param: less and less"
+          insertAItem (uid,name,pash,tel) f = do
+            rt <- liftIO $ try $ liftHandlerT $ runDB $ insert $ Account uid pash tel name
+            case rt of
+              Left e -> returnR $ RtRegistFail $ pack $ show e
+              Right _ -> returnR $ RtRegist uid
+
 \end{code}

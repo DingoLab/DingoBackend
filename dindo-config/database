@@ -2,13 +2,13 @@ Account json sql=table_account
   Id sql=
   uid Text sql=key_uid sqltype=varchar(64)
   pash Text sql=key_pash sqltype=varcher(64)
+  tel Int sql=key_tel
+  name Text sql=key_name sqltype=varchar(64)
   Primary uid
   deriving Show Eq
 Usr json sql=table_usr
   Id sql=
   uid Text sql=key_uid sqltype=varchar(64)
-  tel Int sql=key_tel
-  name Text sql=key_name sqltype=varchar(64)
   email Text sql=key_email
   rname Text sql=key_rname sqltype=varchar(64)
   prcid Text sql=key_prcid sqltype=varchar(18)
@@ -29,8 +29,8 @@ Apic sql=table_apic
 Task json sql=table_task
   Id sql=
   tid Text sql=key_tid sqltype=varchar(64)
-  ca Text sql=key_ca sqltype=varchar(64)
-  cb Text sql=key_cb sqltype=varchat(64)
+  ca Text Maybe sql=key_ca sqltype=varchar(64)
+  cb Text Maybe sql=key_cb sqltype=varchat(64)
   Primary tid
   Foreign Account fkca ca
   Foreign Account fkvcb cb
@@ -74,9 +74,3 @@ TmpToken json sql=table_tmptoken
   uid Text sql=key_uid sqltype=varchar(64)
   Primary tt
   Foreign Account fkuidd uid
-Login json sql=view_login
-  Id sql=
-  uid Text sqltype=varchar(64)
-  uname Text sqltype=varchar(64)
-  utel Int
-  pash Text sqltype=varchar(128)
