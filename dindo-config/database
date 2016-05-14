@@ -17,6 +17,15 @@ Usr json sql=table_usr
   Primary uid
   Foreign Account fkuid uid
   deriving Show Eq
+Addr json sql=table_addr
+  Id sql=
+  aid Text sql=key_aid sqltype=varchar(64)
+  uid Text sql=key_uid sqltype=varchar(64)
+  zip Text sql=key_zip sqltype=varchar(64)
+  addr Text sql=key_addr
+  Primary aid
+  Foreign Account fkaddruid uid
+  deriving Show Eq
 Apic sql=table_apic
   Id sql=
   pid Text sql=key_pic_id sqltype=varchar(64)
@@ -69,7 +78,7 @@ Dd json sql=table_dd
   Foreign Account fkuidc uid
 TmpToken json sql=table_tmptoken
   Id sql=
-  tt Text sql=key_tmptoken sqltype=varchar(128)
+  tt Text sql=key_tmptoken sqltype=varchar(150)
   time UTCTime sql=key_timeup
   uid Text sql=key_uid sqltype=varchar(64)
   Primary tt

@@ -8,13 +8,12 @@
 \begin{code}
 {-# LANGUAGE OverloadedStrings
            , TemplateHaskell
+           , TypeFamilies
            #-}
 \end{code}
 
 \begin{code}
-module Dindo.UM.Foundation
-    (
-    ) where
+module Dindo.UM.Foundation where
 \end{code}
 
 \begin{code}
@@ -40,7 +39,7 @@ module Dindo.UM.Foundation
         isAuthorized _ _ = tokenAuth
       instance YesodPersist UM where
         type YesodPersistBackend UM = SqlBackend
-        runDB a = getYesod >>= (runWithPool a.connPool)
+        runDB a = getYesod >>= (runSqlPool a.connPool)
 \end{code}
 
 微服务架构

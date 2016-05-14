@@ -8,6 +8,8 @@ resolver: lts-5.11
 packages:
 - dindo-common/
 - dindo-database/
+- dindo-launch/
+- dindo-usrmanage/
 
 # Packages to be pulled from upstream that are not in the resolver (e.g., acme-missiles-0.3)
 extra-deps: []

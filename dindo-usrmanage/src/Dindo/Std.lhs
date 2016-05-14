@@ -11,6 +11,6 @@ module Dindo.Std
     , Std
     ) where
 
-      import UM as X -- need change
+      import Dindo.UM as X -- need change
       type Std = UM
 \end{code}

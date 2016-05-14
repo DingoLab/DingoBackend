@@ -71,14 +71,10 @@ COMMENT ON TABLE table_apic
 ;
 -- 收货地址
 CREATE TABLE table_addr
-  ( key_aid CHAR(64) NOT NULL PRIMARY KEY
-  , key_uid CHAR(64) NOT NULL REFERENCES table_account(key_uid)
-  , key_p   CHAR(64) NOT NULL
-  , key_c   CHAR(64) NOT NULL
-  , key_d   CHAR(64) NOT NULL
-  , key_b   CHAR(64) NOT NULL
-  , key_v   CHAR(64) NOT NULL
-  , key_zip INT      NOT NULL CHECK(key_zip <1000000 AND key_zip > 99999)
+  ( key_aid  CHAR(64) NOT NULL PRIMARY KEY
+  , key_uid  CHAR(64) NOT NULL REFERENCES table_account(key_uid)
+  , key_addr TEXT     NOT NULL
+  , key_zip  INT      NOT NULL CHECK(key_zip <1000000 AND key_zip > 99999)
   )
 ;
 COMMENT ON TABLE table_addr
@@ -147,7 +143,7 @@ CREATE TABLE opt_log.log_login
   ( update_time TIMESTAMP WITH TIME ZONE NOT NULL
   , uid         VARCHAR(64)              NOT NULL
   , db_usr      VARCHAR(64)              NOT NULL
-  , token       VARCHAR(128)             NOT NULL
+  , token       VARCHAR(150)             NOT NULL
   )
 ;
 CREATE TABLE opt_log.log_data_change

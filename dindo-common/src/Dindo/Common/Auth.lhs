@@ -16,6 +16,9 @@ module Dindo.Common.Auth
     ( runPash
     , tokenAuth
     , pskAuth
+    , noAuth
+    , fromEntity
+    , fromMaybe'
     ) where
 \end{code}
 
@@ -33,7 +36,7 @@ module Dindo.Common.Auth
 
 用于用户验证的
 \begin{code}
-      runPash = id
+      runPash _= id
       noAuth :: Yesod site => HandlerT site IO AuthResult
       noAuth = return Authorized
 
@@ -63,6 +66,7 @@ module Dindo.Common.Auth
                  )
               => HandlerT site IO AuthResult
       pskAuth = do
+        now <- liftIO getCurrentTime
         uid'  <- lookupPostParam "uid"
         name' <- lookupPostParam "name"
         tel'  <- lookupPostParam "tel"
@@ -72,22 +76,22 @@ module Dindo.Common.Auth
             pash <- getPash
             rt' <- liftHandlerT $ runDB $ selectList
               (  fromMaybe' AccountUid  uid
-              ++ fromMaybe' AccountTel  tel
+              ++ fromMaybe' AccountTel (fmap (read.unpack) tel)
               ++ fromMaybe' AccountName name
               ) []
             case rt' of
               rt:_ -> do
-                let usrPash = runPash.accountPash.fromEntity $ rt
+                let usrPash = runPash now.accountPash.fromEntity $ rt
                 if usrPash == pash
                   then return Authorized
                   else return $ Unauthorized "Who are you!"
               _ -> return $ Unauthorized "Who are you!"
         where
-          fromMaybe' _ Nothing = []
-          fromMaybe' x (Just y) = [x ==. y]
           getPash = do
             pash' <- lookupPostParam "pash"
-            return $ maybe "" runPash pash'
+            return $ fromMaybe "" pash'
       fromEntity :: Entity a -> a
       fromEntity (Entity _ x) = x
+      fromMaybe' _ Nothing = []
+      fromMaybe' x (Just y) = [x ==. y]
 \end{code}

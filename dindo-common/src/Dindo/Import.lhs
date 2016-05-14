@@ -18,4 +18,5 @@ module Dindo.Import
       import Dindo.MicroFramework.Register as X
       import Dindo.MicroFramework.Destory as X
       import Dindo.MicroFramework.API as X
+      import Data.Conduit as X
 \end{code}

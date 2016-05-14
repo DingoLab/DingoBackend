@@ -94,9 +94,9 @@ JSON,Yaml,XML
           status = statusHead.toStatus
           addContent = case toWhere x of
             RtBody -> selectRep $ do
-              provideRepType "application/json" $ return $ decodeUtf8 $ toContent RtJson x
-              provideRepType "application/yaml" $ return $ decodeUtf8 $ toContent RtYaml x
-              provideRepType "application/xml"  $ return $ decodeUtf8 $ toContent RtXml  x
+              provideRepType "application/json" $ return $ decodeUtf8 $ toContents RtJson x
+              provideRepType "application/yaml" $ return $ decodeUtf8 $ toContents RtYaml x
+              provideRepType "application/xml"  $ return $ decodeUtf8 $ toContents RtXml  x
             RtOther y -> do
               addHeader y $ pack $ show x
               selectRep $  provideRep $ return (""::Text)

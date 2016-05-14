@@ -7,7 +7,7 @@
 
 \begin{code}
 module Dindo.Import.Yaml
-    ( moduel X
+    ( module X
     ) where
       import Data.Yaml as X
 \end{code}

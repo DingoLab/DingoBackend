@@ -3,13 +3,13 @@
 
 name:                dindo-launch
 version:             0.0.1.0
--- synopsis:
--- description:
+synopsis:            The launcher of each module
+description:         A launcher of each part of API
 -- license:
 license-file:        LICENSE
 author:              Qinka
 maintainer:          qinka@live.com
--- copyright:
+copyright:           Copyright (C) 2016 DingoLab
 category:            Web
 build-type:          Simple
 -- extra-source-files:
@@ -25,3 +25,7 @@ executable dindo-um
                      , dindo-usrmanage
   hs-source-dirs:      src
   default-language:    Haskell2010
+  if flag(dindo-um)
+    buildable:         True
+  else
+    buildable:         False

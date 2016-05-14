@@ -23,6 +23,15 @@ library
                      , Dindo.MicroFramework.API
                      , Dindo.MicroFramework.Destory
                      , Dindo.MicroFramework.Register
+                     , Dindo.Import
+                     , Dindo.Import.Aeson
+                     , Dindo.Import.ByteString
+                     , Dindo.Import.Database
+                     , Dindo.Import.Digest
+                     , Dindo.Import.Rable
+                     , Dindo.Import.Text
+                     , Dindo.Import.Yaml
+                     , Dindo.Import.Yesod
   -- other-modules:
   -- other-extensions:
   build-depends:       base >=4.8 && <4.9
@@ -39,5 +48,7 @@ library
                      , xml-hamlet >= 0.4
                      , monad-logger >= 0.3
                      , dindo-database == 0.0.1.0
+                     , SHA >= 1.6
+                     , conduit >= 1.2
   hs-source-dirs:      src
   default-language:    Haskell2010
