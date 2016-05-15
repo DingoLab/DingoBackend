@@ -27,15 +27,17 @@ module Dindo.Common.Yesod.Config
 \end{code}
 
 
-通用 配置。
-svrPort 后端端口
-svrDb 数据库配置
-dbAddr 数据库地址
-dbPort 数据库端口
-dbUser 数据库用户名
-dbName 数据库名称
-dbPsk  数据库用户与密码
-dbConThd 链接数设置
+模块配置与数据库链接配置。
+\begin{description}
+  \item[svrPost] 后端侦听端口
+  \item[svrDb] 后端的数据库配置（由下面的项组成）
+  \item[dbAddr] 数据库的地址（ip／域名，不包含端口）
+  \item[dbPort] 数据库侦听的端口
+  \item[dbUser] 链接数据库的用户名
+  \item[dbName] 链接的数据库
+  \item[dbPsk] 链接的密码
+  \item[ConThd] 连接数限制
+\end{description}
 
 \begin{code}
       data SvrConfig = SvrConfig
@@ -52,7 +54,7 @@ dbConThd 链接数设置
         }
 \end{code}
 
-配置实现 ToJSON 与 FromJSON 类型类
+将模块配置与数据库连接设置实现 ToJSON 与 FromJSON 类型类，以供数据转换为JSON 与 YAML。
 \begin{code}
       instance ToJSON SvrConfig where
         toJSON SvrConfig{..} = object
@@ -80,6 +82,9 @@ dbConThd 链接数设置
           <*> v .: "name"
           <*> v .: "password"
           <*> v .: "con-limit"
+\end{code}
+将 数据库配置转化成 链接字符串。
+\begin{code}
       dbConfig2Str :: DbConfig -> (B.ByteString,Int)
       dbConfig2Str DbConfig{..} = (str,dbConThd)
         where
@@ -92,10 +97,29 @@ dbConThd 链接数设置
                       ++ "\'"
 \end{code}
 
-JSON 与 Yaml 例程
+JSON 与 Yaml 例程。
 \begin{json}
-{ " 
+{ "port":3000
+, "database-config":
+  { "addr":"127.0.0.1"
+  , "port":"5432"
+  , "user":"postgres"
+  , "name":"postgres"
+  , "password":"postgres"
+  , "con-limit":10
+  }
 }
 \end{json}
 \begin{yaml}
+port: 3000
+database-config:
+  addr: '127.0.0.1'
+  port: '5432'
+  user: postgres
+  name: postgres
+  password: postgres
 \end{yaml}
+这个需要在运行时传入。假设配置文件在 config.yml 中,启动 UsrManage 模块。
+\begin{shell}
+# cat config.yml ｜ dindo-um
+\end{shell}
