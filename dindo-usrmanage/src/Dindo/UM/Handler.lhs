@@ -202,7 +202,10 @@ module Dindo.UM.Handler
 
 TODO
 \begin{code}
+      postUsrinfochangeR :: Handler TypedContent
       postUsrinfochangeR = undefined
+      postChangpashR :: Handler TypedContent
       postChangpashR = undefined
+      postUpeaddrR :: Handler TypedContent
       postUpeaddrR = undefined
 \end{code}

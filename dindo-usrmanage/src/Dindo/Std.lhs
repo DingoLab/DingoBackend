@@ -4,13 +4,17 @@
 
 
 % src/Dindo/Std.lhs
+\begin{code}
+{-# LANGUAGE TemplateHaskell #-}
+\end{code}
 
 \begin{code}
 module Dindo.Std
     ( module X
-    , Std
+    , std
     ) where
 
       import Dindo.UM as X -- need change
-      type Std = UM
+      import Dindo.Import.TH
+      std = [t|UM|]
 \end{code}

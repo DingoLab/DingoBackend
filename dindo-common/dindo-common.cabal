@@ -20,6 +20,7 @@ library
                      , Dindo.Common.Yesod.Launch
                      , Dindo.Common.Auth
                      , Dindo.Common.Rable
+                     , Dindo.Common
                      , Dindo.MicroFramework.API
                      , Dindo.MicroFramework.Destory
                      , Dindo.MicroFramework.Register
@@ -30,9 +31,10 @@ library
                      , Dindo.Import.Digest
                      , Dindo.Import.Rable
                      , Dindo.Import.Text
+                     , Dindo.Import.TH
                      , Dindo.Import.Yaml
                      , Dindo.Import.Yesod
-  -- other-modules:
+  other-modules:       Paths_dindo_common
   -- other-extensions:
   build-depends:       base >=4.8 && <4.9
                      , yesod >= 1.4
@@ -41,6 +43,7 @@ library
                      , text >= 1.2
                      , bytestring >= 0.10
                      , yaml >= 0.8
+                     , persistent >= 2.2
                      , persistent-postgresql >= 2.2
                      , time >= 1.5
                      , aeson >= 0.5
@@ -50,5 +53,6 @@ library
                      , dindo-database == 0.0.1.0
                      , SHA >= 1.6
                      , conduit >= 1.2
+                     , template-haskell >= 2.10
   hs-source-dirs:      src
   default-language:    Haskell2010

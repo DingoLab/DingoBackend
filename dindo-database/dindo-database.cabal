@@ -18,6 +18,7 @@ cabal-version:       >=1.10
 library
   exposed-modules:     Dindo.Database
   other-modules:       Import
+                     , Paths_dindo_database
   -- other-extensions:
   build-depends:       base >=4.8 && <4.9
                      , aeson >= 0.5

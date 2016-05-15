@@ -1,5 +1,6 @@
 # for Haskell
 
+test
 *.hi
 *.o
 dist

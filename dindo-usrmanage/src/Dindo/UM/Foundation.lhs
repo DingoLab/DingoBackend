@@ -9,6 +9,7 @@
 {-# LANGUAGE OverloadedStrings
            , TemplateHaskell
            , TypeFamilies
+           , QuasiQuotes
            #-}
 \end{code}
 
@@ -27,7 +28,18 @@ module Dindo.UM.Foundation where
         { connPool :: ConnectionPool
         , config   :: SvrConfig
         }
-      mkYesodData "UM" $(parseRoutesFile "dindo-config/um/route")
+      mkYesodData "UM" [parseRoutes|
+        /regist RegistR POST
+        /identify IdentifyR POST
+        /identified Identified POST
+        /login LoginR POST
+        /logout LogoutR POST
+        /usrinfo UsrinfoR POST
+        /usrhimg UsrhimgR POST
+        /usrinfochange UsrinfochangeR POST
+        /changpash ChangpashR POST
+        /upeaddr UpeaddrR POST
+      |]
 \end{code}
 
 实现Yesod类型类
@@ -40,6 +52,7 @@ module Dindo.UM.Foundation where
       instance YesodPersist UM where
         type YesodPersistBackend UM = SqlBackend
         runDB a = getYesod >>= (runSqlPool a.connPool)
+
 \end{code}
 
 微服务架构
