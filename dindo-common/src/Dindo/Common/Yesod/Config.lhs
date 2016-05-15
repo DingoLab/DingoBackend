@@ -28,6 +28,15 @@ module Dindo.Common.Yesod.Config
 
 
 通用 配置。
+svrPort 后端端口
+svrDb 数据库配置
+dbAddr 数据库地址
+dbPort 数据库端口
+dbUser 数据库用户名
+dbName 数据库名称
+dbPsk  数据库用户与密码
+dbConThd 链接数设置
+
 \begin{code}
       data SvrConfig = SvrConfig
         { svrPort :: Int
@@ -82,3 +91,11 @@ module Dindo.Common.Yesod.Config
                       ++ "\' dbname=\'" ++ dbName
                       ++ "\'"
 \end{code}
+
+JSON 与 Yaml 例程
+\begin{json}
+{ " 
+}
+\end{json}
+\begin{yaml}
+\end{yaml}
