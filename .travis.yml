@@ -1,0 +1,27 @@
+# The CI-config of Dindo
+
+# 不同的测试样例
+
+env:
+  - CABALVER=1.22 GHCVER=7.10.3
+
+services:
+  - docker
+
+before_install:
+  - docker login -e="DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+  - sudo add-apt-repository -y ppa:hvr/ghc
+  - sudo apt-get update
+  - sudo apt-get install -y ghc-$GHCVER cabal-install-$CABALVER
+  - sudo apt-get install -y --no-install-recommeds wget texlive-base texlive-xetex latex-xcolor texlive-fonts-recommended texlive-latex-extra lmodern texlive-latex-recommended
+  - sudo apt-get install -y ttf-wqy-microhei ttf-wqy-zenhei
+  - export PATH=/opt/ghc/$GHCVER/bin:/opt/cabal/$CABALVER/bin:$PATH
+
+script: |
+  if [ -n "$DOCUMENT" ]; then
+    dindo-test/document-build.sh
+  else
+    dindo-test/compiler-test.sh
+    dindo-test/docker-build.sh
+after_success: |
+  dindo-test/after_success.sh
