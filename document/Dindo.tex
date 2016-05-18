@@ -19,7 +19,7 @@
 
 \titlebgcolor{dindoblue}
 \titlefontcolor{dindowhite}
-
+\version{0.0.1.0}
 \coverpic{Dingo-A}
 \city{西安, Xi`an}
 \author{李约瀚\\qinka@live.com\\14130140331}
@@ -28,50 +28,77 @@
 	\makecover
     %前言
     \section*{前言}
-    这个文档是关于 Dingo 后端 Dindo 的说明性质的、手册性质的文档。这个文档包含对后端的一些说明，事例代码，与后端的实际主要的 Haskell
-    代码。后端是采用 Haskell \footnote{\href{https://www.haskell.org}{Haskell} 是一门纯函数式的编程语言。}，与 Yesod 
-    \footnote{\href{http://www.yesodweb.com}{Yesod}Yesod 是一个使用 Haskell作为主要语言，的 RESTful API 的WEB 应用框架。}
-    编写。使用的是Haskell 的文学编程方式，源代码为 \LaTeX 与 Haskell 混排的方式组织的\footnote{但由于Haskell 编译器与\LaTeX 系统的一些特性，
-        文学编程的代码并不需要特殊工具，而直接可以被识别。因此较方便的将后端的代码编入文档。}
-    
-    Dingo 后端的名称被确定为 Dindo，当然这个行为是后端的负责者\footnote{也就是笔者。}自己定的。其来源是 笔者在数模校赛期间使用
-    Lingo 是有个报错是关于 Lindo 的于是就开始称后端的程序为 Dindo。
-    
-    这个关于 Dindo 的文档，包括了Dingo 后端 Dindo 的架构设计、后端API代码与解释、Dindo运行指南等部分。
-    Dindo 架构设计 中包含了 关于 Dindo 的设计的内容，与相应的一些解释。后端代码中包括了后端 每个API 的实现代码
-    ，包括相关内容的代码，与API 调用等的说明。Dindo 运行指南 包括了，如何在“标准”的条件下，从零部署 Dindo。
-    同时附录及其他章节还包括了一些其他的内容。
+    这个文档是 Dingo 后端 Dindo 的文档，包括后端的大体需求说明，宏观设计说明、详细设计说明、数据库设计与实现、软件源码说明、
+    软件测试说明、软件部署说明件与软件使用说明。
+
+    后端 Dindo 使用 Haskell \footnote{\href{https://www.haskell.org}{Haskell} 是一门纯函数式的编程语言。}，与 Yesod 框架
+    \footnote{\href{http://www.yesodweb.com}{Yesod} 是一个使用 Haskell作为主要语言，的 RESTful API 的WEB 应用框架。}
+    编写的。同时整个后端代码中 Haskell的部分是使用 Haskell 与 \LaTeX 混排的文学编程。所以文档中有一部分为程序代码（及其说明）。
+
+    Dindo 的名称由来是在笔者（也是主要维护者）在数学建模的校赛是，使用Lingo 是受到 Lingo 与 Lindo 的关系而起的名字。
+
+    这个后端 依次将介绍 需求、设计、数据库设计、软件部署、软件使用与维护、Dindo代码及其说明等内容，以上是正文部分。
+    附录中将会有部分术语表、维护的文档、索引、参考文档等。
+
     %目录
     \newpage
 	\makecontent
-    \section{后端架构设计概论}
-    后端的部分是整个APP的核心部分之一，负责整个客户端与后端、客户端之间与数据库
-    
-    此部分将包含处理负载均衡的大致方法、弹性计算的解决方案、后端API与服务程序分割的
-    策略，其中会有另一个文档详细描述如何测试 Yesod 框架的负载特性。
-    此外还将会有对整个宏观设计一个小的对可行性的讨论。
-    
+	%% PART I
+	\section{大体需求说明}
+    \section{Dindo 架构设计概论}
+    Dindo 是 Dingo 的核心部分之一，负责 客户端与后端的交互，同时负责 客户端与数据库的 、 客户端之间的间接交互。
+    此部分将有负载均衡的大致方法、弹性计算的解决方案、后端API与服务程序分割的内容。同时还将说明后端业务流程。
+
+    Dindo 是基于 Docker 容器上，采用微服务架构的一个 后端。所有的组件将运行与Docker 容器之中，且方便运行与公有云
+    搭建的Docker 中，同时价格相对比较便宜。按照灵雀云的收费标准\cite{alauda:price}，按照北京一区（AWS）来计算。
+		当不使用弹性计算中的策略，即仅当容器的大小与数量时确定不变时。
+    负载均衡负载的采用一个 M 级别的容器，运行5个 L 级别的容器作为数据库，运行20个的 M 级别的容器为处理业务的核心部分。
+    数据库每个容器配置100G的挂载点用于存放数据，并计划每天下载数据量有10G。按上述配置需要\footnote{一个月按 30天计算。}
+    $$((20+1)*0.329+5*0.658)*24*30+10*30*0.93+0.75*100*5=7997.28$$
+    每个月大致需要不到8000元的成本\footnote{当采用弹性计算时，这个成本将继续下降}。
+
+		Dindo 开发过程依赖敏捷开发，并采用以持续集成为主的测试方式测试，同时采用持续交付的方式交付运营者。
+		由于采用微服务架构、持续交付与Docker 可以使得后端的版本升级处于“无痛”状态。 微服务架构也能使的后端的业务逻辑
+		分布在不同的程序（组件），也可使得后端分布上线。
     \section{均衡负载设计}
+    均衡负载 采用 Nginx 作物负载均衡的软件，
     \section{弹性计算设计}
     \section{微服务架构设计}
+    \section{业务流程说明}
+    业务流程部分包括 后端对事件驱动型的业务处理过程，每个 API 中业务处理过程等。
+    这部分的主要内容 将在 Dindo 源码及其结束的部分说明。
+    %% PART II
     \section{数据库设计}
-    \section{后端其他设计}
-  \section{Dindo 公共组件}
-  这部分是关于 Dindo 的公共组件的。由于 Dingo 后端采用的微服务架构\footnote{后面随时可能会称之为 微架构 。}，不同的微服务之间，会有包括
-  服务发现\footnote{目前的版本并没有开发实际的服务发现的内容，直接使用 Nginx 进行做均衡负载等。}、数据库
+
+    %% PART III
+    \section{Dindo 部署说明}
+    \section{Dindo 软件使用与维护说明}
+
+    %% PART IV
+    \section{Dindo 源码及说明}
+
+    \section{Dindo 公共组件}
+    这部分是关于 Dindo 的公共组件的。由于 Dingo 后端采用的微服务架构\footnote{后面随时可能会称之为 微架构 。}，不同的微服务之间，会有包括
+    服务发现\footnote{目前的版本并没有开发实际的服务发现的内容，直接使用 Nginx 进行做均衡负载等。}、数据库
   \footnote{这一部分单独出来的。}、授权认证等是共用的。所以为了减少代码的重复使用，则独立出这一部分。
-  
+
   \section{Dindo 数据库}
-  
+
   \section{Dindo Launcher}
-  
+
   \section{Dindo 微服务组件——用户管理}
-  
+
+  %% PART V
+  \section{DIndo 测试说明}
+
   %附录
   \newpage
   \begin{appendix}
+	  	\section{术语解释}
+	  	\label{section:term}
 	  	% 备忘性质的
 	  	\section{Docker 中 Weave  的配置} % 参考 http://debugo.com/docker-weave/
+	  	\label{section:dockerNweave}
 	  	Weave 是能将Docker 中每个物理主机中的连接起来一个工具，也就是能使的 Docker 容器跨主机互联。
 	  	下面是配置（安装）Weave 的Shell 脚本:
 	  	\begin{shell}[caption=Weave 安装]
@@ -89,8 +116,13 @@ weave launch 192.168.1.181
 	  	\end{shell}
 	  	运行容器需要 使用
 	  	\begin{shell}
-# weave run <ip> <repo> 
+# weave run <ip> <repo>
 	  	\end{shell}
-  \end{appendix} 
-  
+
+	  	 \begin{thebibliography}{}
+	  	 %\bibitem[显示符号]{引用标签} Book Title, Author
+		\bibitem[1]{alauda:price} 灵雀云收费标准2016年5月，\href{http://www.alauda.cn/price/}{Alauda-Price}
+	  	 \end{thebibliography}
+  \end{appendix}
+
 \end{document}
