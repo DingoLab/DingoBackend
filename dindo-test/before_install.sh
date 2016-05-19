@@ -1,5 +1,6 @@
 #!/bin/bash
 if [ -n "$DOCUMENT" ]; then
+  echo "for document"
   sudo apt-get update
   sudo apt-get install -y --no-install-recommeds wget texlive-base texlive-xetex latex-xcolor texlive-fonts-recommended texlive-latex-extra lmodern texlive-latex-recommended
   sudo apt-get install -y ttf-wqy-microhei ttf-wqy-zenhei
