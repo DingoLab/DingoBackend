@@ -1,4 +1,6 @@
 #!/bin/bash
+
+echo "build"
 if [ -n "$DOCUMENT" ]; then
   echo "for document"
   sudo apt-get update
