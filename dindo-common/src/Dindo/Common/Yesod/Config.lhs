@@ -121,5 +121,5 @@ database-config:
 \end{yaml}
 这个需要在运行时传入。假设配置文件在 config.yml 中,启动 UsrManage 模块。
 \begin{shell}
-# cat config.yml ｜ dindo-um
+  # cat config.yml ｜ dindo-um
 \end{shell}

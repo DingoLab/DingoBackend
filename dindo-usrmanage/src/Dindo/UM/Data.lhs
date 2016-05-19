@@ -20,6 +20,9 @@ module Dindo.UM.Data
     , RtCommonSucc(..)
     , RtUImg(..)
     , RtUInfo(..)
+    , RtChPsk(..)
+    , RtEaddr(..)
+    , RtGEadd(..)
     ) where
 \end{code}
 
@@ -30,6 +33,7 @@ module Dindo.UM.Data
       import Dindo.Import.Text as T
       import Dindo.Import.ByteString as B
       import Dindo.Import.Yesod
+      import Dindo.Import.Database
 \end{code}
 
 用户注册返回数据
@@ -151,4 +155,72 @@ module Dindo.UM.Data
           addHeader "CONTEXT" "Failed on get image"
           selectRep $ provideRep $ return (""::Text)
 
+\end{code}
+
+更改密码的 返回值
+\begin{code}
+      data RtChPsk = RtChPsk
+                   | RtChPskFail Text
+        deriving (Eq)
+      instance Show RtChPsk where
+        show (RtChPskFail x) = T.unpack x
+      instance Varable RtChPsk where
+        toValue RtChPsk = Null
+        toValue (RtChPskFail x) = object ["error" .= x]
+        toNodes RtChPsk = [xml|null|]
+        toNodes (RtChPskFail x) = [xml|<error>#{x}|]
+      instance Rable RtChPsk where
+        toWhere RtChPsk = RtBody
+        toWhere (RtChPskFail _) = RtBody
+        toStatus RtChPsk = RtSucc
+        toStatus (RtChPskFail _) = RtFail
+\end{code}
+
+收货地址的增删 的返回值
+\begin{code}
+      data RtEaddr = RtEaddrAdd Text
+                   | RtEaddrChn
+                   | RtEaddrDel
+                   | RtEaddrFail Text
+        deriving (Eq,Show)
+      instance Varable RtEaddr where
+        toValue (RtEaddrAdd x) = object ["aid" .= x]
+        toValue RtEaddrChn = Null
+        toValue RtEaddrDel = Null
+        toValue (RtEaddrFail x) = object ["error" .= x]
+        toNodes (RtEaddrAdd x) = [xml|<aid>#{x}|]
+        toNodes RtEaddrChn = [xml|null|]
+        toNodes RtEaddrDel = [xml|null|]
+        toNodes (RtEaddrFail x) = [xml|<error>#{x}|]
+      instance Rable RtEaddr where
+        toWhere (RtEaddrAdd _) = RtBody
+        toWhere RtEaddrChn = RtBody
+        toWhere RtEaddrDel = RtBody
+        toWhere (RtEaddrFail _) = RtBody
+        toStatus (RtEaddrAdd _) = RtSucc
+        toStatus RtEaddrChn = RtSucc
+        toStatus RtEaddrDel = RtSucc
+        toStatus (RtEaddrFail _) = RtFail
+\end{code}
+
+获取地址
+\begin{code}
+      data RtGEadd = RtGEadd [Addr]
+                   | RtGEaddFail Text
+        deriving (Eq,Show)
+      instance Varable RtGEadd where
+        toValue (RtGEadd x) = toJSON x
+        toValue (RtGEaddFail x) = object ["error" .= x]
+        toNodes (RtGEadd xs) = [xml|
+          $forall x <- xs
+            <aid>#{addrAid x}
+            <addr>#{addrAddr x}
+            <zip>#{addrZip x}
+          |]
+        toNodes (RtGEaddFail x) = [xml|<error>#{x}|]
+      instance Rable RtGEadd where
+        toWhere (RtGEadd _ ) = RtBody
+        toWhere (RtGEaddFail _) = RtBody
+        toStatus (RtGEadd _) = RtSucc
+        toStatus (RtGEaddFail _) =RtFail
 \end{code}

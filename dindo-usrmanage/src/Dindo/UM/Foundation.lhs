@@ -39,6 +39,7 @@ module Dindo.UM.Foundation where
         /usrinfochange UsrinfochangeR POST
         /changpash ChangpashR POST
         /upeaddr UpeaddrR POST
+        /geteaddr GeteaddR POST
       |]
 \end{code}
 
