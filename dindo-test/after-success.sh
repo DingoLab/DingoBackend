@@ -7,7 +7,7 @@ if [ -n "$DOCUMENT" ]; then
   git clone https://qinka:$GITHUB_API_KEY@github.com/Dingo/DingoRelease.git
   cd DingoRelease
   export RELPATH=$(pwd)
-  cp $TRAVIS_BUILD_DIR/*.pdf .
+  cp $TRAVIS_BUILD_DIR/document/*.pdf .
   git add .
   git commit -am"$travis-ci $(date)"
   git push origin master
