@@ -4,7 +4,7 @@ if [ -n "$DOCUMENT" ]; then
   git config --global user.name "travis-auto"
   git config --global user.email "qinka@live.com"
   cd ~
-  git clone https://qinka:$GITHUB_API_KEY@github.com/Dingo/DingoRelease.git
+  git clone https://qinka:$GITHUB_API_KEY@github.com/DingoLab/DingoRelease.git
   cd DingoRelease
   export RELPATH=$(pwd)
   cp $TRAVIS_BUILD_DIR/document/*.pdf .
