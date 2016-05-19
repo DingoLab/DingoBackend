@@ -10,7 +10,7 @@ services:
   - docker
 
 before_install:
-  - bash dindo-test/before_install.sh
+  - source dindo-test/before_install.sh
 
 script: |
   if [ -n "$DOCUMENT" ]; then
