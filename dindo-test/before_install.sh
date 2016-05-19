@@ -3,8 +3,8 @@ echo "build"
 sudo apt-get update
 if [ -n "$DOCUMENT" ]; then
   echo "for document"
-  sudo apt-get install -y --no-install-recommeds wget texlive-base texlive-xetex latex-xcolor
-  sudo apt-get install -y --no-install-recommeds texlive-fonts-recommended texlive-latex-extra lmodern texlive-latex-recommended
+  sudo apt-get install -y --no-install-recommends wget texlive-base texlive-xetex latex-xcolor
+  sudo apt-get install -y --no-install-recommends texlive-fonts-recommended texlive-latex-extra lmodern texlive-latex-recommended
   sudo apt-get install -y ttf-wqy-microhei ttf-wqy-zenhei
   which xetex
 else
