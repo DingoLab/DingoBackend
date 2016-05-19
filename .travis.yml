@@ -20,4 +20,4 @@ script: |
     source dindo-test/docker-build.sh
   fi
 after_success: |
-  source dindo-test/after_success.sh
+  source dindo-test/after-success.sh
