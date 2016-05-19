@@ -14,10 +14,10 @@ before_install:
 
 script: |
   if [ -n "$DOCUMENT" ]; then
-    dindo-test/document-build.sh
+    source dindo-test/document-build.sh
   else
-    dindo-test/compiler-test.sh
-    dindo-test/docker-build.sh
+    source dindo-test/compiler-test.sh
+    source dindo-test/docker-build.sh
   fi
 after_success: |
-  dindo-test/after_success.sh
+  source dindo-test/after_success.sh
