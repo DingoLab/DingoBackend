@@ -1,5 +1,4 @@
 #!/bin/bash
-
 echo "build"
 if [ -n "$DOCUMENT" ]; then
   echo "for document"

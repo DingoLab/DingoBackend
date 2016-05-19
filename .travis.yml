@@ -9,9 +9,9 @@ env:
 services:
   - docker
 
-before_install: 
-  - dindo-test/before_install.sh
-  
+before_install:
+  - bash dindo-test/before_install.sh
+
 script: |
   if [ -n "$DOCUMENT" ]; then
     dindo-test/document-build.sh
