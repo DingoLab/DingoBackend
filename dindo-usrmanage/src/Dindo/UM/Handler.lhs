@@ -38,22 +38,11 @@ module Dindo.UM.Handler
       import Dindo.Import.Digest
       import Dindo.Import.ByteString as B hiding(unpack,pack,splitAt,take,map,null)
       import Dindo.Import.Text as T hiding(splitAt,take,map,null)
-      import Dindo.Common.Auth(fromEntity,fromMaybe')
+      import Dindo.Common.Auth(fromEntity,pickU,pickF)
       import Control.Exception(try,SomeException)
       import Control.Monad
 \end{code}
 
-\begin{code}
-      pick [] = []
-      pick ((y,Just x):oth) = (y =. x):pick oth
-      pick ((_,Nothing):oth) = pick oth
-      getUid = do
-        tt' <- lookupHeader "TMP-TOKEN"
-        let Just tt = fmap decodeUtf8 tt'
-        rt':_ <- liftHandlerT $ runDB $ selectList [TmpTokenTt ==. tt] []
-        let rt = fromEntity rt'
-        return $ tmpTokenTt rt
-\end{code}
 
 注册的API
 \begin{code}
@@ -81,7 +70,6 @@ module Dindo.UM.Handler
             case rt of
               Left e -> returnR $ RtRegistFail $ pack $ show e
               Right _ -> returnR $ RtRegist uid
-
 \end{code}
 
 
@@ -145,11 +133,12 @@ module Dindo.UM.Handler
         case (uid',name',tel') of
           (uid,name,tel) -> do
             pash <- getPash
-            rt' <- liftHandlerT $ runDB $ selectList
-              (  fromMaybe' AccountUid  uid
-              ++ fromMaybe' AccountTel  (fmap (read.unpack) tel)
-              ++ fromMaybe' AccountName name
-              ) []
+            rt' <- liftHandlerT $ runDB $ selectList (pickF
+              [ (AccountUid, uid)
+              , (AccountName, name)
+              ] ++ pickF
+              [ (AccountTel,fmap (read.unpack) tel)
+              ]) []
             case rt' of
               (Entity _ item):_ -> do
                 let uid = accountUid item
@@ -171,7 +160,8 @@ module Dindo.UM.Handler
       postLogoutR :: Handler TypedContent
       postLogoutR = do
         Just token <- lookupHeader "TMP-TOKEN"
-        liftHandlerT $ runDB $ deleteWhere [TmpTokenTt ==. decodeUtf8 token]
+        Just uid <- lookupHeader "USR-ID"
+        liftHandlerT $ runDB $ deleteWhere [TmpTokenTt ==. decodeUtf8 token,TmpTokenUid ==. (read.unpack.decodeUtf8) uid]
         returnR $ RtCommonSucc
 \end{code}
 
@@ -231,9 +221,9 @@ module Dindo.UM.Handler
             prcid <- liftHandlerT $ lookupPostParam "prcid"
             addr <- liftHandlerT $ lookupPostParam "addr"
             pic <- liftHandlerT $ lookupFile "pic"
-            let a = pick [(AccountName,name)]
-            let a' = pick [(AccountTel,fmap (read.T.unpack) tel)]
-            let b = pick [(UsrEmail,email),(UsrRname,rname),(UsrPrcid,prcid),(UsrAddr,addr)]
+            let a = pickU [(AccountName,name)]
+            let a' = pickU [(AccountTel,fmap (read.T.unpack) tel)]
+            let b = pickU [(UsrEmail,email),(UsrRname,rname),(UsrPrcid,prcid),(UsrAddr,addr)]
             f (a++a',b,pic)
 \end{code}
 修改密码
@@ -266,7 +256,7 @@ module Dindo.UM.Handler
             zipcode <- liftHandlerT $ lookupPostParam "zip"
             aid' <- liftHandlerT $ lookupPostParam "aid"
             case aid' of
-              Just aid -> f aid $ pick [(AddrAddr,addr),(AddrZip,zipcode)]
+              Just aid -> f aid $ pickU [(AddrAddr,addr),(AddrZip,zipcode)]
               Nothing -> returnR $ RtEaddrFail "param:change: less and less"
           delItem aid = do
             liftHandlerT $ runDB $ deleteWhere [AddrAid ==. aid]
@@ -307,7 +297,8 @@ module Dindo.UM.Handler
             rt <- liftHandlerT $ runDB $ selectList [AddrUid ==. uid] []
             returnR $ RtGEadd $ map fromEntity rt
           getByAid aid = do
-            rt <- liftHandlerT $ runDB $ selectList [AddrAid ==. aid] []
+            uid <- getUid
+            rt <- liftHandlerT $ runDB $ selectList [AddrAid ==. aid,AddrUid ==. uid] []
             returnR $ RtGEadd $ map fromEntity rt
           spl = do
             uid' <- liftHandlerT $ lookupPostParam "uid"

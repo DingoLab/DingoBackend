@@ -21,7 +21,7 @@ library
                     , Dindo.UM.Foundation
                     , Dindo.UM.Data
                     , Dindo.Std
-  -- other-modules:
+  other-modules:      Paths_dindo_usrmanage
   -- other-extensions:
   build-depends:       base >=4.8 && <4.9
                      , dindo-common == 0.0.1.0
