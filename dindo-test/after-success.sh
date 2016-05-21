@@ -16,4 +16,5 @@ if [ -n "$DOCUMENT" ]; then
   cd $TRAVIS_BUILD_DIR
 else
   echo update docker
+  source dindo-test/docker-build.sh
 fi

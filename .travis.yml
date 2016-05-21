@@ -17,7 +17,6 @@ script: |
     source dindo-test/document-build.sh
   else
     source dindo-test/compiler-test.sh
-    source dindo-test/docker-build.sh
   fi
 after_success: |
   cd $TRAVIS_BUILD_DIR
