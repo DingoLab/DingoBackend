@@ -10,6 +10,7 @@ if [ -n "$DOCUMENT" ]; then
 else
   docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
   sudo add-apt-repository -y ppa:hvr/ghc
+  sudo apt-get update
   sudo apt-get install -y ghc-$GHCVER cabal-install-$CABALVER
   sudo apt-get install -y ttf-wqy-microhei ttf-wqy-zenhei
   export PATH=/opt/ghc/$GHCVER/bin:/opt/cabal/$CABALVER/bin:$PATH
