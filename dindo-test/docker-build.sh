@@ -9,5 +9,5 @@ mkdir dindo-docker/bin
 echo echo \$SERVER_CONFIG \| $BUILDTAGGER \+RTS \-N > dindo-docker/bin/start.sh
 chmod a+x dindo-docker/bin/start.sh
 cp ~/.local/bin/$BUILDTAGGER dindo-docker/bin
-cd dindo-docker &&  build -f Dockerfile -t qinka/dindo:$BUILDTAGGER$DOCKER_IMAGE_TAG . && cd ..
+cd dindo-docker && docker build -f Dockerfile -t qinka/dindo:$BUILDTAGGER-$DOCKER_IMAGE_TAG . && cd ..
 docker push  qinka/dindo
