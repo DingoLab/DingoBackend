@@ -130,7 +130,7 @@ COMMENT ON TABLE table_dd
 ;
 -- TmpToken
 CREATE TABLE table_tmptoken
-  ( key_tmptoken VARCHAR(128)             NOT NULL PRIMARY KEY
+  ( key_tmptoken VARCHAR(150)             NOT NULL PRIMARY KEY
   , key_timeup   TIMESTAMP WITH TIME ZONE NOT NULL
   , key_uid      VARCHAR(64)              NOT NULL REFERENCES table_account(key_uid)
   )

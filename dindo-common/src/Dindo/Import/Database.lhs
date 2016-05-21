@@ -6,8 +6,13 @@
 % src/Dindo/Import/Database.lhs
 
 \begin{code}
+{-# LANGUAGE TypeFamilies #-}
+\end{code}
+
+\begin{code}
 module Dindo.Import.Database
     ( module X
+    , tryRunDB
     ) where
 \end{code}
 
@@ -15,4 +20,14 @@ module Dindo.Import.Database
       import Database.Persist as X
       import Database.Persist.Postgresql as X
       import Dindo.Database as X
+      import Control.Exception
+      import Yesod
+      tryRunDB :: ( Yesod site
+                  , YesodPersist site
+                  , YesodPersistBackend site ~ SqlBackend
+                  )
+                => YesodDB site a -> HandlerT site IO (Either SomeException a)
+      tryRunDB f = do
+        runInnerHandler <- handlerToIO
+        liftIO $ try $ runInnerHandler $ runDB f
 \end{code}
