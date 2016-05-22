@@ -2,7 +2,7 @@
 -- documentation, see http://haskell.org/cabal/users-guide/
 
 name:                dindo-launch
-version:             0.0.1.0
+version:             0.0.2.0
 synopsis:            The launcher of each module
 description:         A launcher of each part of API
 -- license:
@@ -21,9 +21,10 @@ flag dindo-um
 
 executable dindo-um
   main-is:             Main.lhs
-  build-depends:       base >=4.8 && <4.9
-                     , dindo-usrmanage == 0.0.1.0
-                     , dindo-common == 0.0.1.0
+  other-modules:       Paths_dindo_launch
+  build-depends:       base >=4.8 && <5
+                     , dindo-usrmanage >= 0.0.2
+                     , dindo-common >= 0.0.2
                      , cmdargs >= 0.10
   hs-source-dirs:      src
   default-language:    Haskell2010

@@ -14,6 +14,8 @@
 \begin{code}
 module Dindo.UM
     ( module X
+    , dindo_usrmanage_version
+    , dindo_usrmanage_version_quasi
     ) where
       import Dindo.UM.Foundation as X
       import Dindo.UM.Handler as X
@@ -22,7 +24,7 @@ module Dindo.UM
       import Data.Version
       import Paths_dindo_usrmanage
 
-      dindo_usrmanaga_version = version
-      dindo_usrmanaga_version_quasi = stringE $ show version
+      dindo_usrmanage_version = version
+      dindo_usrmanage_version_quasi = stringE $ showVersion version
       mkYesodDispatch "UM" resourcesUM
 \end{code}

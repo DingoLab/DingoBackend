@@ -135,6 +135,6 @@ module Dindo.Database where
 
 
 \begin{code}
-      dindo_database_version_quasi :: Q Exp
+      dindo_database_version = version
       dindo_database_version_quasi = stringE $ showVersion version
 \end{code}

@@ -2,7 +2,7 @@
 -- documentation, see http://haskell.org/cabal/users-guide/
 
 name:                dindo-database
-version:             0.0.1.0
+version:             0.0.2.2
 synopsis:            The database of Dingo's Backend.
 description:         The database of Dingo's Backend
 license:             DingoLicense
@@ -20,7 +20,7 @@ library
   other-modules:       Import
                      , Paths_dindo_database
   -- other-extensions:
-  build-depends:       base >=4.8 && <4.9
+  build-depends:       base >=4.8 && <5
                      , aeson >= 0.5
                      , persistent-template >= 2.1
                      , persistent >= 2.2

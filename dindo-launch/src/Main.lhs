@@ -28,12 +28,24 @@ module Main
       import qualified Dindo.Import.Text as T
       import Dindo.Common.Yesod.Launch
       import Dindo.Common.Yesod.Config
+      import Paths_dindo_launch
+      import Data.Version
+      import Dindo.Common(dindo_common_version_quasi)
+      import Dindo.Import.Database(dindo_database_version_quasi)
 \end{code}
 
 \begin{code}
       data Launch = Launch {form ::String}
         deriving (Show,Data,Typeable)
       launch = Launch{form="json"}
+        &= summary ( "dindo-common-"
+                  ++ $(dindo_common_version_quasi)
+                  ++ "; dindo-database-"
+                  ++ $(dindo_database_version_quasi)
+                  ++ "; " ++ $(dindo_module_name) ++ "-"
+                  ++ $(dindo_module_version)
+                  ++ "; dindo-launch-"
+                  ++ showVersion version)
 \end{code}
 
 \begin{code}

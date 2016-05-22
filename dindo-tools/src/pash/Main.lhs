@@ -7,6 +7,12 @@
 产生密钥 的工具
 
 \begin{code}
+{-# LANGUAGE TemplateHaskell
+           , DeriveDataTypeable
+           #-}
+\end{code}
+
+\begin{code}
 module Main
     ( main
     ) where
@@ -19,18 +25,21 @@ module Main
       import Dindo.Import.Digest
       import qualified Dindo.Import.Text as T
       import qualified Dindo.Import.ByteString as B
+      import Dindo.Common(dindo_common_version_quasi)
+      import Data.Version
+      import System.Console.CmdArgs
+      import Paths_dindo_tools
 \end{code}
 
 \begin{code}
       main :: IO ()
       main = do
-        (key:typ':_) <- getArgs
+        Pash key t <- cmdArgs pash
         now <- getCurrentTime
-        let typ = read typ'
-        pash <- getPash typ key now
+        pash <- getPash t key now
         a' <- getContents
         let a = concat.lines $ a'
-        case typ of
+        case t of
           100 -> putStr $ a ++ " -d \"pash="++pash++"\""
           _ -> putStr $ a ++ " -d \"pash="++pash++"\" -H \"TIME-STAMP:"++show now++"\""
         return ()
@@ -41,4 +50,17 @@ module Main
               let k = T.pack $ showDigest $ sha256 $ B.fromStrictBS $ T.encodeUtf8 $ T.pack key
               let time = T.encodeUtf8.T.pack.show $ now
               return $ T.unpack $ runPash x time k
+\end{code}
+
+\begin{code}
+      data Pash = Pash {pKey :: String,pType :: Int}
+        deriving (Show,Data,Typeable)
+      pash =  Pash
+        { pKey = def &= args &= typ "PASSWORD"
+        , pType = def &= args &= typ "Identify type"
+        } &= summary ( "dindo-common:-"
+                    ++ $(dindo_common_version_quasi)
+                    ++ "; dindo-tools-"
+                    ++ showVersion version
+                    )
 \end{code}
