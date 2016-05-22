@@ -3,8 +3,9 @@ echo "build"
 sudo apt-get update
 if [ -n "$DOCUMENT" ]; then
   echo "for document"
-  sudo apt-get install -y --no-install-recommends wget texlive-base texlive-xetex latex-xcolor
-  sudo apt-get install -y --no-install-recommends texlive-fonts-recommended texlive-latex-extra lmodern texlive-latex-recommen
+  sudo apt-get update
+  sudo apt-get install -y --no-install-recommends wget texlive-base texlive-xetex latex-xcolor xzdec
+  sudo apt-get install -y --no-install-recommends texlive-fonts-recommended texlive-latex-extra lmodern texlive-latex-recommended
   cd ~ && mkdir texmf
   tlmgr init-usertree
   sudo tlmgr update --all
