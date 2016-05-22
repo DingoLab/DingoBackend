@@ -31,7 +31,7 @@ else
   sudo apt-get install -y ghc-$GHCVER cabal-install-$CABALVER
   sudo apt-get install stack -y
   if [ -n "$LLVM" ]; then
-    sudo apt-get install libllvm-$LLVM-ocaml-dev libllvm$LLVM libllvm$LLVM-dbg lldb-$LLVM llvm-$LLVM llvm-$LLVM-dev llvm-$LLVM-runtime lldb-$LLVM-dev
+    sudo apt-get install -y libllvm-$LLVM-ocaml-dev libllvm$LLVM libllvm$LLVM-dbg lldb-$LLVM llvm-$LLVM llvm-$LLVM-dev llvm-$LLVM-runtime lldb-$LLVM-dev
   fi
   export PATH=/opt/ghc/$GHCVER/bin:/opt/cabal/$CABALVER/bin:$PATH
 fi
