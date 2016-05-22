@@ -23,5 +23,9 @@ else
   sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 575159689BEFB442
   echo 'deb http://download.fpcomplete.com/ubuntu '$Codename' main'|sudo tee /etc/apt/sources.list.d/fpco.list
   sudo apt-get update && sudo apt-get install stack -y
+  deb http://llvm.org/apt/$Codename/ llvm-toolchain-$Codename main
+  deb-src http://llvm.org/apt/$Codename/ llvm-toolchain-$Codename main
+  deb http://llvm.org/apt/$Codename/ llvm-toolchain-$Codename-3.7 main
+  deb-src http://llvm.org/apt/$Codename/ llvm-toolchain-$Codename-3.7 main
 fi
 echo 'end'
