@@ -17,10 +17,10 @@ else
   sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 575159689BEFB442
   echo deb http://download.fpcomplete.com/ubuntu $Codename main|sudo tee /etc/apt/sources.list.d/fpco.list
   if [ -n "$LLVM" ]; then
-    sudo echo deb http://llvm.org/apt/$Codename/ llvm-toolchain-$Codename main > /etc/apt/sources.list.d/llvm.list
-    sudo echo deb-src http://llvm.org/apt/$Codename/ llvm-toolchain-$Codename main >> /etc/apt/sources.list.d/llvm.list
-    sudo echo deb http://llvm.org/apt/$Codename/ llvm-toolchain-$Codename-$LLVM main >> /etc/apt/sources.list.d/llvm.list
-    sudo echo deb-src http://llvm.org/apt/$Codename/ llvm-toolchain-$Codename-$LLVM main >> /etc/apt/sources.list.d/llvm.list
+    echo deb http://llvm.org/apt/$Codename/ llvm-toolchain-$Codename main sudo tee -a /etc/apt/sources.list.d/llvm.list
+    echo deb-src http://llvm.org/apt/$Codename/ llvm-toolchain-$Codename main sudo tee -a /etc/apt/sources.list.d/llvm.list
+    echo deb http://llvm.org/apt/$Codename/ llvm-toolchain-$Codename-$LLVM main sudo tee -a /etc/apt/sources.list.d/llvm.list
+    echo deb-src http://llvm.org/apt/$Codename/ llvm-toolchain-$Codename-$LLVM main sudo tee -a /etc/apt/sources.list.d/llvm.list
   fi
   cat /etc/apt/sources.list
   docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
