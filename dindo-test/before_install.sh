@@ -1,10 +1,11 @@
 #!/bin/bash
 echo "build"
 sudo apt-get update
+sudo apt-get install wget
 if [ -n "$DOCUMENT" ]; then
   echo "for document"
   sudo apt-get update
-  sudo apt-get install -y --no-install-recommends wget texlive-base texlive-xetex latex-xcolor xzdec
+  sudo apt-get install -y --no-install-recommends texlive-base texlive-xetex latex-xcolor xzdec
   sudo apt-get install -y --no-install-recommends texlive-fonts-recommended texlive-latex-extra lmodern texlive-latex-recommended
   cd ~ && mkdir texmf
   tlmgr init-usertree
@@ -17,6 +18,7 @@ else
   sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 575159689BEFB442
   echo deb http://download.fpcomplete.com/ubuntu $Codename main|sudo tee /etc/apt/sources.list.d/fpco.list
   if [ -n "$LLVM" ]; then
+    wget -O - http://llvm.org/apt/llvm-snapshot.gpg.key|sudo apt-key add -
     echo deb http://llvm.org/apt/$Codename/ llvm-toolchain-$Codename main | sudo tee -a /etc/apt/sources.list.d/llvm.list
     echo deb-src http://llvm.org/apt/$Codename/ llvm-toolchain-$Codename main | sudo tee -a /etc/apt/sources.list.d/llvm.list
     echo deb http://llvm.org/apt/$Codename/ llvm-toolchain-$Codename-$LLVM main | sudo tee -a /etc/apt/sources.list.d/llvm.list
