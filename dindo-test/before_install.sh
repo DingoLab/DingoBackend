@@ -13,17 +13,16 @@ if [ -n "$DOCUMENT" ]; then
   sudo tlmgr install geometry fontspec fandol ulem zhnumber
   cd $TRAVIS_BUILD_DIR
 else
-
   export Codename=$(lsb_release -a | grep Codename | awk '{print $2}')
   sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 575159689BEFB442
   echo deb http://download.fpcomplete.com/ubuntu $Codename main|sudo tee /etc/apt/sources.list.d/fpco.list
   if [ -n "$LLVM" ]; then
-    echo deb http://llvm.org/apt/$Codename/ llvm-toolchain-$Codename main > /etc/apt/sources.list
-    echo deb-src http://llvm.org/apt/$Codename/ llvm-toolchain-$Codename main > /etc/apt/sources.list
-    echo deb http://llvm.org/apt/$Codename/ llvm-toolchain-$Codename-$LLVM main > /etc/apt/sources.list
-    echo deb-src http://llvm.org/apt/$Codename/ llvm-toolchain-$Codename-$LLVM main > /etc/apt/sources.list
-    wget -O - http://llvm.org/apt/llvm-snapshot.gpg.key | sudo apt-key add -
+    echo deb http://llvm.org/apt/$Codename/ llvm-toolchain-$Codename main >> /etc/apt/sources.list
+    echo deb-src http://llvm.org/apt/$Codename/ llvm-toolchain-$Codename main >> /etc/apt/sources.list
+    echo deb http://llvm.org/apt/$Codename/ llvm-toolchain-$Codename-$LLVM main >> /etc/apt/sources.list
+    echo deb-src http://llvm.org/apt/$Codename/ llvm-toolchain-$Codename-$LLVM main >> /etc/apt/sources.list
   fi
+  cat /etc/apt/sources.list
   docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
   sudo add-apt-repository -y ppa:hvr/ghc
   sudo apt-get update
