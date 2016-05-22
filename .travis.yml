@@ -1,7 +1,8 @@
 # The CI-config of Dindo
 
 # 不同的测试样例
-
+sudo: required
+dist: trusty
 env:
   - DOCUMENT=true
   - CABALVER=1.22 GHCVER=7.10.3 BUILDTAGGER=dindo-um

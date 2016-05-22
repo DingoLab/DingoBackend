@@ -4,9 +4,13 @@ sudo apt-get update
 if [ -n "$DOCUMENT" ]; then
   echo "for document"
   sudo apt-get install -y --no-install-recommends wget texlive-base texlive-xetex latex-xcolor
-  sudo apt-get install -y --no-install-recommends texlive-fonts-recommended texlive-latex-extra lmodern texlive-latex-recommended
-  sudo apt-get install -y ttf-wqy-microhei ttf-wqy-zenhei
-  which xetex
+  sudo apt-get install -y --no-install-recommends texlive-fonts-recommended texlive-latex-extra lmodern texlive-latex-recommen
+  cd ~ && mkdir texmf
+  tlmgr init-usertree
+  sudo tlmgr update --all
+  sudo tlmgr install ctex l3kernel xecjk l3packages latex
+  sudo tlmgr install geometry fontspec fandol ulem zhnumber
+  cd $TRAVIS_BUILD_DIR
 else
   docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
   sudo add-apt-repository -y ppa:hvr/ghc
