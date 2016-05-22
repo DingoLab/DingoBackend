@@ -44,7 +44,7 @@
     \newpage
 	\makecontent
 	%% PART I
-	\section{大体需求说明}
+		\section{大体需求说明}
     \section{Dindo 架构设计概论}
     Dindo 是 Dingo 的核心部分之一，负责 客户端与后端的交互，同时负责 客户端与数据库的 、 客户端之间的间接交互。
     此部分将有负载均衡的大致方法、弹性计算的解决方案、后端API与服务程序分割的内容。同时还将说明后端业务流程。
@@ -67,12 +67,49 @@
     \section{业务流程说明}
     业务流程部分包括 后端对事件驱动型的业务处理过程，每个 API 中业务处理过程等。
     这部分的主要内容 将在 Dindo 源码及其结束的部分说明。
-    %% PART II
+  %% PART II
     \section{数据库设计}
 
-    %% PART III
-    \section{Dindo 部署说明}
-    \section{Dindo 软件使用与维护说明}
+  %% PART III
+  	\section{Dindo 部署说明}
+		\label{sec:deploy}
+			此部分主要说明 Dindo 的部署问题，包括测试、原型与最后实际运行是的部署。
+			测试与原型的部署有两种方式，一种是直接运行，另一种是基于 Docker
+			\footnote{基于的是 Ubuntu（Linux）原声的 Docker，暂不讨论 Mac OS X 与 Windows 下原生的 Docker。}
+			。而最后运营是的部署，目前计划直接部公有云之上，利用 CaaS 服务。
+
+			\subsection{测试部署方式}
+			\label{sub:testdeploy}
+				测试的部署一般适用于调试与检测。调试一方面是指后端开发时测试验证，另一方面则是指前端开发时测试使用。
+				检测是如安全性测试等方面的检测。而通常运营部署通常不需要调试磨合，直接部署到 CaaS 提供商即可。
+
+				\subsubsection{原生运行}
+				\label{subs:nativetest}
+					原生运行 首先要构建\footnote{Dindo 是不直接发行二进制文件的，发行的只有 Docker 镜像。}
+					然后部署，最后运行。如果已获得 构建好的二进制文件，请直接跳过下面构建的过程。
+
+					\paragraph{Windows 下构建}
+						首先需要安装 \href{Haskell Platform 7.10.3 x64}{https://www.haskell.org/platform/windows.html}，
+						然后克隆 \href{GitHub/DingoLab/DingoBackend}{https://github.com/DingoLab/DingoBackend} 仓库
+						到本地，然后安装 stack，安装方式可参考 \href{Stack Install \& Upgrade}{https://github.com/commercialhaskell/stack/blob/master/doc/install_and_upgrade.md#windows}
+						。安装完之后 跳转到仓库的目录：
+						\begin{cmd}
+							cd DingoBackend
+						\end{cmd}
+						然后执行构建：
+						\begin{cmd}
+							stack build
+						\end{cmd}
+						然后在 .stack_work 文件夹中某个文件夹下面的 bin 文件夹中可以找到 编译好的二进制文件
+						\fotnote{为何不直接搜索。}。
+
+					\paragraph{Linux 下的构建}
+						首先安装 GHC\footnote{要求 7.10以上， 之前的版本没有测试过，无法保证可以正常编译运行。}。
+						安装的方式通常通过
+
+
+
+  	\section{Dindo 软件使用与维护说明}
 
     %% PART IV
     \section{Dindo 源码及说明}
@@ -96,6 +133,11 @@
   \begin{appendix}
 	  	\section{术语解释}
 	  	\label{section:term}
+			\begin{description}
+				\item[CaaS] Container as a Server， 是指 将 容器（Docker）提供💺一种服务。
+					是 云计算中的概念，与 PaaS、SaaS 等概念对等。
+			\end{description}
+
 	  	% 备忘性质的
 	  	\section{Docker 中 Weave  的配置} % 参考 http://debugo.com/docker-weave/
 	  	\label{section:dockerNweave}
