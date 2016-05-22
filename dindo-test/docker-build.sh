@@ -4,7 +4,10 @@ if [ -n "$TRAVIS_TAG" ]; then
 else
   export DOCKER_IMAGE_TAG=${TRAVIS_COMMIT:0:7}
 fi
-export DOCKER_IMAGE_TAG=$TRAVIS_BUILD_NUMBER-$DOCKER_IMAGE_TAG-GHC$GHCVER-$BUILDTAGGER
+if [ -n "$LLVM" ]; then
+  export DOCKER_IMAGE_TAG=$DOCKER_IMAGE_TAG-llvm-$LLVM
+fi
+export DOCKER_IMAGE_TAG=$TRAVIS_BUILD_NUMBER-$DOCKER_IMAGE_TAG-GHC-$GHCVER-$BUILDTAGGER
 echo build docker
 mkdir dindo-docker/bin
 echo echo \$SERVER_CONFIG \| $BUILDTAGGER \+RTS \-N > dindo-docker/bin/start.sh
