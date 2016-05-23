@@ -7,4 +7,5 @@ if [ -n "$LLVM" ]; then
 fi
 if [ "$THREADED" == "true" ]; then
   export THREADFLAG=" --ghc-options -threaded"
+fi
 stack install --flag dindo-launch:$BUILDTAGGER $STACKFILE  --ghc-options -O2 $LLVMFLAG $THREADFLAG
