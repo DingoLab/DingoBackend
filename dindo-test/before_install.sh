@@ -32,6 +32,11 @@ else
   sudo apt-get install stack -y
   if [ -n "$LLVM" ]; then
     sudo apt-get install -y libllvm-$LLVM-ocaml-dev libllvm$LLVM libllvm$LLVM-dbg lldb-$LLVM llvm-$LLVM llvm-$LLVM-dev llvm-$LLVM-runtime lldb-$LLVM-dev
+    which llc
+    llc --version
+    which llc-3.7
+    llc-3.7 --version
+    which llc3.7
   fi
   export PATH=/opt/ghc/$GHCVER/bin:/opt/cabal/$CABALVER/bin:$PATH
 fi
