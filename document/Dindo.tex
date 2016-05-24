@@ -118,7 +118,7 @@
 						通常在 UNIX Shell \footnote{比如 Bash、Zsh等。} 或与之类似的 Shell 环境中\footnote{例如 Windows 下的 PowerShell。}
 						以用户管理模块为例，假设 文件 config.yml 为YAML 格式的配置文件，则输入如下：
 						\begin{shell}
-	# cat config.yml | dindo-um --form=yaml
+	$ cat config.yml | dindo-um --form=yaml
 						\end{shell}
 						就可以启动用户管理部分的模块。其中config.yml文件的内容如下
 						\begin{yaml}
@@ -145,11 +145,11 @@
 	  , "password" : "johnjing"
 	  }
 	}
-						\end{json}
+						\end{shell}
 						同时启动的命令是：
 						\begin{code}
-	# cat config.json | dindo-um
-						\end{code}
+	$ cat config.json | dindo-um
+						\end{shell}
 						其中默认的文件格式是 JSON ，然而推荐使用 YAML 的格式。
 						同时还可以直接执行可执行文件，然后通过标准输入键入，然后输入文件结束符 EOF
 						\footnote{Windows 下按 Ctrl＋Z，Linux 与 Mac 按 Ctrl＋D}。
