@@ -4,11 +4,11 @@ if [ -n "$TRAVIS_TAG" ]; then
 else
   export DOCKER_IMAGE_TAG=${TRAVIS_COMMIT:0:7}
 fi
+if [ -n "$THREADED" ]; then
+  export DOCKER_IMAGE_TAG=$DOCKER_IMAGE_TAG-threaded
+fi
 if [ -n "$LLVM" ]; then
   export DOCKER_IMAGE_TAG=$DOCKER_IMAGE_TAG-llvm-$LLVM
-fi
-if [ -n "$THREADED" ]; then
-  export DOCKER_IMAGE_TAG=threaded-$DOCKER_IMAGE_TAG
 fi
 export DOCKER_IMAGE_TAG=$TRAVIS_BUILD_NUMBER-$DOCKER_IMAGE_TAG-GHC-$GHCVER-$BUILDTAGGER
 echo build docker
