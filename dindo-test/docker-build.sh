@@ -7,8 +7,8 @@ fi
 if [ -n "$LLVM" ]; then
   export DOCKER_IMAGE_TAG=$DOCKER_IMAGE_TAG-llvm-$LLVM
 fi
-if [ "$THREADED" == "true" ]; then
-  export DOCKER_IMAGR_TAG=threaded-$DOCKER_IMAGE_TAG
+if [ -n "$THREADED" ]; then
+  export DOCKER_IMAGE_TAG=threaded-$DOCKER_IMAGE_TAG
 fi
 export DOCKER_IMAGE_TAG=$TRAVIS_BUILD_NUMBER-$DOCKER_IMAGE_TAG-GHC-$GHCVER-$BUILDTAGGER
 echo build docker
