@@ -1,16 +1,18 @@
 #!/bin/bash
+export DOCKER_IMAGE_TAG=docekr_$TRAVIS_BUILD_NUMBER
 if [ -n "$TRAVIS_TAG" ]; then
-  export DOCKER_IMAGE_TAG=$TRAVIS_TAG
+  export DOCKER_IMAGE_TAG=$DOCKER_IMAGE_TAG-$TRAVIS_TAG
 else
-  export DOCKER_IMAGE_TAG=${TRAVIS_COMMIT:0:7}
+  export DOCKER_IMAGE_TAG=$DOCKER_IMAGE_TAG-${TRAVIS_COMMIT:0:7}
+fi
+export DOCKER_IMAGE_TAG=$DOCKER_IMAGE_TAG-$(uname)_$Distributor_$Codename-GHC_$GHCVER-$(lscpu | grep Architecture | awk '{print $2}')
+if [ -n "$LLVM" ]; then
+  export DOCKER_IMAGE_TAG=$DOCKER_IMAGE_TAG-llvm-$LLVM
 fi
 if [ -n "$THREADED" ]; then
   export DOCKER_IMAGE_TAG=$DOCKER_IMAGE_TAG-threaded
 fi
-if [ -n "$LLVM" ]; then
-  export DOCKER_IMAGE_TAG=$DOCKER_IMAGE_TAG-llvm-$LLVM
-fi
-export DOCKER_IMAGE_TAG=$TRAVIS_BUILD_NUMBER-$DOCKER_IMAGE_TAG-GHC-$GHCVER-$BUILDTAGGER
+export DOCKER_IMAGE_TAG=$DOCKER_IMAGE_TAG-$BUILDTAGGER
 echo build docker
 mkdir dindo-docker/bin
 echo echo \$SERVER_CONFIG \| $BUILDTAGGER \+RTS \-N > dindo-docker/bin/start.sh

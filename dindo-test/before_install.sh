@@ -15,6 +15,7 @@ if [ -n "$DOCUMENT" ]; then
   cd $TRAVIS_BUILD_DIR
 else
   export Codename=$(lsb_release -a | grep Codename | awk '{print $2}')
+  export Distributor=$(lsb_release -a | grep Distributor | awk '{print $2}')
   sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 575159689BEFB442
   echo deb http://download.fpcomplete.com/ubuntu $Codename main|sudo tee /etc/apt/sources.list.d/fpco.list
   if [ -n "$LLVM" ]; then
