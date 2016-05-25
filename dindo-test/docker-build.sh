@@ -5,7 +5,7 @@ if [ -n "$TRAVIS_TAG" ]; then
 else
   export DOCKER_IMAGE_TAG=$DOCKER_IMAGE_TAG-${TRAVIS_COMMIT:0:7}
 fi
-export DOCKER_IMAGE_TAG=$DOCKER_IMAGE_TAG-$(uname)_$Distributor_$Codename-GHC_$GHCVER-$(lscpu | grep Architecture | awk '{print $2}')
+export DOCKER_IMAGE_TAG=$DOCKER_IMAGE_TAG-$(uname)_$Distributor\_$Codename-GHC_$GHCVER-$(lscpu | grep Architecture | awk '{print $2}')
 if [ -n "$LLVM" ]; then
   export DOCKER_IMAGE_TAG=$DOCKER_IMAGE_TAG-llvm-$LLVM
 fi
