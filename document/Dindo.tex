@@ -94,11 +94,11 @@
 						到本地，然后安装 stack，安装方式可参考 \href{https://github.com/commercialhaskell/stack/blob/master/doc/install_and_upgrade.md#windows}{Stack Install \& Upgrade}
 						。安装完之后 跳转到仓库的目录：
 						\begin{cmd}
-							cd DingoBackend
+	$ cd DingoBackend
 						\end{cmd}
 						然后执行构建：
 						\begin{cmd}
-							stack build
+  $ stack build
 						\end{cmd}
 						然后在 .stack\_work 文件夹中某个文件夹下面的 bin 文件夹中可以找到 编译好的二进制文件
 						\footnote{为何不直接搜索。}。
@@ -118,7 +118,7 @@
 						通常在 UNIX Shell \footnote{比如 Bash、Zsh等。} 或与之类似的 Shell 环境中\footnote{例如 Windows 下的 PowerShell。}
 						以用户管理模块为例，假设 文件 config.yml 为YAML 格式的配置文件，则输入如下：
 						\begin{shell}
-	# cat config.yml | dindo-um --form=yaml
+	$ cat config.yml | dindo-um --form=yaml
 						\end{shell}
 						就可以启动用户管理部分的模块。其中config.yml文件的内容如下
 						\begin{yaml}
@@ -147,9 +147,9 @@
 	}
 						\end{json}
 						同时启动的命令是：
-						\begin{code}
-	# cat config.json | dindo-um
-						\end{code}
+						\begin{shell}
+	$ cat config.json | dindo-um
+						\end{shell}
 						其中默认的文件格式是 JSON ，然而推荐使用 YAML 的格式。
 						同时还可以直接执行可执行文件，然后通过标准输入键入，然后输入文件结束符 EOF
 						\footnote{Windows 下按 Ctrl＋Z，Linux 与 Mac 按 Ctrl＋D}。
@@ -188,7 +188,7 @@
   	\label{section:dockerNweave}
   	Weave 是能将Docker 中每个物理主机中的连接起来一个工具，也就是能使的 Docker 容器跨主机互联。
   	下面是配置（安装）Weave 的Shell 脚本:
-  	\begin{shell}[caption=Weave 安装]
+  	\begin{bash}[caption=Weave 安装]
 #!/bin/sh
 wget -O /usr/local/bin/weave \
 https://github.com/zettio/weave/releases/download/latest_release/weave
@@ -200,13 +200,19 @@ apt-get update
 apt-get install bridge-utils
 dao pull weaveworks/weavedb:latest
 weave launch 192.168.1.181
-  	\end{shell}
+  	\end{bash}
   	运行容器需要 使用
   	\begin{shell}
 # weave run <ip> <repo>
   	\end{shell}
 
-		\section{后端附带工具使用说明}
+	\section{后端附带工具使用说明}
+    
+    \section{发行（发布）的二进制文件镜像与包的命名规则}
+    这一部分的内容是关于 发布或发行的 二进制文件包或者Docker镜像的命名规则。
+    (构建类型\_构建编号)-([commit hash] | [tag name])-(操作系统体系\_发行版本)-(编译系统体系\_版本)-(cpu架构体系)-[llvm\_版本]-[threaded]-[其他特性]-(模块)
+    例如某二进制包的文件名：\\
+    single-7a8c900-win32\_windows\_10\_rs1\_14342-x86\_64-GHC\_8.0.1-llvm\_3.8-threaded-all\_in\_one.tar.xz
 
 	  \begin{thebibliography}{}
 	  	 %\bibitem[显示符号]{引用标签} Book Title, Author
