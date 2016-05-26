@@ -10,7 +10,6 @@
 \documentclass{dingo}
 
 \title{Dindo Document}
-
 % 定义封面颜色
 \definecolor{dindoblue}{rgb}{0.00,0.60,1.00}
 
@@ -19,7 +18,7 @@
 
 \titlebgcolor{dindoblue}
 \titlefontcolor{dindowhite}
-\version{0.0.1.0}
+\version{0.0.3.0}
 \coverpic{Dingo-A}
 \city{西安, Xi`an}
 \author{李约瀚\\qinka@live.com\\14130140331}
@@ -158,6 +157,57 @@
 
     %% PART IV
     \section{Dindo 源码及说明}
+			这一部分是关于 Dindo 源代码及其解释说明。
+			\subsection{dindo-database}
+			\label{pack:dindo-database}
+				\def\loadlhs#1#2[#3]{\loadsrc[#3]{../dindo-database/}{#1}{#2}}
+				这一部分的功能是 数据库驱动与数据库内容的表示。
+				\loadlhs{src/Dindo/Database.lhs}{数据库内容}[Dindo.Database]
+				\loadlhs{src/Import}{用于本模块的导入内容，不导出}
+			\subsection{dindo-common}
+			\label{pack:dindo-common}
+				\def\loadlhs#1#2[#3]{\loadsrc[#3]{../dindo-common/}{#1}{#2}}
+				这一部分是dindo 各个微组件使用的基础公共设施。
+				\loadlhs{src/Dindo/Import.lhs}{这个系列的模块是用来导入模块的，以减少代码重复度}[module:Dindo.Import]
+				\loadlhs{src/Dindo/Import/Aeson.lhs}{导入 Data.Aeson 及相关内容}[module:Dindo.Import.Aeson]
+				\loadlhs{src/Dindo/Import/ByteString.lhs}{导入 bytestring 包中相关模块}[module:Dindo.Import.ByteString]
+				\loadlhs{src/Dindo/Import/Database.lhs}{导入 与数据库相关的模块}[module:Dindo.Import.Database]
+				\loadlhs{src/Dindo/Import/Digest.lhs}{导入 与摘要算法有关的内容 模块}[module:Dindo.Import.Digest]
+				\loadlhs{src/Dindo/Import/Rable.lhs}{导入 返回值有关的内容模块}[module:Dindo.Import.Rable]
+				\loadlhs{src/Dindo/Import/Text.lhs}{导入 text包中相关的模块}[module:Dindo.Import.Text]
+				\loadlhs{src/Dindo/Import/TH.lhs}{导入 与 TemplateHaskell 与 QuasiQuote 有关的 模块}[module:Dindo.Import.TH]
+				\loadlhs{src/Dindo/Import/Yaml.lhs}{导入 与 Yaml有关 模块}[module:Dindo.Import.Yaml]
+				\loadlhs{src/Dindo/Import/Yesod.lhs}{导入 与 Yesod 有关的模块}[module:Dindo.Import.Yesod]
+				\loadlhs{src/Dindo/Common.lhs}{ 提供版本号的部分}[module:Dindo.Common]
+				\loadlhs{src/Dindo/Common/Auth.lhs}{ 提供身份确认的函数的部分}[module:Dindo.Common.Auth]
+				\loadlhs{src/Dindo/Common/Rable.lhs}{提供数据返回的部分 部分}[module:Dindo.Common.Rable]
+				\loadlhs{src/Dindo/Common/Yesod/Config.lhs}{提供模块配置的 部分}[module:Dindo.Common.Yesod.Config]
+				\loadlhs{src/Dindo/Common/Yesod/Launch.lhs}{提供了启动的相关 部分}[module:Dindo.Common.Yesod.Launch]
+				微服务架构这一部分，就大部分内容犹豫某些原因为实现，是有能使之运行的空壳。
+				\loadlhs{src/Dindo/MicroFramework/API.lhs}{提供了 微服务架构 中的API注册 的部分}[module:Dindo.MicroFramework.API]
+				\loadlhs{src/Dindo/MicroFramework/Destory.lhs}{提供了 微服务架构中 销毁 的部分}[module:Dindo.MicroFramework.Destory]
+				\loadlhs{src/Dindo/MicroFramework/Register.lhs}{提供了 微服务架构中服务实例注册 的部分}[module:Dindo.MicroFramework.Register]
+			\subsection{dindo-launch}
+			\label{pack:dindo-launch}
+				\def\loadlhs#1#2[#3]{\loadsrc[#3]{../dindo-launch/}{#1}{#2}}
+				这一部分是 dindo 的服务的启动部分。
+				\loadlhs{src/Main.lhs}{启动器的主体}[module:launch:Main]
+			\subsection{dindo-usrmanage}
+			\label{pack:dindo-usrmanage}
+				\def\loadlhs#1#2[#3]{\loadsrc[#3]{../dindo-usrmanage/}{#1}{#2}}
+				这一部分是 dindo 的用户管理了部分。
+				\loadlhs{src/Dindo/Std.lhs}{与 Dindo 启动器对接 的部分}[module:Dindo.Std]
+				\loadlhs{src/Dindo/UM.lhs}{用户管理部分的导出 的部分}[module:Dindo.UM]
+				\loadlhs{src/Dindo/UM/Data.lhs}{定义返回数据 的部分}[module:Dindo.UM.Data]
+				\loadlhs{src/Dindo/UM/Foundation.lhs}{基础 的部分}[module:Dindo.UM.Foundation]
+				\loadlhs{src/Dindo/UM/Handler.lhs}{处理函数 的部分}[module:Dindo.UM.Handler]
+			\subsection{dindo-tools}
+			\label{pack:dindo-tools}
+				\def\loadlhs#1#2[#3]{\loadsrc[#3]{../dindo-tools/}{#1}{#2}}
+				dindo 的辅助工具
+
+				dindo-pash 测试用的辅助工具
+				\loadlhs{src/pash/Main.lhs}{主函数部分}[module:tools:pash:Main]
 
     \section{Dindo 公共组件}
     这部分是关于 Dindo 的公共组件的。由于 Dingo 后端采用的微服务架构\footnote{后面随时可能会称之为 微架构 。}，不同的微服务之间，会有包括
@@ -172,6 +222,7 @@
 
   %% PART V
   \section{DIndo 测试说明}
+		\subsection{如何测试}
 
   %附录
   \newpage
@@ -207,7 +258,8 @@ weave launch 192.168.1.181
   	\end{shell}
 
 		\section{后端附带工具使用说明}
-
+			\subsection{dindo-pash}
+			dindo-pash 是用于测试期间生成密码的工具，具体使用请参照 \ref{module:toolspash:Main} 部分。
     \section{发行（发布）的二进制文件镜像与包的命名规则}
     这一部分的内容是关于 发布或发行的 二进制文件包或者Docker镜像的命名规则。
     (构建类型\_构建编号)-([commit hash] | [tag name])-(操作系统体系\_发行版本)-(编译系统体系\_版本)-(cpu架构体系)-[llvm\_版本]-[threaded]-[其他特性]-(模块)

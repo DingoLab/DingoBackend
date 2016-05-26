@@ -37,7 +37,7 @@ module Main
 \begin{code}
       data Launch = Launch {form ::String}
         deriving (Show,Data,Typeable)
-      launch = Launch{form="json"}
+      launch = Launch{form="json" &= typ "YAML|JSON" &= help "格式"}
         &= summary ( "dindo-common-"
                   ++ $(dindo_common_version_quasi)
                   ++ "; dindo-database-"

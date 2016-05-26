@@ -34,8 +34,9 @@ module Main
 \begin{code}
       main :: IO ()
       main = do
-        Pash key t <- cmdArgs pash
-        now <- getCurrentTime
+        Pash key t at <- cmdArgs pash
+        now' <- getCurrentTime
+        let now = addUTCTime (fromIntegral at) now
         pash <- getPash t key now
         a' <- getContents
         let a = concat.lines $ a'
@@ -51,13 +52,23 @@ module Main
               let time = T.encodeUtf8.T.pack.show $ now
               return $ T.unpack $ runPash x time k
 \end{code}
-
+\paragraph{dindo-pash 使用说明}
+\label{tools:pash:help}
+一共有两个参数：一个是密码，另一个是散列方式，也就是认证方式。
+\begin{description}
+  \item[100] 注册时
+  \item[0] 使用 uid 登录时
+  \item[1] 使用 name 登录时
+  \item[2] 使用 tel 登录时
+\end{description}
+有一个 flag 开关是关于时间矫正的，矫正单位是秒。
 \begin{code}
-      data Pash = Pash {pKey :: String,pType :: Int}
+      data Pash = Pash {pKey :: String,pType :: Int,aTime :: Int}
         deriving (Show,Data,Typeable)
       pash =  Pash
-        { pKey = def &= args &= typ "PASSWORD"
-        , pType = def &= args &= typ "Identify type"
+        { pKey = def &= args &= typ "PASSWORD" &= help "密码"
+        , pType = def &= args &= typ "Identify type" &= help "认证方式"
+        , aTime = 0 &= typ "UTCDiffTime" &= help "时间矫正"
         } &= summary ( "dindo-common:-"
                     ++ $(dindo_common_version_quasi)
                     ++ "; dindo-tools-"
