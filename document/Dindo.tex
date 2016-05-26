@@ -161,9 +161,10 @@
 			\subsection{dindo-database}
 			\label{pack:dindo-database}
 				\def\loadlhs#1#2[#3]{\loadsrc[#3]{../dindo-database/}{#1}{#2}}
+                \def\loadnelhs#1#2{\loadsrc{../dindo-database/}{#1}{#2}}
 				这一部分的功能是 数据库驱动与数据库内容的表示。
-				\loadlhs{src/Dindo/Database.lhs}{数据库内容}[Dindo.Database]
-				\loadlhs{src/Import}{用于本模块的导入内容，不导出}
+				\loadlhs{src/Dindo/Database.lhs}{数据库内容}[module:Dindo.Database]
+				\loadnelhs{src/Import.lhs}{用于本模块的导入内容，不导出}
 			\subsection{dindo-common}
 			\label{pack:dindo-common}
 				\def\loadlhs#1#2[#3]{\loadsrc[#3]{../dindo-common/}{#1}{#2}}
