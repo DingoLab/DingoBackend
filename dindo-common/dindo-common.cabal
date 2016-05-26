@@ -2,7 +2,7 @@
 -- documentation, see http://haskell.org/cabal/users-guide/
 
 name:                dindo-common
-version:             0.0.2.10
+version:             0.0.2.20
 synopsis:            The common part of Dindo's microserver.
 description:         Some basic of Dindo's microserver, including configuring, and so on.
 license:             DingoLicense

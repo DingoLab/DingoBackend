@@ -14,13 +14,20 @@
 \end{code}
 
 \begin{code}
-module Dindo.UM.Foundation where
+module Dindo.UM.Foundation
+    ( module Dindo.UM.Foundation
+    , getSvrtimeR
+    ) where
 \end{code}
 
 \begin{code}
+      import Dindo.Common
       import Dindo.Import
       import Dindo.Import.Yesod
       import Dindo.Import.Database
+      import Paths_dindo_usrmanage
+      import Dindo.Import.Text as T
+      import Data.Version
 \end{code}
 
 \begin{code}
@@ -47,13 +54,15 @@ module Dindo.UM.Foundation where
 \begin{code}
       instance Yesod UM where
         errorHandler = returnR
+        isAuthorized SvrinfoR _ = return Authorized
+        isAuthorized SvrtimeR _ = return Authorized
         isAuthorized RegistR _ = noAuth
         isAuthorized LoginR _ = pskAuth
         isAuthorized _ _ = tokenAuth
       instance YesodPersist UM where
         type YesodPersistBackend UM = SqlBackend
         runDB a = getYesod >>= (runSqlPool a.connPool)
-
+      mkSvrinfoR $ pack $ "dindo-um-" ++ showVersion version ++ "; dindo-common-" ++ $(dindo_common_version_quasi)
 \end{code}
 
 微服务架构
