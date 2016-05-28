@@ -19,6 +19,8 @@ module Main
 \end{code}
 
 \begin{code}
+      import qualified GHC.IO.Encoding as E
+      import System.IO
       import System.Environment
       import Dindo.Import
       import Dindo.Common.Auth
@@ -34,6 +36,8 @@ module Main
 \begin{code}
       main :: IO ()
       main = do
+        E.setLocaleEncoding E.utf8
+        hSetEncoding stdout utf8
         Pash key t at <- cmdArgs pash
         now' <- getCurrentTime
         let now = addUTCTime (fromIntegral at) now
@@ -66,8 +70,8 @@ module Main
       data Pash = Pash {pKey :: String,pType :: Int,aTime :: Int}
         deriving (Show,Data,Typeable)
       pash =  Pash
-        { pKey = def &= args &= typ "PASSWORD" &= help "密码"
-        , pType = def &= args &= typ "Identify type" &= help "认证方式"
+        { pKey = def &= argPos 1 &= typ "PASSWORD"
+        , pType = def &= argPos 2 &= typ "IDENTIFY-TYPE"
         , aTime = 0 &= typ "UTCDiffTime" &= help "时间矫正"
         } &= summary ( "dindo-common:-"
                     ++ $(dindo_common_version_quasi)

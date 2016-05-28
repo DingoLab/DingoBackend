@@ -260,6 +260,10 @@ weave launch 192.168.1.181
 		\section{后端附带工具使用说明}
 			\subsection{dindo-pash}
 			dindo-pash 是用于测试期间生成密码的工具，具体使用请参照 \ref{module:toolspash:Main} 部分。
+			dindo-pash 直接输出的是对应着 cURL 的参数名称。同时输入的内容应该是 cURL 对应的其他内容。
+			\begin{shell}
+	$ echo 'curl --some-flags url://host' | dindo-pash password 
+			\end{shell}
     \section{发行（发布）的二进制文件镜像与包的命名规则}
     这一部分的内容是关于 发布或发行的 二进制文件包或者Docker镜像的命名规则。
     (构建类型\_构建编号)-([commit hash] | [tag name])-(操作系统体系\_发行版本)-(编译系统体系\_版本)-(cpu架构体系)-[llvm\_版本]-[threaded]-[其他特性]-(模块)

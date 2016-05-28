@@ -18,6 +18,8 @@ module Main
 \end{code}
 
 \begin{code}
+      import qualified GHC.IO.Encoding as E
+      import System.IO
       import Dindo.Std
       import System.Console.CmdArgs
       import Dindo.Import.Aeson as A
@@ -51,6 +53,8 @@ module Main
 \begin{code}
       main :: IO ()
       main = do
+        E.setLocaleEncoding E.utf8
+        hSetEncoding stdout utf8
         cfg' <- cmdArgs launch >>= cfg
         warpDindo cfg' itemWarp
         where
