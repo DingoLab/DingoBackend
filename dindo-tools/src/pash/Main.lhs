@@ -36,7 +36,7 @@ module Main
 #endif
         Pash key t at <- cmdArgs pash
         now' <- getCurrentTime
-        let now = addUTCTime (fromIntegral at) now
+        let now = addUTCTime (fromIntegral at) now'
         pash <- getPash t key now
         a' <- getContents
         let a = concat.lines $ a'

@@ -172,7 +172,7 @@ $$
 BEGIN
   INSERT INTO opt_log.log_login(update_time,uid,db_usr,token)
     VALUES(clock_timestamp(),NEW.key_uid,USER,NEW.key_tmptoken);
-  RETURN NULL;
+  RETURN NEW;
 END;
 $$
 LANGUAGE "plpgsql";

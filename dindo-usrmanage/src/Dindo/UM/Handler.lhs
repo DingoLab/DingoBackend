@@ -142,7 +142,7 @@ module Dindo.UM.Handler
                 let to = showDigest $ sha512 $ fromStrictBS $ encodeUtf8 $ T.concat [uid,pash,pack time]
                 let tt = pack $ take 22 time ++ to
                 liftHandlerT $ runDB $ insert $ TmpToken tt lim uid
-                returnR RtCommonSucc
+                returnR $ RtCommonSuccT tt
         where
           getPash = do
             pash' <- lookupPostParam "pash"
