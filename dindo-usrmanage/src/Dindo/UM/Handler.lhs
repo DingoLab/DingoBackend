@@ -155,7 +155,7 @@ module Dindo.UM.Handler
       postLogoutR = do
         Just token <- lookupHeader "TMP-TOKEN"
         Just uid <- lookupHeader "USR-ID"
-        rt <- liftHandlerT $ tryRunDB $ deleteWhere [TmpTokenTt ==. decodeUtf8 token,TmpTokenUid ==. (read.unpack.decodeUtf8) uid]
+        rt <- liftHandlerT $ tryRunDB $ deleteWhere [TmpTokenTt ==. decodeUtf8 token,TmpTokenUid ==. decodeUtf8 uid]
         returnR $ case rt of
           Left e -> RtCommonFail $ pack $ show e
           Right _ -> RtCommonSucc
