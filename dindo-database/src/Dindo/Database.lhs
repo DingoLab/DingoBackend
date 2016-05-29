@@ -10,17 +10,6 @@
 %%%
 
 
-\begin{code}
-{-# LANGUAGE TemplateHaskell
-           , FlexibleInstances
-           , TypeFamilies
-           , MultiParamTypeClasses
-           , GADTs
-           , GeneralizedNewtypeDeriving
-           , QuasiQuotes
-           #-}
-\end{code}
-
 
 \begin{code}
 module Dindo.Database where

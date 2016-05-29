@@ -6,14 +6,6 @@
 % src/Dindo/UM/Foundation.lhs
 
 \begin{code}
-{-# LANGUAGE OverloadedStrings
-           , TemplateHaskell
-           , TypeFamilies
-           , QuasiQuotes
-           #-}
-\end{code}
-
-\begin{code}
 module Dindo.UM.Foundation
     ( module Dindo.UM.Foundation
     , getSvrtimeR

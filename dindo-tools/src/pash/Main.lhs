@@ -7,12 +7,6 @@
 产生密钥 的工具
 
 \begin{code}
-{-# LANGUAGE TemplateHaskell
-           , DeriveDataTypeable
-           #-}
-\end{code}
-
-\begin{code}
 module Main
     ( main
     ) where
@@ -36,8 +30,10 @@ module Main
 \begin{code}
       main :: IO ()
       main = do
+#ifndef WithoutUTF8
         E.setLocaleEncoding E.utf8
         hSetEncoding stdout utf8
+#endif
         Pash key t at <- cmdArgs pash
         now' <- getCurrentTime
         let now = addUTCTime (fromIntegral at) now

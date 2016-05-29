@@ -17,7 +17,7 @@ CREATE DATABASE dingo
        LC_CTYPE = 'en_US.utf8'
        CONNECTION LIMIT = -1
 ;
-COMMENT ON DATABASE bank
+COMMENT ON DATABASE dingo
   IS '软件工程大作业－Dingo 后端－Dindo 的数据库'
 ;
 
@@ -38,7 +38,7 @@ COMMENT ON SCHEMA opt_log
 CREATE TABLE table_account
   ( key_uid  VARCHAR(64) PRIMARY KEY
   , key_name VARCHAR(64) UNIQUE
-  , key_tel  INT         UNIQUE NOT NULL CHECK(key_tel > 10000000000 AND key_tel < 20000000000)
+  , key_tel  BIGINT         UNIQUE NOT NULL CHECK(key_tel > 10000000000 AND key_tel < 20000000000)
   , key_pash VARCHAR(64) NOT NULL CHECK(char_length(key_pash) = 64)
   )
 ;

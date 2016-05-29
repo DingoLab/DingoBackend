@@ -7,12 +7,6 @@
 
 % 导出 Yesod
 
-\begin{code}
-{-# LANGUAGE QuasiQuotes
-           , TemplateHaskell
-           , OverloadedStrings
-           #-}
-\end{code}
 
 \begin{code}
 module Dindo.Import.Yesod

@@ -16,12 +16,20 @@ build-type:          Simple
 -- extra-source-files:
 cabal-version:       >=1.10
 
+flag without-utf8
+  description: Turn on, when do not want to use utf8.
+  default: False
+
 executable dindo-pash
   main-is:             Main.lhs
   other-modules:       Paths_dindo_tools
-  -- other-extensions:
+  extensions:          TemplateHaskell
+                     , DeriveDataTypeable
+                     , CPP
   build-depends:       base >=4.8 && <5
                      , dindo-common >= 0.0.2.0
                      , cmdargs >= 0.10
   hs-source-dirs:      src/pash
   default-language:    Haskell2010
+  if flag(without-utf8)
+    cpp-options:       -DWithoutUTF8

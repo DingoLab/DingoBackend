@@ -4,9 +4,6 @@
 
 
 % src/Dindo/Std.lhs
-\begin{code}
-{-# LANGUAGE TemplateHaskell #-}
-\end{code}
 
 \begin{code}
 module Dindo.Std

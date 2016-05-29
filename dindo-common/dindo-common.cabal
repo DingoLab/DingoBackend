@@ -2,7 +2,7 @@
 -- documentation, see http://haskell.org/cabal/users-guide/
 
 name:                dindo-common
-version:             0.0.2.20
+version:             0.0.2.30
 synopsis:            The common part of Dindo's microserver.
 description:         Some basic of Dindo's microserver, including configuring, and so on.
 license:             DingoLicense
@@ -35,7 +35,14 @@ library
                      , Dindo.Import.Yaml
                      , Dindo.Import.Yesod
   other-modules:       Paths_dindo_common
-  -- other-extensions:
+
+  extensions:          TypeFamilies
+                     , OverloadedStrings
+                     , TemplateHaskell
+                     , QuasiQuotes
+                     , RecordWildCards
+
+
   build-depends:       base >=4.8 && <5
                      , yesod >= 1.4
                      , yesod-core >= 1.4
@@ -50,7 +57,7 @@ library
                      , xml-conduit >= 1.3
                      , xml-hamlet >= 0.4
                      , monad-logger >= 0.3
-                     , dindo-database >= 0.0.2
+                     , dindo-database >= 0.0.2.15
                      , SHA >= 1.6
                      , conduit >= 1.2
                      , template-haskell >= 2.10

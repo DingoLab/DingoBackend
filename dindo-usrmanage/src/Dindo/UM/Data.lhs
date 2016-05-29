@@ -6,18 +6,11 @@
 % src/Dindo/UM/Data.lhs
 
 \begin{code}
-{-# LANGUAGE OverloadedStrings
-           , QuasiQuotes
-           , RecordWildCards
-           #-}
-\end{code}
-
-\begin{code}
 module Dindo.UM.Data
     ( RtRegist(..)
     , RtIdy(..)
     , RtIdfed(..)
-    , RtCommonSucc(..)
+    , RtCommon(..)
     , RtUImg(..)
     , RtUInfo(..)
     , RtChPsk(..)
@@ -97,16 +90,21 @@ module Dindo.UM.Data
         toStatus RtIdfedNo = RtSucc
 \end{code}
 
-通用成功标志
+通用成功与失败标志
 \begin{code}
-      data RtCommonSucc = RtCommonSucc
+      data RtCommon = RtCommonSucc
+                    | RtCommonFail Text
         deriving (Eq,Show)
-      instance Varable RtCommonSucc where
+      instance Varable RtCommon where
         toValue RtCommonSucc = Null
+        toValue (RtCommonFail x) = String x
         toNodes RtCommonSucc = [xml|null|]
-      instance Rable RtCommonSucc where
+        toNodes (RtCommonFail x) = [xml|<error>#{x}|]
+      instance Rable RtCommon where
         toWhere RtCommonSucc = RtBody
+        toWhere (RtCommonFail _) = RtBody
         toStatus RtCommonSucc = RtSucc
+        toStatus (RtCommonFail _) = RtFail
 \end{code}
 
 用户信息查询返回结果

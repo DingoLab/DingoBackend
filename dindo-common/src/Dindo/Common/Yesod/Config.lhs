@@ -5,16 +5,13 @@
 
 % src/Dindo/Common/Yesod/Config.lhs
 
-\begin{code}
-{-# LANGUAGE RecordWildCards
-           , OverloadedStrings
-           #-}
-\end{code}
 
 \begin{code}
 module Dindo.Common.Yesod.Config
     ( SvrConfig(..)
     , DbConfig(..)
+    , ScError(..)
+    ,scError
     , dbConfig2Str
     ) where
 \end{code}
@@ -24,6 +21,7 @@ module Dindo.Common.Yesod.Config
       import Data.ByteString as B
       import Data.ByteString.Lazy
       import Data.String
+      import Control.Exception
 \end{code}
 
 
@@ -74,6 +72,7 @@ module Dindo.Common.Yesod.Config
         parseJSON (Object v) = SvrConfig
           <$> v .: "port"
           <*> v .: "database-config"
+        parseJSON _ = throw $ ScError "Invailed"
       instance FromJSON DbConfig where
         parseJSON (Object v) =DbConfig
           <$> v .: "addr"
@@ -82,6 +81,7 @@ module Dindo.Common.Yesod.Config
           <*> v .: "name"
           <*> v .: "password"
           <*> v .: "con-limit"
+        parseJSON _ = throw $ ScError "Invailed"
 \end{code}
 将 数据库配置转化成 链接字符串。
 \begin{code}
@@ -95,6 +95,17 @@ module Dindo.Common.Yesod.Config
                       ++ "\' password=\'" ++ dbPsk
                       ++ "\' dbname=\'" ++ dbName
                       ++ "\'"
+\end{code}
+
+设置读写异常
+\begin{code}
+      data ScError = ScError String
+        deriving (Eq)
+      scError = throw.ScError
+      instance Show ScError where
+        show (ScError e) = "parse server config file FAILED:\n\t" ++ e
+      instance Exception ScError where
+        displayException e = "parse server config file FAILED:\n\t"
 \end{code}
 
 JSON 与 Yaml 例程。

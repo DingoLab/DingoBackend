@@ -6,10 +6,6 @@
 % src/Dindo/Import/Database.lhs
 
 \begin{code}
-{-# LANGUAGE TypeFamilies #-}
-\end{code}
-
-\begin{code}
 module Dindo.Import.Database
     ( module X
     , tryRunDB
@@ -22,6 +18,10 @@ module Dindo.Import.Database
       import Dindo.Database as X
       import Control.Exception
       import Yesod
+\end{code}
+
+
+\begin{code}
       tryRunDB :: ( Yesod site
                   , YesodPersist site
                   , YesodPersistBackend site ~ SqlBackend

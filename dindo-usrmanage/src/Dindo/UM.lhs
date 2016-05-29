@@ -6,12 +6,6 @@
 % src/Dindo/UM.lhs
 
 \begin{code}
-{-# LANGUAGE TemplateHaskell
-           , OverloadedStrings
-           #-}
-\end{code}
-
-\begin{code}
 module Dindo.UM
     ( module X
     , dindo_usrmanage_version

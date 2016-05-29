@@ -6,12 +6,6 @@
 % src/Dindo/Common/Auth.lhs
 
 \begin{code}
-{-# LANGUAGE TypeFamilies
-           , OverloadedStrings
-           #-}
-\end{code}
-
-\begin{code}
 module Dindo.Common.Auth
     ( runPash
     , tokenAuth

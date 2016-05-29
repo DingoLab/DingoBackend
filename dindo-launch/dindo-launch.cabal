@@ -2,7 +2,7 @@
 -- documentation, see http://haskell.org/cabal/users-guide/
 
 name:                dindo-launch
-version:             0.0.2.0
+version:             0.0.2.20
 synopsis:            The launcher of each module
 description:         A launcher of each part of API
 -- license:
@@ -18,16 +18,24 @@ cabal-version:       >=1.10
 flag dindo-um
   description: Build dindo's UM module
   default:  False
+flag without-utf8
+  description: Turn on when do not want to use utf8.
+  default:  False
 
 executable dindo-um
   main-is:             Main.lhs
   other-modules:       Paths_dindo_launch
   build-depends:       base >=4.8 && <5
-                     , dindo-usrmanage >= 0.0.2
-                     , dindo-common >= 0.0.2
+                     , dindo-usrmanage >= 0.0.2.18
+                     , dindo-common >= 0.0.2.30
                      , cmdargs >= 0.10
   hs-source-dirs:      src
+  extensions:          TemplateHaskell
+                     , DeriveDataTypeable
+                     , CPP
   default-language:    Haskell2010
+  if flag(without-utf8)
+    cpp-options:     -DWithoutUTF8
   if flag(dindo-um)
     buildable:         True
   else

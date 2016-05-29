@@ -6,13 +6,6 @@
 % src/Dindo/UM/Handler.lhs
 
 \begin{code}
-{-# LANGUAGE OverloadedStrings
-           , FlexibleContexts
-           , TypeFamilies
-           #-}
-\end{code}
-
-\begin{code}
 module Dindo.UM.Handler
     ( postRegistR
     , postUsrinfoR
@@ -50,8 +43,6 @@ module Dindo.UM.Handler
       postRegistR =
         getParam insertAItem
         where
-          try' :: IO a -> IO (Either SomeException a)
-          try' = try
           getParam f = do
             name' <- lookupPostParam "name"
             pash' <- lookupPostParam "pash"
@@ -65,11 +56,11 @@ module Dindo.UM.Handler
                 f (pack uid,name,pash,read (unpack tel))
               _ -> returnR $ RtRegistFail "param: less and less"
           insertAItem (uid,name,pash,tel) = do
-            runInnerHandler <- handlerToIO
-            rt <- liftIO $ try' $ runInnerHandler $ runDB $ insert $ Account uid pash tel name
-            case rt of
-              Left e -> returnR $ RtRegistFail $ pack $ show e
-              Right _ -> returnR $ RtRegist uid
+            rt <- liftHandlerT $ tryRunDB $
+              insert $ Account uid pash tel name
+            returnR $ case rt of
+              Left e -> RtRegistFail $ pack $ show e
+              Right _ -> RtRegist uid
 \end{code}
 
 
@@ -88,27 +79,29 @@ module Dindo.UM.Handler
               (Just email,Just rname,Just prcid,Just addr) ->
                 f (email,rname,prcid,addr)
               _ -> returnR $ RtIdyFail "param: less and less"
-          checkPic f = do
+          checkPic f ins = do
             pic' <- lookupFile "pic"
             case pic' of
               Just pic -> do
                 rt <- sourceToList $ fileSource pic
                 let bpic = B.concat rt
-                f bpic
+                f (bpic,ins)
               _ -> returnR $ RtIdyFail "param: picture needed"
-          addItem f (email,rname,prcid,addr) = do
-            uid <- getUid
-            liftHandlerT $ runDB $ insert $ Usr uid email rname prcid addr "N"
-            f
-          addPic pic = do
+          addItem f (email,rname,prcid,addr) =
+            f $ \uid -> Usr uid email rname prcid addr "N"
+          addPic (pic,usr) = do
             uid <- getUid
             now <- liftIO getCurrentTime
             let str = show now
             let (time,p) = splitAt 10 $ str
             let to = showDigest $ sha1 $ fromStrictBS $ encodeUtf8 $ T.concat [uid, pack str]
             let pid = pack $ 'A':time ++ to
-            liftHandlerT $ runDB $ insert $ Apic pid uid pic $ Just 0
-            returnR $ RtIdy
+            rt <- liftHandlerT $ tryRunDB $ do
+              insert $ usr uid
+              insert $ Apic pid uid pic $ Just 0
+            returnR $ case rt of
+              Left e -> RtIdyFail $ pack $ show e
+              Right _ -> RtIdy
 \end{code}
 
 认证状态查询
@@ -117,10 +110,11 @@ module Dindo.UM.Handler
       postIdentified = do
         uid <- getUid
         rt <- liftHandlerT $ runDB $ selectList [UsrUid ==. uid] []
-        case rt of
+        returnR $ case rt of
           (Entity _ item):_ -> if usrStatus item == "P"
-            then returnR RtIdfedPass
-            else returnR RtIdfedNo
+            then RtIdfedPass
+            else RtIdfedNo
+          _ -> RtIdfedNo
 \end{code}
 
 用户登录
@@ -161,8 +155,10 @@ module Dindo.UM.Handler
       postLogoutR = do
         Just token <- lookupHeader "TMP-TOKEN"
         Just uid <- lookupHeader "USR-ID"
-        liftHandlerT $ runDB $ deleteWhere [TmpTokenTt ==. decodeUtf8 token,TmpTokenUid ==. (read.unpack.decodeUtf8) uid]
-        returnR $ RtCommonSucc
+        rt <- liftHandlerT $ tryRunDB $ deleteWhere [TmpTokenTt ==. decodeUtf8 token,TmpTokenUid ==. (read.unpack.decodeUtf8) uid]
+        returnR $ case rt of
+          Left e -> RtCommonFail $ pack $ show e
+          Right _ -> RtCommonSucc
 \end{code}
 
 查询用户信息
@@ -207,12 +203,15 @@ module Dindo.UM.Handler
               updateWhere [ApicUid ==. uid,ApicTyp ==. Just 0] [ApicBpic =. bpic]
           update (a,b,pic) = do
             uid <- getUid
-            when (not $ null a) $
-              liftHandlerT $ runDB $ updateWhere [AccountUid ==. uid] a
-            when (not $ null b) $
-              liftHandlerT $ runDB $ updateWhere [UsrUid ==. uid] b
-            liftHandlerT $ runDB $ updatePic uid pic
-            returnR $ RtCommonSucc
+            rt <- liftHandlerT $ tryRunDB $ do
+              when (not $ null a) $
+                updateWhere [AccountUid ==. uid] a
+              when (not $ null b) $
+                updateWhere [UsrUid ==. uid] b
+              updatePic uid pic
+            returnR $ case rt of
+              Left e -> RtCommonFail $ pack $ show e
+              Right _ -> RtCommonSucc
           check f = do
             name <- liftHandlerT $ lookupPostParam "name"
             tel  <- liftHandlerT $ lookupPostParam "tel"
@@ -233,8 +232,10 @@ module Dindo.UM.Handler
         where
           changePash pash = do
             uid <- getUid
-            liftHandlerT $ runDB $ updateWhere [AccountUid ==. uid] [AccountPash =. pash]
-            returnR $ RtChPsk
+            rt <- liftHandlerT $ tryRunDB $ updateWhere [AccountUid ==. uid] [AccountPash =. pash]
+            returnR $ case rt of
+              Left e -> RtChPskFail $ pack $ show e
+              Right _ -> RtChPsk
           check f = do
             pash' <- lookupPostParam "pash"
             case pash' of
@@ -249,8 +250,10 @@ module Dindo.UM.Handler
       postUpeaddrR = spl
         where
           changeItem aid a = do
-            liftHandlerT $ runDB $ updateWhere [AddrAid ==. aid] a
-            returnR $ RtEaddrChn
+            rt <- liftHandlerT $ tryRunDB $ updateWhere [AddrAid ==. aid] a
+            returnR $ case rt of
+              Left e -> RtEaddrFail $ pack $ show e
+              Right _ -> RtEaddrChn
           checkChn f = do
             addr <- liftHandlerT $ lookupPostParam "addr"
             zipcode <- liftHandlerT $ lookupPostParam "zip"
@@ -259,8 +262,10 @@ module Dindo.UM.Handler
               Just aid -> f aid $ pickU [(AddrAddr,addr),(AddrZip,zipcode)]
               Nothing -> returnR $ RtEaddrFail "param:change: less and less"
           delItem aid = do
-            liftHandlerT $ runDB $ deleteWhere [AddrAid ==. aid]
-            returnR $ RtEaddrDel
+            rt <- liftHandlerT $ tryRunDB $ deleteWhere [AddrAid ==. aid]
+            returnR $ case rt of
+              Left e -> RtEaddrFail $ pack $ show e
+              Right _ -> RtEaddrDel
           checkDel f = do
             aid' <- liftHandlerT $ lookupPostParam "aid"
             case aid' of
@@ -271,8 +276,10 @@ module Dindo.UM.Handler
             now <- liftIO getCurrentTime
             let aid' = showDigest $ sha256 $ fromStrictBS $ encodeUtf8 addr
             let aid = pack $ "A"++show now++aid'
-            liftHandlerT $ runDB $ insert $ Addr aid uid zipcode addr
-            returnR $ RtEaddrAdd aid
+            rt <- liftHandlerT $ tryRunDB $ insert $ Addr aid uid zipcode addr
+            returnR $ case rt of
+              Left e -> RtEaddrFail $ pack $ show e
+              Right _ -> RtEaddrAdd aid
           checkAdd f = do
             addr' <- liftHandlerT $ lookupPostParam "addr"
             zip' <- liftHandlerT $ lookupPostParam "zip"

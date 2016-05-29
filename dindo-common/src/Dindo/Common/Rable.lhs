@@ -8,13 +8,6 @@
 返回的类型的通用类型类
 
 \begin{code}
-{-# LANGUAGE OverloadedStrings
-           , TemplateHaskell
-           , QuasiQuotes
-           #-}
-\end{code}
-
-\begin{code}
 module Dindo.Common.Rable
     ( RtType(..)
     , RtWhere(..)
@@ -85,10 +78,10 @@ JSON,Yaml,XML
                     )
                  => a -> m TypedContent
       defReturnR x = do
-        addHeader "STATUS" $ status x
+        addHeader "Status" $ status x
         if toWhere x == RtBody
-          then addHeader "CONTEXT-WHERE" "BODY"
-          else addHeader "CONTEXT-WHERE" $ (\(RtOther a)-> a) $ toWhere x
+          then addHeader "Context-Where" "Body"
+          else addHeader "Context-Where" $ (\(RtOther a)-> a) $ toWhere x
         addContent
         where
           status = statusHead.toStatus
@@ -105,8 +98,8 @@ JSON,Yaml,XML
 \begin{code}
       data RtStatus = RtSucc | RtFail
       statusHead :: RtStatus -> Text
-      statusHead RtSucc = "SUCCESS"
-      statusHead RtFail = "FAILED"
+      statusHead RtSucc = "Success"
+      statusHead RtFail = "Failed"
 \end{code}
 
 
@@ -129,6 +122,6 @@ JSON,Yaml,XML
         toNodes (BadMethod x) = [xml|<BadMethod>#{pack $ show x}|]
 
       instance Rable ErrorResponse where
-        toWhere _ = RtOther "CONTEXT"
+        toWhere _ = RtBody
         toStatus _ = RtFail
 \end{code}

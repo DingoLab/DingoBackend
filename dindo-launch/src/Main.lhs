@@ -6,12 +6,6 @@
 % src/Main.lhs
 
 \begin{code}
-{-# LANGUAGE TemplateHaskell
-           , DeriveDataTypeable
-           #-}
-\end{code}
-
-\begin{code}
 module Main
     ( main
     ) where
@@ -34,12 +28,16 @@ module Main
       import Data.Version
       import Dindo.Common(dindo_common_version_quasi)
       import Dindo.Import.Database(dindo_database_version_quasi)
+      import Control.Exception(try,SomeException,ErrorCall(..),throw,evaluate)
+      import Data.Char
 \end{code}
 
+启动方式是通过 标准输入流输入，输入的格式是 JSON 或者 是 YAML， “--form=”
+这个选项是控制输入或输出的是的，是JSON或者是YAML。
 \begin{code}
       data Launch = Launch {form ::String}
         deriving (Show,Data,Typeable)
-      launch = Launch{form="json" &= typ "YAML|JSON" &= help "格式"}
+      launch = Launch{form="auto" &= typ "AUTO|YAML|JSON" &= help "格式"}
         &= summary ( "dindo-common-"
                   ++ $(dindo_common_version_quasi)
                   ++ "; dindo-database-"
@@ -53,19 +51,37 @@ module Main
 \begin{code}
       main :: IO ()
       main = do
+#ifndef WithoutUTF8
         E.setLocaleEncoding E.utf8
         hSetEncoding stdout utf8
+#endif
         cfg' <- cmdArgs launch >>= cfg
         warpDindo cfg' itemWarp
         where
           itemWarp :: Int -> $(std) -> IO()
           itemWarp = warp
       cfg :: Launch -> IO SvrConfig
-      cfg l = getContents >>= (return.fromMaybe (error "Invailed config json").decode'.T.encodeUtf8.T.pack)
+      cfg l = getContents >>= (decode'.T.encodeUtf8.T.pack)
         where
-          decode' = case l of
-            Launch "json" -> A.decode.B.fromStrictBS
-            Launch "yaml" -> Y.decode
-            _ -> error "error form"
+          tryList :: [a -> SvrConfig] -> [ScError] -> a -> IO SvrConfig
+          tryList [] es a = scError.concatWith "\n\t".map getError $ es
+          tryList (x:xs) es a = do
+            rt <- try.evaluate $ x a :: IO (Either ScError SvrConfig)
+            case rt of
+              Left e -> tryList xs (e:es) a
+              Right sc -> return sc
+          getError (ScError a) = a
+          concatWith a xs = foldr sig "all failed" xs
+            where
+              sig x os = x ++ a ++ os
+          decJ = fromMaybe (throw $ ScError "Invailed JSON").A.decode.B.fromStrictBS
+          decY = fromMaybe (throw $ ScError "Invailed YAML").Y.decode
+          decA = tryList [decY,decJ] []
+          decode' = let Launch ll = l in
+            case map toLower ll of
+              "auto" -> decA
+              "json" -> evaluate.decJ
+              "yaml" -> evaluate.decY
+              _ -> error "error form"
 
 \end{code}
