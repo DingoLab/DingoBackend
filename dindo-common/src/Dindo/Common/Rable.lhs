@@ -20,6 +20,7 @@ module Dindo.Common.Rable
     , defReturnR
     , RtStatus(..)
     , statusHead
+    , RtCommon(..)
     ) where
 \end{code}
 
@@ -124,4 +125,26 @@ JSON,Yaml,XML
       instance Rable ErrorResponse where
         toWhere _ = RtBody
         toStatus _ = RtFail
+\end{code}
+
+通用成功与失败标志
+\begin{code}
+      data RtCommon = RtCommonSucc
+                    | RtCommonSuccT Text
+                    | RtCommonFail Text
+        deriving (Eq,Show)
+      instance Varable RtCommon where
+        toValue RtCommonSucc = Null
+        toValue (RtCommonSuccT t) = object ["tmp-token" .= t]
+        toValue (RtCommonFail x) = String x
+        toNodes RtCommonSucc = [xml|null|]
+        toNodes (RtCommonSuccT x) = [xml|<tmp-token>#{x}|]
+        toNodes (RtCommonFail x) = [xml|<error>#{x}|]
+      instance Rable RtCommon where
+        toWhere RtCommonSucc = RtBody
+        toWhere (RtCommonFail _) = RtBody
+        toWhere (RtCommonSuccT _) = RtBody
+        toStatus RtCommonSucc = RtSucc
+        toStatus (RtCommonSuccT _) = RtSucc
+        toStatus (RtCommonFail _) = RtFail
 \end{code}

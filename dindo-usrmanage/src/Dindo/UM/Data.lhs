@@ -10,16 +10,13 @@ module Dindo.UM.Data
     ( RtRegist(..)
     , RtIdy(..)
     , RtIdfed(..)
-    , RtCommon(..)
     , RtUImg(..)
     , RtUInfo(..)
     , RtChPsk(..)
     , RtEaddr(..)
     , RtGEadd(..)
     ) where
-\end{code}
-
-\begin{code}
+      
       import Dindo.Import.Rable
       import Dindo.Import.Aeson as A
       import Dindo.Import.Yaml as Y
@@ -88,28 +85,6 @@ module Dindo.UM.Data
         toWhere RtIdfedNo = RtBody
         toStatus RtIdfedPass = RtSucc
         toStatus RtIdfedNo = RtSucc
-\end{code}
-
-通用成功与失败标志
-\begin{code}
-      data RtCommon = RtCommonSucc
-                    | RtCommonSuccT Text
-                    | RtCommonFail Text
-        deriving (Eq,Show)
-      instance Varable RtCommon where
-        toValue RtCommonSucc = Null
-        toValue (RtCommonSuccT t) = object ["tmp-token" .= t]
-        toValue (RtCommonFail x) = String x
-        toNodes RtCommonSucc = [xml|null|]
-        toNodes (RtCommonSuccT x) = [xml|<tmp-token>#{x}|]
-        toNodes (RtCommonFail x) = [xml|<error>#{x}|]
-      instance Rable RtCommon where
-        toWhere RtCommonSucc = RtBody
-        toWhere (RtCommonFail _) = RtBody
-        toWhere (RtCommonSuccT _) = RtBody
-        toStatus RtCommonSucc = RtSucc
-        toStatus (RtCommonSuccT _) = RtSucc
-        toStatus (RtCommonFail _) = RtFail
 \end{code}
 
 用户信息查询返回结果

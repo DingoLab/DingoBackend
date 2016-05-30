@@ -6,13 +6,8 @@
 % src/Dindo/UM/Foundation.lhs
 
 \begin{code}
-module Dindo.UM.Foundation
-    ( module Dindo.UM.Foundation
-    , getSvrtimeR
-    ) where
-\end{code}
+module Dindo.UM.Foundation where
 
-\begin{code}
       import Dindo.Common
       import Dindo.Import
       import Dindo.Import.Yesod
@@ -22,6 +17,7 @@ module Dindo.UM.Foundation
       import Data.Version
 \end{code}
 
+定义基本类型路由表
 \begin{code}
       data UM = UM
         { connPool :: ConnectionPool
@@ -46,15 +42,14 @@ module Dindo.UM.Foundation
 \begin{code}
       instance Yesod UM where
         errorHandler = returnR
-        isAuthorized SvrinfoR _ = return Authorized
-        isAuthorized SvrtimeR _ = return Authorized
+        isAuthorized ShomeR _ = return Authorized
         isAuthorized RegistR _ = noAuth
         isAuthorized LoginR _ = pskAuth
         isAuthorized _ _ = tokenAuth
       instance YesodPersist UM where
         type YesodPersistBackend UM = SqlBackend
         runDB a = getYesod >>= (runSqlPool a.connPool)
-      mkSvrinfoR $ pack $ "dindo-um-" ++ showVersion version ++ "; dindo-common-" ++ $(dindo_common_version_quasi)
+      mkShomeR $ pack $ "dindo-um-" ++ showVersion version ++ "; dindo-common-" ++ $(dindo_common_version_quasi)
 \end{code}
 
 微服务架构

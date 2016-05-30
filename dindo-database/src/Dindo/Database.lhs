@@ -86,10 +86,10 @@ module Dindo.Database where
         ew Double sql=key_ew
         ns Double sql=key_ns
         r Double sql=key_r
-        w Double sql=key_w
+        wei Double sql=key_wei
         size [Double] sql=key_size
-        note Text Maybe sql=key-note
-        cost Int sql=key_note
+        note Text Maybe sql=key_note
+        cost Int sql=key_cost
         des Text Maybe sql=key_des
         Primary tid
         Foreign Task fktid tid

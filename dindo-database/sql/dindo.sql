@@ -96,7 +96,7 @@ CREATE TABLE table_task_info
   , key_ew   REAL        NOT NULL
   , key_ns   REAL        NOT NULL
   , key_r    REAL        NOT NULL
-  , key_w    REAL        NOT NULL
+  , key_wei  REAL        NOT NULL
   , key_size REAL[]      NOT NULL CHECK(array_length(key_size,1) = 3)
   , key_note TEXT
   , key_cost INT         NOT NULL

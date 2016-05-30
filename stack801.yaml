@@ -8,6 +8,7 @@ packages:
 - dindo-launch/
 - dindo-tools/
 - dindo-usrmanage/
+- dindo-agentake/
 extra-deps:
 - skein-1.0.9.4
 - postgresql-libpq-0.9.1.1
