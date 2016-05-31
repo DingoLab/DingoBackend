@@ -8,4 +8,11 @@ fi
 if [ -n "$THREADED" ]; then
   export THREADFLAG=" --ghc-options -threaded "
 fi
-stack install --flag dindo-launch:$BUILDTAGGER $STACKFILE  --ghc-options -O2 $THREADFLAG $LLVMFLAG
+if [ -n "$INSTALLTAGGER" ]; then
+  export STACK_CMD=install
+  export DINDO_LAUNCH_TAGGER=$INSTALLTAGGER
+else
+  export STACK_CMD=build
+  export DINDO_LAUNCH_TAGGER=$BUILDTAGGER
+fi
+stack $STACK_CMD --flag dindo-launch:$DINDO_LAUNCH_TAGGER $STACKFILE  --ghc-options -O2 $THREADFLAG $LLVMFLAG

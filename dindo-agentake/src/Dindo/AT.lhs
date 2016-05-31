@@ -24,4 +24,5 @@ module Dindo.AT
       dindo_agentake_version = version
       dindo_agentake_version_quasi :: Q Exp
       dindo_agentake_version_quasi = stringE $ showVersion version
+      mkYesodDispatch "AT" resourcesAT
 \end{code}

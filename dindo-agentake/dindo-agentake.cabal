@@ -19,7 +19,7 @@ library
   exposed-modules:     Dindo.AT
                      , Dindo.AT.Handler
                      , Dindo.AT.Data
-                     , Dindo.UM.Foundation
+                     , Dindo.AT.Foundation
                      , Dindo.Std
   other-modules:       Paths_dindo_agentake
   extensions:          TemplateHaskell
@@ -29,6 +29,6 @@ library
                      , TypeFamilies
                      , FlexibleContexts
   build-depends:       base >=4.9 && <5
-                     , dindo-agentake >= 0.0.2.20
+                     , dindo-common >= 0.0.2.20
   hs-source-dirs:      src
   default-language:    Haskell2010

@@ -24,7 +24,7 @@ module Dindo.UM.Handler
 
 \begin{code}
       import Dindo.Import
-      import Dindo.Rable
+      import Dindo.Import.Rable
       import Dindo.Import.Yesod
       import Dindo.Import.Database
       import Dindo.UM.Foundation

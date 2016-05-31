@@ -6,10 +6,7 @@
 % src/Dindo/AT/Foundation.lhs
 
 \begin{code}
-module Dindo.AT.Foundation
-    ( module Dindo.AT.Foundation
-    , getSvrtimeR
-    ) where
+module Dindo.AT.Foundation where
 
       import Dindo.Common
       import Dindo.Import

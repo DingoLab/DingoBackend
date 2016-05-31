@@ -10,11 +10,12 @@ module Dindo.AT.Data
     (
     ) where
 
+      import Dindo.Import
       import Dindo.Import.Rable
       import Dindo.Import.Aeson as A
       import Dindo.Import.Yaml as Y
-      import Dindo.Import.Text as T
-      import Dindo.Import.ByteString as B
+      import Dindo.Import.Text as T hiding(length)
+      import Dindo.Import.ByteString as B hiding(length,pack)
       import Dindo.Import.Yesod
       import Dindo.Import.Database
 \end{code}
@@ -23,6 +24,7 @@ module Dindo.AT.Data
 \begin{code}
       data RtUtask = RtUtaskSucc Text
                    | RtUtaskFail Text
+        deriving (Eq,Show)
       instance Varable RtUtask where
         toValue (RtUtaskSucc x) = object ["task-id" .= x]
         toValue (RtUtaskFail x) = object ["error" .= x]
@@ -38,6 +40,7 @@ module Dindo.AT.Data
 \begin{code}
       data RtGtask = RtGtaskSucc [Text]
                    | RtGtaskFail Text
+        deriving (Eq,Show)
       instance Varable RtGtask where
         toValue (RtGtaskSucc x) = object
           [ "count" .= length x
@@ -45,11 +48,13 @@ module Dindo.AT.Data
           ]
         toValue (RtGtaskFail x) = object ["error" .= x]
         toNodes (RtGtaskSucc x) = [xml|
-          <count>#{length x}
+          <count>#{lengx}
           <data>
             $forall i <- x
               <item>#{i}
-        |]
+          |]
+          where
+            lengx = pack $ show $ length x
         toNodes (RtGtaskFail x) = [xml|<error>#{x}|]
       instance Rable RtGtask where
         toWhere _ = RtBody
@@ -61,7 +66,8 @@ module Dindo.AT.Data
 \begin{code}
       data RtItask = RtItaskSucc Taskinfo Task Taskcost
                    | RtItaskFail Text
-      instance Rable RtItask where
+        deriving (Eq,Show)
+      instance Varable RtItask where
         toValue (RtItaskFail x) = object ["error".=x]
         toValue (RtItaskSucc Taskinfo{..} Task{..} Taskcost{..}) = object $
           [ "tid"       .= taskinfoTid
@@ -83,21 +89,33 @@ module Dindo.AT.Data
         toNodes (RtItaskFail x) = [xml|<error>#{x}|]
         toNodes (RtItaskSucc Taskinfo{..} Task{..} Taskcost{..}) = [xml|
           <tid>          #{taskinfoTid}
-          <ew>           #{taskinfoEw}
-          <ns>           #{taskinfoNs}
-          <r>            #{taskinfoR}
-          <wei>          #{taskinfoWei}
+          <ew>           #{showT taskinfoEw}
+          <ns>           #{showT taskinfoNs}
+          <r>            #{showT taskinfoR}
+          <wei>          #{showT taskinfoWei}
           <size>         #{tSize}
-          <note>         #{takeinfoNote}
-          <cost>         #{takeinfoCost}
-          <intr>         #{taskinfoDes}
-          <costA>        #{taskcostAd}
-          <costB>        #{taskcostBd}
-          <linkedA>      #{taskCa}
-          <linkedB>      #{taskCb}
+          <note>         #{fromMaybe "null" taskinfoNote}
+          <cost>         #{showT taskinfoCost}
+          <intr>         #{fromMaybe "null" taskinfoDes}
+          <costA>
+            $if length taskcostAd == 0
+              null
+            $else
+              $forall a <- taskcostAd
+                <item>#{showT a}
+          <costB>
+            $if length taskcostBd == 0
+              null
+            $else
+              $forall b <- taskcostBd
+                <item>#{showT b}
+          <linkedA>      #{fromMaybe "null" taskCa}
+          <linkedB>      #{fromMaybe "null" taskCb}
           |]
           where
-            tSize = "("++show (taskinfoSize!!0)++","++show (taskinfoSize!!1)++","++show (taskinfoSize!!2)++")"
+            tSize = pack $ "("++show (taskinfoSize!!0)++","++show (taskinfoSize!!1)++","++show (taskinfoSize!!2)++")"
+            rText = pack $ show taskinfoR
+
       instance Rable RtItask where
         toWhere _ = RtBody
         toStatus (RtItaskSucc _ _ _) = RtSucc
@@ -108,6 +126,7 @@ module Dindo.AT.Data
 \begin{code}
       data RtAagent = RtAagentSucc Text
                     | RtAagentFail Text
+         deriving (Eq,Show)
       instance Varable RtAagent where
         toValue (RtAagentSucc x) = object ["did" .= x]
         toValue (RtAagentFail x) = object ["error" .= x]
@@ -123,6 +142,7 @@ module Dindo.AT.Data
 \begin{code}
       data RtSagent = RtSagentSucc Dd
                     | RtSagentFail Text
+         deriving (Eq,Show)
       instance Varable RtSagent where
         toValue (RtSagentFail x) = object ["error" .= x]
         toValue (RtSagentSucc Dd{..}) = object
@@ -134,9 +154,8 @@ module Dindo.AT.Data
         toNodes (RtSagentFail x) = [xml|<error>#{x}|]
         toNodes (RtSagentSucc Dd{..}) = [xml|
           <dd>  #{ddDd}
-          <ew>  #{ddEw}
-          <ns>  #{ddNs}
-          <r>   #{ddR}
+          <ew>  #{showT ddEw}
+          <ns>  #{showT ddNs}
+          <r>   #{showT ddR}
           |]
-
 \end{code}

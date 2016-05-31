@@ -18,9 +18,33 @@ cabal-version:       >=1.10
 flag dindo-um
   description: Build dindo's UM module
   default:  False
+flag dindo-at
+  description: Build dindo's AT module
+  default:  False
+
 flag without-utf8
   description: Turn on when do not want to use utf8.
   default:  False
+
+
+executable dindo-at
+  main-is:             Main.lhs
+  other-modules:       Paths_dindo_launch
+  build-depends:       base >=4.8 && <5
+                     , dindo-agentake
+                     , dindo-common >= 0.0.2.30
+                     , cmdargs >= 0.10
+  hs-source-dirs:      src
+  extensions:          TemplateHaskell
+                     , DeriveDataTypeable
+                     , CPP
+  default-language:    Haskell2010
+  if flag(without-utf8)
+    cpp-options:     -DWithoutUTF8
+  if flag(dindo-at)
+    buildable:         True
+  else
+    buildable:         False
 
 executable dindo-um
   main-is:             Main.lhs

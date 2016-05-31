@@ -112,6 +112,7 @@ module Dindo.Database where
         r Double sql=key_r
         Primary did
         Foreign Account fkuidc uid
+        deriving Show Eq
       TmpToken json sql=table_tmptoken
         Id sql=
         tt Text sql=key_tmptoken sqltype=varchar(150)
@@ -119,6 +120,7 @@ module Dindo.Database where
         uid Text sql=key_uid sqltype=varchar(64)
         Primary tt
         Foreign Account fkuidd uid
+        deriving Show Eq
       |]
 \end{code}
 

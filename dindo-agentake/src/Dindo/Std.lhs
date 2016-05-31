@@ -22,4 +22,6 @@ module Dindo.Std
       dindo_module_name = stringE "dindo-agentake"
       dindo_module_version :: Q Exp
       dindo_module_version = dindo_agentake_version_quasi
+      std :: Q Type
+      std = [t|AT|]
 \end{code}
