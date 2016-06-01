@@ -5,14 +5,14 @@ name:                dindo-usrmanage
 version:             0.0.2.18
 synopsis:            The module of User Management
 description:         A part of the management of user
--- license:
+license:             LICENSE
 license-file:        LICENSE
 author:              Qinka
 maintainer:          qinka@live.com
 copyright:           Copyright (C) 2016 DingoLab
 category:            Web
 build-type:          Simple
--- extra-source-files:
+extra-source-files:  ChangeLog.md
 cabal-version:       >=1.10
 
 library
@@ -22,7 +22,7 @@ library
                      , Dindo.UM.Data
                      , Dindo.Std
   other-modules:      Paths_dindo_usrmanage
-  extensions:          TemplateHaskell
+  default-extensions:  TemplateHaskell
                      , OverloadedStrings
                      , QuasiQuotes
                      , RecordWildCards

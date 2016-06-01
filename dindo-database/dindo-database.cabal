@@ -12,14 +12,14 @@ maintainer:          qinka@live.com
 copyright:           Copyright  (C) 2016 DingoLab
 category:            Web
 build-type:          Simple
--- extra-source-files:
+extra-source-files:  ChangeLog.md
 cabal-version:       >=1.10
 
 library
   exposed-modules:     Dindo.Database
   other-modules:       Import
                      , Paths_dindo_database
-  extensions:          TemplateHaskell
+  default-extensions:  TemplateHaskell
                      , FlexibleInstances
                      , TypeFamilies
                      , MultiParamTypeClasses

@@ -12,7 +12,7 @@ maintainer:          qinka@live.com
 copyright:           Copyright (C) 2016 DingoLab
 category:            Web
 build-type:          Simple
--- extra-source-files:
+extra-source-files:  ChangeLog.md
 cabal-version:       >=1.10
 
 library
@@ -36,7 +36,7 @@ library
                      , Dindo.Import.Yesod
   other-modules:       Paths_dindo_common
 
-  extensions:          TypeFamilies
+  default-extensions:  TypeFamilies
                      , OverloadedStrings
                      , TemplateHaskell
                      , QuasiQuotes

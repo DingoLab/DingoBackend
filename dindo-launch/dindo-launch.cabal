@@ -5,14 +5,14 @@ name:                dindo-launch
 version:             0.0.2.20
 synopsis:            The launcher of each module
 description:         A launcher of each part of API
--- license:
+license:             LICENSE
 license-file:        LICENSE
 author:              Qinka
 maintainer:          qinka@live.com
 copyright:           Copyright (C) 2016 DingoLab
 category:            Web
 build-type:          Simple
--- extra-source-files:
+extra-source-files:  ChangeLog.md
 cabal-version:       >=1.10
 
 flag dindo-um
@@ -31,11 +31,11 @@ executable dindo-at
   main-is:             Main.lhs
   other-modules:       Paths_dindo_launch
   build-depends:       base >=4.8 && <5
-                     , dindo-agentake
+                     , dindo-agentake >= 0.0.2
                      , dindo-common >= 0.0.2.30
                      , cmdargs >= 0.10
   hs-source-dirs:      src
-  extensions:          TemplateHaskell
+  default-extensions:  TemplateHaskell
                      , DeriveDataTypeable
                      , CPP
   default-language:    Haskell2010
@@ -54,7 +54,7 @@ executable dindo-um
                      , dindo-common >= 0.0.2.30
                      , cmdargs >= 0.10
   hs-source-dirs:      src
-  extensions:          TemplateHaskell
+  default-extensions:  TemplateHaskell
                      , DeriveDataTypeable
                      , CPP
   default-language:    Haskell2010

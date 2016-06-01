@@ -2,7 +2,7 @@
 -- documentation, see http://haskell.org/cabal/users-guide/
 
 name:                dindo-agentake
-version:             0.0.1.0
+version:             0.0.2.0
 synopsis:            The part of II
 description:         代收快递部分
 license:             LICENSE
@@ -22,7 +22,7 @@ library
                      , Dindo.AT.Foundation
                      , Dindo.Std
   other-modules:       Paths_dindo_agentake
-  extensions:          TemplateHaskell
+  default-extensions:  TemplateHaskell
                      , OverloadedStrings
                      , QuasiQuotes
                      , RecordWildCards

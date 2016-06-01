@@ -3,17 +3,16 @@
 
 name:                dindo-tools
 version:             0.0.2.1
-
--- synopsis:
--- description:
--- license:
+synopsis:            Tools for dindo
+description:         A collection of tools needed by dindo.
+license:             LICENSE
 license-file:        LICENSE
 author:              Qinka
 maintainer:          qinka@live.com
--- copyright:
+copyright:           Copyright (C) 2016 DingoLab
 category:            Tools
 build-type:          Simple
--- extra-source-files:
+extra-source-files:  ChangeLog.md
 cabal-version:       >=1.10
 
 flag without-utf8
@@ -23,7 +22,7 @@ flag without-utf8
 executable dindo-pash
   main-is:             Main.lhs
   other-modules:       Paths_dindo_tools
-  extensions:          TemplateHaskell
+  default-extensions:  TemplateHaskell
                      , DeriveDataTypeable
                      , CPP
   build-depends:       base >=4.8 && <5
