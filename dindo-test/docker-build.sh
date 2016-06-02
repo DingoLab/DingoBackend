@@ -3,11 +3,11 @@ if [ -n "$INSTALLTAGGER" ]; then
   export DOCKER_IMAGE_TAG=docekr_$(date -u '+%Y_%m_%d_%H_%M_%S_%Z')
   export DOCKER_IMAGE_LASTEST=docker
   if [ -n "$TRAVIS_TAG" ]; then
-    export DOCKER_IMAGE_TAG=$DOCKER_IMAGE_TAG-$TRAVUS_BRANCH\_$TRAVIS_TAG
+    export DOCKER_IMAGE_TAG=$DOCKER_IMAGE_TAG-$TRAVIS_BRANCH\_$TRAVIS_TAG
   else
-    export DOCKER_IMAGE_TAG=$DOCKER_IMAGE_TAG-$TRAVUS_BRANCH\_${TRAVIS_COMMIT:0:7}
+    export DOCKER_IMAGE_TAG=$DOCKER_IMAGE_TAG-$TRAVIS_BRANCH\_${TRAVIS_COMMIT:0:7}
   fi
-  export DOCKER_IMAGE_LASTEST=$DOCKER_IMAGE_LASTEST-lastest
+  export DOCKER_IMAGE_LASTEST=$DOCKER_IMAGE_LASTEST-lastest_$TRAVIS_BRANCH
   export DOCKER_IMAGE_TAG=$DOCKER_IMAGE_TAG-$(uname)_$Distributor\_$Codename-GHC_$GHCVER-$(lscpu | grep Architecture | awk '{print $2}')
   export DOCKER_IMAGE_LASTEST=$DOCKER_IMAGE_LASTEST-$(uname)_$Distributor\_$Codename-GHC_$GHCVER-$(lscpu | grep Architecture | awk '{print $2}')
   if [ -n "$LLVM" ]; then
