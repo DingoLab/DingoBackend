@@ -30,6 +30,9 @@ module Main
       import Dindo.Import.Database(dindo_database_version_quasi)
       import Control.Exception(try,SomeException,ErrorCall(..),throw,evaluate)
       import Data.Char
+      import System.Exit
+      import Control.Concurrent
+      import System.Signal
 \end{code}
 
 启动方式是通过 标准输入流输入，输入的格式是 JSON 或者 是 YAML， “--form=”
@@ -37,7 +40,8 @@ module Main
 \begin{code}
       data Launch = Launch {form ::String}
         deriving (Show,Data,Typeable)
-      launch = Launch{form="auto" &= typ "AUTO|YAML|JSON" &= help "格式"}
+      launch = Launch{ form="auto" &= typ "AUTO|YAML|JSON" &= help "格式"
+                     }
         &= summary ( "dindo-common-"
                   ++ $(dindo_common_version_quasi)
                   ++ "; dindo-database-"
@@ -55,13 +59,22 @@ module Main
         E.setLocaleEncoding E.utf8
         hSetEncoding stdout utf8
 #endif
+        tid <- myThreadId
+        installHandler sigINT $ \ sig -> do
+          if sig == sigINT
+            then do
+              putStrLn "going to turn down"
+              killThread tid
+              exitSuccess
+            else putStrLn $ "catch" ++ show sig
         cfg' <- cmdArgs launch >>= cfg
         warpDindo cfg' itemWarp
         where
           itemWarp :: Int -> $(std) -> IO()
           itemWarp = warp
       cfg :: Launch -> IO SvrConfig
-      cfg l = getContents >>= (decode'.T.encodeUtf8.T.pack)
+      cfg l = getContents >>=
+          (decode'.T.encodeUtf8.T.pack)
         where
           tryList :: [a -> SvrConfig] -> [ScError] -> a -> IO SvrConfig
           tryList [] es a = scError.concatWith "\n\t".map getError $ es
@@ -77,7 +90,7 @@ module Main
           decJ = fromMaybe (throw $ ScError "Invailed JSON").A.decode.B.fromStrictBS
           decY = fromMaybe (throw $ ScError "Invailed YAML").Y.decode
           decA = tryList [decY,decJ] []
-          decode' = let Launch ll = l in
+          decode' = let ll = form l in
             case map toLower ll of
               "auto" -> decA
               "json" -> evaluate.decJ

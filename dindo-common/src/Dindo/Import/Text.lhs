@@ -11,6 +11,7 @@
 module Dindo.Import.Text
     ( module X
     , showT
+    , readT
     ) where
 
       import Data.Text as X
@@ -20,4 +21,9 @@ module Dindo.Import.Text
 \begin{code}
       showT :: Show a => a -> Text
       showT = pack.show
+\end{code}
+
+\begin{code}
+      readT :: Read a => Text -> a
+      readT = read.unpack
 \end{code}

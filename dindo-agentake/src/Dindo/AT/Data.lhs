@@ -7,7 +7,7 @@
 
 \begin{code}
 module Dindo.AT.Data
-    (
+    ( RtUtask(..)
     ) where
 
       import Dindo.Import

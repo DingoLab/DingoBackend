@@ -34,6 +34,7 @@ executable dindo-at
                      , dindo-agentake >= 0.0.2
                      , dindo-common >= 0.0.2.30
                      , cmdargs >= 0.10
+                     , signal >= 0.1
   hs-source-dirs:      src
   default-extensions:  TemplateHaskell
                      , DeriveDataTypeable
@@ -53,6 +54,7 @@ executable dindo-um
                      , dindo-usrmanage >= 0.0.2.18
                      , dindo-common >= 0.0.2.30
                      , cmdargs >= 0.10
+                     , signal >= 0.1
   hs-source-dirs:      src
   default-extensions:  TemplateHaskell
                      , DeriveDataTypeable
