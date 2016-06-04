@@ -287,7 +287,7 @@ CREATE FUNCTION func_get_tasks (r REAL,ew REAL,ns REAL,lew REAL,lns REAL)
     y1 := re*cos(radians(ns))*sin(radians(ew));
     y2 := re*cos(radians(lns))*sin(radians(lew));
     d := (x1-x2)^2 + (y1-y2)^2 + (z1-z2)^2;
-    IF d <= d^2 THEN
+    IF d <= r^2 THEN
       RETURN  TRUE;
     ELSE
       RETURN FALSE;
