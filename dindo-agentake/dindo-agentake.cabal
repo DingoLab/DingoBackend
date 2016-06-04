@@ -28,6 +28,8 @@ library
                      , RecordWildCards
                      , TypeFamilies
                      , FlexibleContexts
+                     , GeneralizedNewtypeDeriving
+                     , GADTs
   build-depends:       base >=4.8 && <5
                      , dindo-common >= 0.0.2.20
   hs-source-dirs:      src

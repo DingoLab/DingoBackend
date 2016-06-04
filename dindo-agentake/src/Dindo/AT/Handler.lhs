@@ -59,7 +59,7 @@ module Dindo.AT.Handler
           newTask f = do
             uid <- getUid
             tid <- mkTid uid
-            let (t,ti) = f uid
+            let (t,ti) = f tid
                 tc     = Taskcost tid [] []
             rt <- liftHandlerT $ tryRunDB $ do
               insert t
@@ -70,14 +70,14 @@ module Dindo.AT.Handler
               Left e -> returnR.RtUtaskFail . pack.show $ e
               Right _ -> returnR.RtUtaskSucc $ tid
           mkTid uid = do
-            now <- liftIO $ fmap (pack.show) getCurrentTime
+            now <- liftIO $ fmap (pack.take 10.show) getCurrentTime
             let hash = pack.showDigest.sha1.fromStrictBS.encodeUtf8. T.concat $ [uid,now]
             return.T.concat $ ["T",now,hash]
 \end{code}
 任务的删改
 \begin{code}
       postCtaskR :: Handler TypedContent
-      postCtaskR = undefined
+      postCtaskR = optCheck
         where
           optCheck = do
             ct' <- lookupPostParam "ct"
@@ -129,12 +129,36 @@ module Dindo.AT.Handler
               deleteWhere [TaskinfoTid ==. tid]
               deleteWhere [TaskTid ==. tid]
             case rt of
-              Left e -> returnR.RtCommonFail .pack.show $ e
+              Left e -> returnR.RtCommonFail .showT $ e
               Right _ -> returnR RtCommonSucc
 \end{code}
+
+获取任务的查询
+\begin{code}
+      getTaskTid :: ( Yesod site
+                   , YesodPersist site
+                   , YesodPersistBackend site ~ SqlBackend
+                   )
+                => Double -> Double -> YesodDB site [Single String]
+      getTaskTid ew ns = rawSql "SELECT key_tid FROM table_task_info WHERE func_get_tasks(key_r,key_ew,key_ns,?,?)" [PersistDouble ew,PersistDouble ns]
+\end{code}
+任务的获取
 \begin{code}
       postGtaskR :: Handler TypedContent
-      postGtaskR = undefined
+      postGtaskR = checkParam getTask
+        where
+          checkParam f = do
+            ew' <- lookupPostParam "ew"
+            ns' <- lookupPostParam "ns"
+            case (ew',ns') of
+              (Just ew,Just ns) -> f ew ns
+              _ -> returnR $ RtGtaskFail "dindo:at:invailed param"
+          getTask ew ns = do
+            rt <- liftHandlerT $ tryRunDB $ getTaskTid (readT ew) (readT ns)
+            case rt of
+              Left e -> returnR.RtGtaskFail .showT $ e
+              Right xs -> let ys = map (\(Single i) -> pack i) xs
+                in returnR $ RtGtaskSucc ys
 \end{code}
 \begin{code}
       postBtaskR :: Handler TypedContent

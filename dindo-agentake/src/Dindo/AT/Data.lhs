@@ -6,9 +6,7 @@
 % src/Dindo/AT/Data.lhs
 
 \begin{code}
-module Dindo.AT.Data
-    ( RtUtask(..)
-    ) where
+module Dindo.AT.Data where
 
       import Dindo.Import
       import Dindo.Import.Rable
@@ -158,4 +156,14 @@ module Dindo.AT.Data
           <ns>  #{showT ddNs}
           <r>   #{showT ddR}
           |]
+\end{code}
+
+\begin{code}
+      share [mkPersist sqlSettings] [persistLowerCase|
+        Taskget
+          Id sql=
+          tid Text sql=key_tid
+          Primary tid
+          deriving Show Eq
+        |]
 \end{code}

@@ -97,7 +97,7 @@ CREATE TABLE table_task_info
   , key_ns   REAL        NOT NULL
   , key_r    REAL        NOT NULL
   , key_wei  REAL        NOT NULL
-  , key_size REAL[]      NOT NULL CHECK(array_length(key_size,1) = 3)
+  , key_size REAL[3]      NOT NULL CHECK(array_length(key_size,1) = 3)
   , key_note TEXT
   , key_cost INT         NOT NULL
   , key_des  TEXT
@@ -263,6 +263,38 @@ CREATE TRIGGER data_changing
   BEFORE INSERT OR UPDATE OR DELETE  ON table_dd
   FOR EACH ROW EXECUTE PROCEDURE data_changing()
 ;
+
+-- 函数
+-- 获取任务
+CREATE FUNCTION func_get_tasks (r REAL,ew REAL,ns REAL,lew REAL,lns REAL)
+  RETURNS BOOL AS
+  $$
+  DECLARE
+    re REAL;
+    z1 REAL;
+    z2 REAL;
+    x1 REAL;
+    x2 REAL;
+    y1 REAL;
+    y2 REAL;
+    d REAl;
+  BEGIN
+    re := 6370000;
+    z1 := re*sin(radians(ns));
+    z2 := re*sin(radians(lns));
+    x1 := re*cos(radians(ns))*cos(radians(ew));
+    x2 := re*cos(radians(lns))*cos(radians(lew));
+    y1 := re*cos(radians(ns))*sin(radians(ew));
+    y2 := re*cos(radians(lns))*sin(radians(lew));
+    d := (x1-x2)^2 + (y1-y2)^2 + (z1-z2)^2;
+    IF d <= d^2 THEN
+      RETURN  TRUE;
+    ELSE
+      RETURN FALSE;
+    END IF;
+  END;
+  $$
+LANGUAGE "plpgsql";
 
 -- 用户
 -- 用户认证管理员账号

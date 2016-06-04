@@ -135,10 +135,10 @@ JSON,Yaml,XML
         deriving (Eq,Show)
       instance Varable RtCommon where
         toValue RtCommonSucc = Null
-        toValue (RtCommonSuccT t) = object ["tmp-token" .= t]
+        toValue (RtCommonSuccT t) = String t
         toValue (RtCommonFail x) = String x
         toNodes RtCommonSucc = [xml|null|]
-        toNodes (RtCommonSuccT x) = [xml|<tmp-token>#{x}|]
+        toNodes (RtCommonSuccT x) = [xml|#{x}|]
         toNodes (RtCommonFail x) = [xml|<error>#{x}|]
       instance Rable RtCommon where
         toWhere RtCommonSucc = RtBody

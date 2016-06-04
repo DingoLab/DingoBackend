@@ -15,8 +15,9 @@ module Dindo.UM.Data
     , RtChPsk(..)
     , RtEaddr(..)
     , RtGEadd(..)
+    , RtLogin(..)
     ) where
-      
+
       import Dindo.Import.Rable
       import Dindo.Import.Aeson as A
       import Dindo.Import.Yaml as Y
@@ -118,6 +119,25 @@ module Dindo.UM.Data
         toStatus RtUInfoNSU = RtFail
 \end{code}
 
+登录
+\begin{code}
+      data RtLogin = RtLoginSucc Text Text
+                   | RtLoginFail Text
+        deriving (Show,Eq)
+      instance Varable RtLogin where
+        toValue (RtLoginSucc u t) = object ["uid".=u,"tmp-token".=t]
+        toValue (RtLoginFail e) = object ["error" .= e]
+        toNodes (RtLoginFail e) = [xml|<error>#{e}|]
+        toNodes (RtLoginSucc u t) =[xml|
+          <uid>#{u}
+          <tmp-token>#{t}
+          |]
+      instance Rable RtLogin where
+        toWhere _ = RtBody
+        toStatus (RtLoginSucc _ _) = RtSucc
+        toStatus (RtLoginFail _) = RtFail
+\end{code}
+
 获取用户头像返回内容
 \begin{code}
       data RtUImg = RtUImg ByteString
@@ -132,7 +152,6 @@ module Dindo.UM.Data
           addHeader "CONTEXT-WHERE" "CONTEXT"
           addHeader "CONTEXT" "Failed on get image"
           selectRep $ provideRep $ return (""::Text)
-
 \end{code}
 
 更改密码的 返回值

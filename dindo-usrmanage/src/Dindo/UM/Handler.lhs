@@ -119,6 +119,8 @@ module Dindo.UM.Handler
 \end{code}
 
 用户登录
+
+这里所有的登录失败都是 返回的服务器内部错误
 \begin{code}
       postLoginR :: Handler TypedContent
       postLoginR = do
@@ -142,8 +144,10 @@ module Dindo.UM.Handler
                 let time = show lim
                 let to = showDigest $ sha512 $ fromStrictBS $ encodeUtf8 $ T.concat [uid,pash,pack time]
                 let tt = pack $ take 22 time ++ to
-                liftHandlerT $ runDB $ insert $ TmpToken tt lim uid
-                returnR $ RtCommonSuccT tt
+                rt <- liftHandlerT $ tryRunDB $ insert $ TmpToken tt lim uid
+                case rt of
+                  Left e -> returnR $ RtLoginFail $ showT e
+                  Right _ -> returnR $ RtLoginSucc uid tt
         where
           getPash = do
             pash' <- lookupPostParam "pash"

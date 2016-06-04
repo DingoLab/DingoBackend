@@ -47,10 +47,12 @@ module Dindo.Common.Auth
              => HandlerT site IO Text
       getUid = do
         tt' <- lookupHeader "TMP-TOKEN"
+        uid' <- lookupHeader "UID"
         let Just tt = fmap decodeUtf8 tt'
-        rt':_ <- liftHandlerT $ runDB $ selectList [TmpTokenTt ==. tt] []
+        let Just uid = fmap decodeUtf8 uid'
+        rt':_ <- liftHandlerT $ runDB $ selectList [TmpTokenTt ==. tt,TmpTokenUid ==. uid] []
         let rt = fromEntity rt'
-        return $ tmpTokenTt rt
+        return $ tmpTokenUid rt
 \end{code}
 
 用于用户验证的
