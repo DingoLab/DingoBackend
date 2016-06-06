@@ -1,0 +1,28 @@
+# The CI-config of Dindo
+
+# 不同的测试样例
+sudo: required
+dist: trusty
+env:
+  - DOCUMENT=true
+  - CABALVER=1.24 GHCVER=8.0.1 INSTALLTAGGER=dindo-um THREADED=t
+  - CABALVER=1.24 GHCVER=8.0.1 BUILDTAGGER=dindo-at
+  - CABALVER=1.22 GHCVER=7.10.3 BUILDTAGGER=dindo-at STACK=stack-7103.yaml
+  - CABALVER=1.24 GHCVER=8.0.1 INSTALLTAGGER=dindo-um LLVM=3.7 THREADED=t
+  - CABALVER=1.22 GHCVER=7.10.3 INSTALLTAGGER=dindo-um STACK=stack-7103.yaml THREADED=t
+
+services:
+  - docker
+
+before_install:
+  - source dindo-test/before_install.sh
+
+script: |
+  if [ -n "$DOCUMENT" ]; then
+    source dindo-test/document-build.sh
+  else
+    source dindo-test/compiler-test.sh
+  fi
+after_success: |
+  cd $TRAVIS_BUILD_DIR
+  source dindo-test/after-success.sh
