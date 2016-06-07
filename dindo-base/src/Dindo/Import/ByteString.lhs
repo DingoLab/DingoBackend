@@ -23,5 +23,8 @@ module Dindo.Import.ByteString
       import Data.Text.Encoding as ET
 
       showB :: Show a => a -> ByteString
-      showB = encodeUtf8. T.pack.show
+      showB = encodeUtf8.T.pack.show
+
+      readB :: Read a => ByteString -> a
+      readB = read.T.unpack.decodeUtf8
 \end{code}

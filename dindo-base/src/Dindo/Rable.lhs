@@ -146,3 +146,29 @@ MIME 转换
         toStatus (RtCommonSuccT _) = RtSucc
         toStatus (RtCommonFail _) = RtFail
 \end{code}
+
+拒绝认证（403）
+\begin{code}
+      data Rt403 = Rt403 Text
+        deriving (Eq,Show)
+      instance Varable Rt403 where
+        toValue (Rt403 t) = object ["auth-msg".=t]
+        toNodes (Rt403 t) = [xml|<auth-msg>#{t}|]
+      instance Rable Rt403 where
+        returnR x = do
+          cTRt <- toCT
+          return $ responseLBS status403
+            [ ("Status",statusH RtFail)
+            , ("Context-Where","Body")
+            , ("Content-Type",toMIME cTRt)
+            ] $ toContents cTRt $ x
+          where
+            toCT = do
+              wh <- lookupHeader "Accept"
+              return $ case wh of
+                "application/json" -> RtJson
+                "application/xml" -> RtYaml
+                "application/yaml" -> RtXml
+                "application/some" -> RtOth undefined
+                x -> invalidAccept $ T.unpack x
+\end{code}

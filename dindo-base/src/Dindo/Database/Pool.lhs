@@ -7,7 +7,7 @@
 \begin{code}
 module Dindo.Database.Pool where
       import Data.Pool
-      import Databaste.PostgreSQL.Simple as PG
+      import Database.PostgreSQL.Simple as PG
       import Control.Monad.IO.Class
 \end{code}
 

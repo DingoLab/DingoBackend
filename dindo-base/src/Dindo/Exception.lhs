@@ -17,7 +17,9 @@ module Dindo.Exception
       import Control.Exception as Dindo.Exception
       import Data.Typeable
       import Dindo.RIO
+\end{code}
 
+\begin{code}
       data BaseError = BaseError
         { typ :: String
         , context :: String
