@@ -10,6 +10,5 @@ module Dindo.Import.Database
     ( module X
     ) where
 
-      --import Dindo.Database as X
-      import Database.PostgreSQL.Simple as X
+      import Dindo.Database as X
 \end{code}

@@ -18,6 +18,7 @@ module Dindo.RIO
 
       import Dindo.Import
       import Network.HTTP.Types
+      import Control.Monad.IO.Class
 \end{code}
 
 
@@ -66,4 +67,7 @@ module Dindo.RIO
           x <- i rd
           let (RIO y) = f x
           y rd
+
+      instance MonadIO (RIO cfg) where
+        liftIO i = RIO $ \_ -> i
 \end{code}
