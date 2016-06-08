@@ -9,6 +9,7 @@
 module Dindo.Import.Text
     ( module X
     , fromStrict,toStrict
+    , readT,showT
     ) where
 
       import Data.Text as X

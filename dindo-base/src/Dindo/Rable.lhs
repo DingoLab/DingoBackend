@@ -22,6 +22,7 @@ module Dindo.Rable
     , statusH
     , statusC
     , RtCommon(..)
+    , Rt403(..)
     ) where
 
       import Dindo.RIO

@@ -12,9 +12,12 @@ module Dindo.Exception
     , invalidArgs
     , invalidAccept
     , invalidHeaders
+    , tryRIO
+    , catchRIO
+    , module X
     ) where
 
-      import Control.Exception as Dindo.Exception
+      import Control.Exception as X
       import Data.Typeable
       import Dindo.RIO
 \end{code}
@@ -39,8 +42,8 @@ module Dindo.Exception
 \end{code}
 
 \begin{code}
-      tryRIO :: Exception e => RIO a -> RIO (Either e a)
-      tryRIO (RIO i) = RIO $ \rd -> try i
-      catchRIO :: Exception e => RIO a -> (e -> RIO a) -> RIO a
-      catchRIO (RIO i) f = RIO $ \rd -> catch i (\e runRIO rd (f e))
+      tryRIO :: Exception e => RIO cfg a -> RIO cfg (Either e a)
+      tryRIO (RIO i) = RIO $ \rd -> try $ i rd
+      catchRIO :: Exception e => RIO cfg a -> (e -> RIO cfg a) -> RIO cfg a
+      catchRIO (RIO i) f = RIO $ \rd -> catch (i rd) (\e -> runRIO rd (f e))
 \end{code}

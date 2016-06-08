@@ -11,7 +11,7 @@ module Dindo.Import.ByteString
     ( module X
     , fromStrict
     , toStrict
-    , showB
+    , showB,readB
     ) where
 
       import Data.ByteString as X

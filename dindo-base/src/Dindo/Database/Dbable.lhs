@@ -6,8 +6,9 @@
 % src/Dindo/Database/Dbable.lhs
 
 \begin{code}
- module Dindo.Database.Dbable where
-       import Dindo.Database.Pool
+module Dindo.Database.Dbable where
+      import Dindo.Database.Pool
+      import Dindo.RIO
 \end{code}
 
 \begin{code}

@@ -16,7 +16,11 @@ extra-source-files:  ChangeLog.md
 cabal-version:       >=1.10
 
 library
-  exposed-modules:     Dindo.Base
+  exposed-modules:     Dindo.Auth
+                     , Dindo.Base
+                     , Dindo.Database
+                     , Dindo.Database.Dbable
+                     , Dindo.Database.Pool
                      , Dindo.Exception
                      , Dindo.Import
                      , Dindo.Import.Aeson
@@ -26,6 +30,8 @@ library
                      , Dindo.Import.Rable
                      , Dindo.Import.TH
                      , Dindo.Import.Yaml
+                     , Dindo.Launch
+                     , Dindo.Logger
                      , Dindo.MicroFramework.API
                      , Dindo.MicroFramework.Destory
                      , Dindo.MicroFramework.Register
@@ -42,12 +48,15 @@ library
                      , case-insensitive >= 1.2
                      , conduit >= 1.2
                      , conduit-extra >= 1.1.13
+                     , fast-logger >= 2.4
                      , http-types >= 0.9
                      , lifted-base >= 0.2.3
                      , postgresql-simple >= 0.5
+                     , resource-pool >= 0.2.2
                      , SHA >= 1.6
                      , template-haskell >= 2.11
                      , text >= 1.2
+                     , time >= 1.6
                      , wai >= 3.2
                      , wai-conduit >= 3
                      , warp >= 3.2

@@ -9,14 +9,24 @@
 module Dindo.Database
     ( module X
     , module PG
+    , beginPgT,commitPgT,rollbackPgT
+    , queryPg,queryPg_
+    , executePg,executePg_
+    , runPg,tryRunPg,runPgT,tryRunPgT
+    , toQuery
     ) where
 
       import Dindo.Database.Pool as X
       import Dindo.Database.Dbable as X
       import Database.PostgreSQL.Simple as PG
+      import Database.PostgreSQL.Simple.Types
       import Dindo.Exception
       import Dindo.RIO
       import Data.Int(Int64)
+\end{code}
+
+\begin{code}
+      toQuery = Query
 \end{code}
 
 Sql 查询
@@ -36,10 +46,10 @@ PostgreSQL 的查询
 Query 函数
 \begin{code}
       queryPg :: (PG.ToRow q,FromRow r)
-              => PG.Query -> q -> CPA [r]
+              => PG.Query -> q -> CPA PgC [r]
       queryPg q qq = CPA $ \c -> query c q qq
       queryPg_ :: PG.FromRow r
-              => PG.Query -> CPA [r]
+              => PG.Query -> CPA PgC [r]
       queryPg_ q = CPA $ \c -> query_ c q
 \end{code}
 可能返回的异常：
@@ -52,9 +62,9 @@ Query 函数
 Execute 函数
 \begin{code}
       executePg :: PG.ToRow q
-                => Query -> q -> RIO Int64
+                => Query -> q -> CPA PgC Int64
       executePg q qq = CPA $ \c -> execute c q qq
-      executePg_ :: Query -> RIO Int64
+      executePg_ :: Query -> CPA PgC Int64
       executePg_ q = CPA $ \c -> execute_ c q
 \end{code}
 
@@ -77,25 +87,31 @@ Execute 函数
 \begin{code}
       runPgT :: PgSql cfg
              => PgCPA b -> RIO cfg b
-      runPgT action' = catchRIO
-        (runPg action)
-        (\e -> runPg rollbackPgT >> throw e)
+      runPgT action' = catchRIO (runPg action) te
         where
+          te ::PgSql cfg => SomeException -> RIO cfg b
+          te e = do
+            runPg rollbackPgT
+            throw e
           action = do
             beginPgT
-            action'
+            rt <- action'
             commitPgT
+            return rt
 \end{code}
 带事务，返回异常
 \begin{code}
       tryRunPgT :: (PgSql cfg,Exception e)
                 => PgCPA b -> RIO cfg (Either e b)
-      tryRunPgT action' = catchRIO
-        (runPg action >>= (return.Right))
-        (\e -> runPg rollbackPgT >> (return.Left e))
+      tryRunPgT action' = catchRIO rv le
         where
+          rv = fmap Right $ runPg action
+          le e = do
+            runPg rollbackPgT
+            return $ Left e
           action = do
             beginPgT
-            action'
+            rt <- action'
             commitPgT
+            return rt
 \end{code}

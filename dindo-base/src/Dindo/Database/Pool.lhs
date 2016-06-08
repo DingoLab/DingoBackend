@@ -9,6 +9,7 @@ module Dindo.Database.Pool where
       import Data.Pool
       import Database.PostgreSQL.Simple as PG
       import Control.Monad.IO.Class
+      import Dindo.Import.ByteString
 \end{code}
 
 连接
@@ -24,7 +25,7 @@ module Dindo.Database.Pool where
 \begin{code}
       pgConnectionPool :: ByteString -> Int -> IO PgCP
       pgConnectionPool cstr limit = createPool
-        (connectionPostgreSQL cstr)
+        (connectPostgreSQL cstr)
         PG.close
         (div limit 2)
         60
@@ -38,7 +39,7 @@ module Dindo.Database.Pool where
       runCPA (CPA f) p = withResource p f
 
       instance Functor (CPA cp) where
-        fmap f ( i) = CPA $ \rd-> do
+        fmap f (CPA i) = CPA $ \rd-> do
           x <- i rd
           return $ f x
 
@@ -61,6 +62,6 @@ module Dindo.Database.Pool where
 \end{code}
 
 \begin{code}
-      runPgCP :: PgCPA b ->  PgCP -> > IO b
+      runPgCP :: PgCPA b ->  PgCP -> IO b
       runPgCP = runCPA
 \end{code}

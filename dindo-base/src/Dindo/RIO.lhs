@@ -10,15 +10,19 @@ module Dindo.RIO
     ( RIO(..)
     , RIOM(..)
     , RD(..)
+    , runRIO
     , getQuerys
     , getHeaders
     , getRequest
     , getConfig
+    , getLogger
+    , liftIO
     ) where
 
       import Dindo.Import
       import Network.HTTP.Types
       import Control.Monad.IO.Class
+      import System.Log.FastLogger
 \end{code}
 
 
@@ -26,22 +30,27 @@ module Dindo.RIO
 \begin{code}
       data RD cfg = RD
         { rdRequest :: Request
-        , rdConfig ::cfg
+        , rdConfig :: cfg
+        , rdLogger :: LoggerSet
         }
 \end{code}
 
 带有 Request 等信息的 Monad （IO）
 \begin{code}
-      runRIO rd (RIO i) = i rd
-
       getRequest :: RIO cfg Request
-      getRequest = RIO $ \rd -> return $ rdRequest rd
+      getRequest = RIO $ return.rdRequest
       getConfig  :: RIO cfg cfg
-      getConfig = RIO $ \rd -> return $ rdConfig rd
+      getConfig = RIO $ return.rdConfig
       getHeaders :: RIO cfg [Header]
       getHeaders = (return.requestHeaders) =<< getRequest
       getQuerys :: RIO cfg Query
       getQuerys = (return.queryString) =<< getRequest
+
+      getLogger :: RIO cfg LoggerSet
+      getLogger = RIO $ return.rdLogger
+\end{code}
+\begin{code}
+      runRIO rd (RIO i) = i rd
 
       newtype RIO cfg a = RIO
         { unRIO :: RD cfg -> IO a
