@@ -23,6 +23,7 @@ module Dindo.Rable
     , statusC
     , RtCommon(..)
     , Rt403(..)
+    , Rt500(..)
     ) where
 
       import Dindo.RIO
@@ -39,6 +40,7 @@ module Dindo.Rable
       import Data.Text.Encoding
       import GHC.Exts(fromList)
       import Control.Monad
+      import Control.Exception(SomeException)
 \end{code}
 
 
@@ -159,6 +161,32 @@ MIME 转换
         returnR x = do
           cTRt <- toCT
           return $ responseLBS status403
+            [ ("Status",statusH RtFail)
+            , ("Context-Where","Body")
+            , ("Content-Type",toMIME cTRt)
+            ] $ toContents cTRt $ x
+          where
+            toCT = do
+              wh <- lookupHeader "Accept"
+              return $ case wh of
+                "application/json" -> RtJson
+                "application/xml" -> RtYaml
+                "application/yaml" -> RtXml
+                "application/some" -> RtOth undefined
+                x -> invalidAccept $ T.unpack x
+\end{code}
+
+500
+\begin{code}
+      data Rt500 = Rt500 SomeException
+        deriving (Show)
+      instance Varable Rt500 where
+        toValue (Rt500 e) = object ["ierror".= show e]
+        toNodes (Rt500 e) = [xml|<ierror>#{T.pack(show e)}|]
+      instance Rable Rt500 where
+        returnR x = do
+          cTRt <- toCT
+          return $ responseLBS status500
             [ ("Status",statusH RtFail)
             , ("Context-Where","Body")
             , ("Content-Type",toMIME cTRt)

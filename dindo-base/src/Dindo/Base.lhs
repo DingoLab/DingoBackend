@@ -23,8 +23,6 @@ module Dindo.Base
       import Dindo.Import.ByteString as B
 \end{code}
 
-
-
 查找头
 \begin{code}
       lookupHeader :: CI.CI ByteString -> RIO cfg Text

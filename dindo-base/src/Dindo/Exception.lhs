@@ -8,6 +8,8 @@
 \begin{code}
 module Dindo.Exception
     ( BaseError(..)
+    , ErrorError(..)
+    , ScError(..)
     , baseError
     , invalidArgs
     , invalidAccept
@@ -30,7 +32,15 @@ module Dindo.Exception
       data ErrorError = ErrorError
         { etyp :: String
         , econtext :: SomeException
-        }
+        } deriving (Show,Typeable)
+      instance Exception ErrorError where
+        toException = SomeException
+
+      data ScError = ScError String
+        deriving (Show,Typeable)
+
+      instance Exception ScError where
+        toException = SomeException
 
       instance Exception BaseError where
         toException = SomeException

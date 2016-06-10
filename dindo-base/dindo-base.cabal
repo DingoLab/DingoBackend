@@ -2,11 +2,10 @@
 -- documentation, see http://haskell.org/cabal/users-guide/
 
 name:                dindo-base
-version:             0.1.0.0
+version:             0.1.0.10
 synopsis:            The backend of  Dingo, which is named Dindo.
 description:         The backend of  Dingo, which is named Dindo, and is used warp and wai.
 license:             AllRightsReserved
-license-file:        LICENSE
 author:              Qinka
 maintainer:          qinka@live.com
 copyright:           DingoLab
@@ -18,17 +17,20 @@ cabal-version:       >=1.10
 library
   exposed-modules:     Dindo.Auth
                      , Dindo.Base
+                     , Dindo.Config
                      , Dindo.Database
-                     , Dindo.Database.Dbable
-                     , Dindo.Database.Pool
+                     , Dindo.Database.Pg
                      , Dindo.Exception
                      , Dindo.Import
                      , Dindo.Import.Aeson
                      , Dindo.Import.ByteString
                      , Dindo.Import.Database
                      , Dindo.Import.Digest
+                     , Dindo.Import.Log
                      , Dindo.Import.Rable
+                     , Dindo.Import.Text
                      , Dindo.Import.TH
+                     , Dindo.Import.Wai
                      , Dindo.Import.Yaml
                      , Dindo.Launch
                      , Dindo.Logger
@@ -37,11 +39,15 @@ library
                      , Dindo.MicroFramework.Register
                      , Dindo.Rable
                      , Dindo.RIO
-  -- other-modules:
+                     , Dindo.Route
+  other-modules:       Dindo.Database.Internal
+                     , Dindo.Route.Types
   default-extensions:  OverloadedStrings
                      , TemplateHaskell
                      , QuasiQuotes
                      , DeriveDataTypeable
+                     , RecordWildCards
+                     , DeriveAnyClass
   build-depends:       aeson >= 0.11
                      , base >= 4.4 && < 4.10
                      , bytestring >= 0.10

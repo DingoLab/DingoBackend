@@ -19,6 +19,7 @@ module Dindo.Auth
       import Dindo.RIO
       import Dindo.Rable
       import Dindo.Database
+      import Dindo.Database.Pg
       import Dindo.Exception
       import Dindo.Base
       import Dindo.Import.ByteString as B
