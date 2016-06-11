@@ -9,6 +9,7 @@
 module Dindo.UM where
 
   import Dindo.Route
+  import Dindo.Auth
 \end{code}
 
 \begin{code}

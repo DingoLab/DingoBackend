@@ -108,13 +108,12 @@ MIME 转换
             then "Body"
             else (\(RtOther a)-> a) $ toWhere x
           toCT = do
-            wh <- lookupHeader "Accept"
+            wh <- lookupHeaderm "Accept"
             return $ case wh of
-              "application/json" -> RtJson
-              "application/xml" -> RtYaml
-              "application/yaml" -> RtXml
-              "application/some" -> RtOth undefined
-              x -> invalidAccept $ T.unpack x
+              Just "application/xml" -> RtXml
+              Just "application/yaml" -> RtYaml
+              Just "application/some" -> RtOth undefined
+              _ -> RtJson
 \end{code}
 
 \begin{code}
@@ -167,13 +166,12 @@ MIME 转换
             ] $ toContents cTRt $ x
           where
             toCT = do
-              wh <- lookupHeader "Accept"
+              wh <- lookupHeaderm "Accept"
               return $ case wh of
-                "application/json" -> RtJson
-                "application/xml" -> RtYaml
-                "application/yaml" -> RtXml
-                "application/some" -> RtOth undefined
-                x -> invalidAccept $ T.unpack x
+                Just "application/xml" -> RtXml
+                Just "application/yaml" -> RtYaml
+                Just "application/some" -> RtOth undefined
+                _ -> RtJson
 \end{code}
 
 500
@@ -193,11 +191,10 @@ MIME 转换
             ] $ toContents cTRt $ x
           where
             toCT = do
-              wh <- lookupHeader "Accept"
+              wh <- lookupHeaderm "Accept"
               return $ case wh of
-                "application/json" -> RtJson
-                "application/xml" -> RtYaml
-                "application/yaml" -> RtXml
-                "application/some" -> RtOth undefined
-                x -> invalidAccept $ T.unpack x
+                Just "application/xml" -> RtXml
+                Just "application/yaml" -> RtYaml
+                Just "application/some" -> RtOth undefined
+                _ -> RtJson
 \end{code}

@@ -14,11 +14,13 @@ module Dindo.Route.Types where
       import Language.Haskell.TH
       import Language.Haskell.TH.Quote
       import Dindo.RIO
+      import Data.Time
       import Dindo.Rable
       import Dindo.Exception
       import Network.Wai
       import Network.HTTP.Types
-      import System.Log.FastLogger (LoggerSet)
+      import Dindo.Import.Text (showT)
+      import Dindo.Logger(LoggerSet,apLogger)
 \end{code}
 
 \begin{code}
@@ -32,7 +34,7 @@ module Dindo.Route.Types where
       fromList [a,b,c,d] = Just $ RouInfo a b c d
       fromList _  = Nothing
       mapList :: [String] -> [RouInfo]
-      mapList [] = []
+      mapList [] = [RouInfo "/svrtime" "GET" "noAuth" "getSvrTimeR"]
       mapList (x:xs) = case (fromList $ words x) of
         Just y -> y:mapList xs
         Nothing -> mapList xs
@@ -41,11 +43,20 @@ module Dindo.Route.Types where
 \end{code}
 
 \begin{code}
+      getSvrTimeR :: RIO cfg Response
+      getSvrTimeR = do
+        time <- liftIO getCurrentTime
+        returnR $ RtCommonSuccT $ showT time
+\end{code}
+
+\begin{code}
       checkMethod :: Method -> cfg -> LoggerSet -> Request -> (RIO cfg Response -> RIO cfg Response) -> RIO cfg Response -> IO Response
       checkMethod met cfg logset req auth fm =
-        runRIO (RD req cfg logset) $  if met == requestMethod req
-          then catchRIO (auth fm) $ \e -> returnR $ Rt500 e
+        runRIO (RD req cfg logset) $ apLogger $ if met == requestMethod req
+          then catchRIO fdo $ \e -> returnR $ Rt500 e
           else returnR $ Rt403 "I do not know you!"
+        where
+          fdo = auth $ fm
       checkGET = checkMethod "GET"
       checkPOST = checkMethod "POST"
 \end{code}

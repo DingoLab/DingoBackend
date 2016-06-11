@@ -58,7 +58,7 @@ module Main
           "stderr" -> newStderrLoggerSet defaultBufSize
           x -> newFileLoggerSet defaultBufSize x
         rdCfg <- toRdCfg cfg'
-        run (getPort cfg') $ stdDindo rdCfg ls
+        runSettings (setFromL cfg' defaultSettings) $ stdDindo rdCfg ls
       cfg :: Launch -> IO $(stdT)
       cfg l = getContents >>= (decode'.T.encodeUtf8.T.pack)
         where

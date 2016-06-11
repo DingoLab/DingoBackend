@@ -23,6 +23,8 @@ library
   default-extensions:  QuasiQuotes
                      , OverloadedStrings
                      , TemplateHaskell
+                     , RecordWildCards
+                     , TypeFamilies
   build-depends:       base >=4.9 && <4.10
                      , dindo-base
   hs-source-dirs:      src

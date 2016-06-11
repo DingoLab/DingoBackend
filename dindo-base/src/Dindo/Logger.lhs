@@ -8,10 +8,18 @@
 \begin{code}
 module Dindo.Logger
     ( defaultBufSize
+    , pushLogStr
+    , pushLogStrTime
+    , pushLogStrLn
+    , pushLogStrLnTime
+    , logger
+    , loggerLn
+    , apLogger
     , BufSize
+    , module X
     ) where
 
-      import System.Log.FastLogger
+      import System.Log.FastLogger as X
       import Data.Monoid
       import Dindo.RIO
       import Network.Wai.Internal
@@ -23,9 +31,16 @@ module Dindo.Logger
 
 \begin{code}
       pushLogStrTime :: LogStr -> LoggerSet -> IO ()
-      pushLogStrTime i s = getCurrentTime >>= (pushLogStr s.(<>i).toLogStr.show)
+      pushLogStrTime i s = getLocalTime >>= (pushLogStr s.(<>i).toLogStr)
       pushLogStrLnTime :: LogStr -> LoggerSet -> IO ()
-      pushLogStrLnTime i s = getCurrentTime >>= (pushLogStrLn s.(<>i).toLogStr.show)
+      pushLogStrLnTime i s = getLocalTime >>= (pushLogStrLn s.(<>i).toLogStr)
+      getLocalTime :: IO String
+      getLocalTime = do
+        tz <- getCurrentTimeZone
+        now <- getCurrentTime
+        let nl = utcToLocalTime tz now
+        return $ show nl ++" "++ show tz
+
 \end{code}
 
 \begin{code}
@@ -38,16 +53,17 @@ module Dindo.Logger
 \begin{code}
       apLogger :: RIO cfg Response -> RIO cfg Response
       apLogger i = do
+        --liftIO $ putStrLn "hw"
         response <- i
         req <- getRequest
-        loggerLn $ " "
-          <> show' (remoteHost req) <> " "
-          <> show' (requestMethod req) <> " "
-          <> concat' (pathInfo req) <> " "
-          <> show' (httpVersion req) <> " "
-          <> resStatus response <> " "
-          <> show' (requestBodyLength req) <> " "
-          <> fromMaybe' (requestHeaderHost req) <> " "
+        loggerLn $ "\n\t"
+          <> show' (remoteHost req) <> "\n\t"
+          <> show' (requestMethod req) <> "\n\t/"
+          <> concat' (pathInfo req) <> "\n\t"
+          <> show' (httpVersion req) <> "\n\t"
+          <> resStatus response <> "\n\t"
+          <> show' (requestBodyLength req) <> "\n\t"
+          <> fromMaybe' (requestHeaderHost req) <> "\n\t"
           <> fromMaybe' (requestHeaderUserAgent req)
         return response
         where
