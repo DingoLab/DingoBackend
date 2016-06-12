@@ -271,9 +271,18 @@ weave launch 192.168.1.181
     例如某二进制包的文件名：\\
     single-7a8c900-win32\_windows\_10\_rs1\_14342-x86\_64-GHC\_8.0.1-llvm\_3.8-threaded-all\_in\_one.tar.xz
 
+    \section{关于重构}
+    在 Dindo 设计与开发过程中，由于设计者与开发者的经验的缺乏， Dindo 的目前\footnote{没有重构之前。}的结构相当不合理。同时，由于使用的 Yesod 的框架配套的
+    数据库“驱动” 并不能发挥 PostgreSQL 数据库的强大的功能，同时只对单一数据存储所有的 CRUD 操作模式有支持，CQRS 模式 对其具有毁灭性的效果。所以就在选框架的
+    情况下进行重构。
+    
+    使用的新的框架是 Yesod 使用的底层框架 Wai 与 Warp 。
+    
+
 	  \begin{thebibliography}{}
 	  	 %\bibitem[显示符号]{引用标签} Book Title, Author
 		 	\bibitem[1]{alauda:price} 灵雀云收费标准2016年5月，\href{http://www.alauda.cn/price/}{Alauda-Price}
+		     \bibitem[2]{bmicro1} 微服务设计，Sam\,Newman著，崔力强\,张骏译，中国工信出版集团\,人民邮电出版社\,O'REILLY\,Media,Inc.，2016年4月，北京。
 		\end{thebibliography}
   \end{appendix}
 
