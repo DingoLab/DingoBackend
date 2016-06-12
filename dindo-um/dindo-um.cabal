@@ -2,7 +2,7 @@
 -- documentation, see http://haskell.org/cabal/users-guide/
 
 name:                dindo-um
-version:             0.1.0.0
+version:             0.1.0.12
 -- synopsis:
 -- description:
 license:             BSD3
@@ -17,15 +17,17 @@ cabal-version:       >=1.10
 
 library
   exposed-modules:     Dindo.UM
-                     , Dindo.UM.Config
                      , Dindo.Std
-  -- other-modules:
+  other-modules:       Dindo.UM.Config
+                     , Dindo.UM.Data
+                     , Dindo.UM.Handler
+                     , Paths_dindo_um
   default-extensions:  QuasiQuotes
                      , OverloadedStrings
                      , TemplateHaskell
                      , RecordWildCards
                      , TypeFamilies
   build-depends:       base >=4.9 && <4.10
-                     , dindo-base
+                     , dindo-base >= 0.1.1
   hs-source-dirs:      src
   default-language:    Haskell2010

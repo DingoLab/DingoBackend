@@ -12,6 +12,9 @@ module Dindo.Base
     , lookupQueryf
     , lookupQuery
     , lookupQuerym
+    , HandlerT
+    , dindo_base_version
+    , dindo_base_version_quote
     ) where
 
       import Dindo.Import
@@ -21,6 +24,19 @@ module Dindo.Base
       import qualified Data.Text.Encoding as TE
       import qualified Data.CaseInsensitive as CI
       import Dindo.Import.ByteString as B
+      import Network.Wai(Response)
+      import Paths_dindo_base
+      import Data.Version
+      import Language.Haskell.TH
+\end{code}
+
+\begin{code}
+      dindo_base_version = showVersion version
+      dindo_base_version_quote = stringE dindo_base_version
+\end{code}
+
+\begin{code}
+      type HandlerT cfg = RIO cfg Response
 \end{code}
 
 查找头

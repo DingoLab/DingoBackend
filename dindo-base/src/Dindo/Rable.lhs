@@ -24,6 +24,7 @@ module Dindo.Rable
     , RtCommon(..)
     , Rt403(..)
     , Rt500(..)
+    , RtSvrInfo(..)
     ) where
 
       import Dindo.RIO
@@ -117,13 +118,13 @@ MIME 转换
 \end{code}
 
 \begin{code}
-      data RtStatus = RtSucc | RtFail
+      data RtStatus = RtSucc | RtFail Status
       statusH :: RtStatus -> BI.ByteString
       statusH RtSucc = "Success"
-      statusH RtFail = "Failed"
+      statusH (RtFail _) = "Failed"
       statusC :: RtStatus -> Status
       statusC RtSucc = status200
-      statusC RtSucc = status400
+      statusC (RtFail x) = x
 \end{code}
 
 
@@ -146,7 +147,7 @@ MIME 转换
         toWhere (RtCommonSuccT _) = RtBody
         toStatus RtCommonSucc = RtSucc
         toStatus (RtCommonSuccT _) = RtSucc
-        toStatus (RtCommonFail _) = RtFail
+        toStatus (RtCommonFail _) = RtFail status400
 \end{code}
 
 拒绝认证（403）
@@ -157,21 +158,8 @@ MIME 转换
         toValue (Rt403 t) = object ["auth-msg".=t]
         toNodes (Rt403 t) = [xml|<auth-msg>#{t}|]
       instance Rable Rt403 where
-        returnR x = do
-          cTRt <- toCT
-          return $ responseLBS status403
-            [ ("Status",statusH RtFail)
-            , ("Context-Where","Body")
-            , ("Content-Type",toMIME cTRt)
-            ] $ toContents cTRt $ x
-          where
-            toCT = do
-              wh <- lookupHeaderm "Accept"
-              return $ case wh of
-                Just "application/xml" -> RtXml
-                Just "application/yaml" -> RtYaml
-                Just "application/some" -> RtOth undefined
-                _ -> RtJson
+        toWhere _ = RtBody
+        toStatus _ = RtFail status403
 \end{code}
 
 500
@@ -182,19 +170,50 @@ MIME 转换
         toValue (Rt500 e) = object ["ierror".= show e]
         toNodes (Rt500 e) = [xml|<ierror>#{T.pack(show e)}|]
       instance Rable Rt500 where
-        returnR x = do
-          cTRt <- toCT
-          return $ responseLBS status500
-            [ ("Status",statusH RtFail)
-            , ("Context-Where","Body")
-            , ("Content-Type",toMIME cTRt)
-            ] $ toContents cTRt $ x
+         toStatus _ = RtFail status500
+         toWhere _ = RtBody
+\end{code}
+返回服务器信息
+\begin{code}
+      data RtSvrInfo = RtSvrInfo Text Text Text Text Bool
+        deriving (Show,Eq)
+      instance Varable RtSvrInfo where
+        toValue (RtSvrInfo t s v d _) = object [ "server-time".=t
+                                             , "server-info".=s
+                                             , "server-version".=v
+                                             , "dindo-base-version".=d
+                                             ]
+        toNodes (RtSvrInfo t s v d _) = [xml|
+          <server-time>#{t}
+          <server-info>#{s}
+          <server-version>#{v}
+          <dindo-base-version>#{d}
+          |]
+      instance Rable RtSvrInfo where
+        returnR (x@(RtSvrInfo _ _ _ _ b)) =
+          spReturnR statusCode RtBody RtSucc x
           where
-            toCT = do
-              wh <- lookupHeaderm "Accept"
-              return $ case wh of
-                Just "application/xml" -> RtXml
-                Just "application/yaml" -> RtYaml
-                Just "application/some" -> RtOth undefined
-                _ -> RtJson
+            statusCode = if b
+              then status404
+              else Status 200 "GetSvrInfo"
+\end{code}
+
+\begin{code}
+      spReturnR sC sW sS x = do
+        cTRt <- toCT
+        return $ responseLBS sC
+          [ ("Status",statusH sS)
+          , ("Context-Where",whereH sW)
+          , ("Content-Type",toMIME cTRt)
+          ] $ toContents cTRt $ x
+        where
+          toCT = do
+            wh <- lookupHeaderm "Accept"
+            return $ case wh of
+              Just "application/xml" -> RtXml
+              Just "application/yaml" -> RtYaml
+              Just "application/some" -> RtOth undefined
+              _ -> RtJson
+          whereH (RtOther x) = x
+          whereH RtBody = "Body"
 \end{code}

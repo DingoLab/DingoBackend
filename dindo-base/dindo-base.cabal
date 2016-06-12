@@ -2,7 +2,7 @@
 -- documentation, see http://haskell.org/cabal/users-guide/
 
 name:                dindo-base
-version:             0.1.0.10
+version:             0.1.1.20
 synopsis:            The backend of  Dingo, which is named Dindo.
 description:         The backend of  Dingo, which is named Dindo, and is used warp and wai.
 license:             AllRightsReserved
@@ -42,7 +42,9 @@ library
                      , Dindo.RIO
                      , Dindo.Route
   other-modules:       Dindo.Database.Internal
+                     , Dindo.Database.Pg.TH
                      , Dindo.Route.Types
+                     , Paths_dindo_base
   default-extensions:  OverloadedStrings
                      , TemplateHaskell
                      , QuasiQuotes

@@ -12,6 +12,7 @@ module Main
 
       import Dindo.Std
       import Dindo.Config
+      import Dindo.Base(dindo_base_version_quote)
       import Dindo.Exception(ScError(..))
       import Dindo.Import.Wai hiding(getPort)
       import System.Console.CmdArgs
@@ -37,11 +38,11 @@ module Main
       data Launch = Launch {form ::String}
         deriving (Show,Data,Typeable)
       launch = Launch{form="auto" &= typ "AUTO|YAML|JSON" &= help "格式"}
-        &= summary ( {-"dindo-base-"
-                  ++ $(dindo_common_version_quasi)
-                  ++ "; " ++ $(dindo_module_name) ++ "-"
-                  ++ $(dindo_module_version)
-                  ++ "; -} "dindo-launch-"
+        &= summary ( "dindo-base-"
+                  ++ $(dindo_base_version_quote)
+                  ++ "; " ++ $(dindom_name_quote) ++ "-"
+                  ++ $(dindom_version_quote)
+                  ++ ";  dindo-launch-"
                   ++ showVersion version)
 \end{code}
 

@@ -14,6 +14,7 @@ module Dindo.Database.Pg
     , toQuery
     , PgC,PgCP,PgCPA
     , PgSql(..)
+    , pgQuery
     ) where
 
       import Data.Pool
@@ -24,6 +25,7 @@ module Dindo.Database.Pg
       import Dindo.Exception
       import Dindo.RIO
       import Data.Int(Int64)
+      import Dindo.Database.Pg.TH
 \end{code}
 
 
