@@ -7,6 +7,8 @@ if [ -n "$DOCUMENT" ]; then
   sudo apt-get update
   sudo apt-get install -y --no-install-recommends texlive-base texlive-xetex latex-xcolor xzdec
   sudo apt-get install -y --no-install-recommends texlive-fonts-recommended texlive-latex-extra lmodern texlive-latex-recommended
+  tlmgr repository list
+  tlmgr option repository http://mirror.ctan.org/systems/texlive/tlnet
   cd ~ && mkdir texmf
   tlmgr init-usertree
   sudo tlmgr update --all
