@@ -8,7 +8,7 @@
 \begin{code}
 module Dindo.Import.Logger
     ( module X
-    , Logger
+    , Logger(..)
     ) where
 
       import System.Log.FastLogger as X

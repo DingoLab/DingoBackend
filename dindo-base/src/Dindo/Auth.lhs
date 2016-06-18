@@ -7,12 +7,18 @@
 
 \begin{code}
 module Dindo.Auth
-    (
+    ( runPash
+    , noAuth
+    , tokenAuth
+    , pskAuth
     ) where
 
+      import Dindo.Import
+      import Dindo.Import.Digest
+      import Dindo.Import.Pg
+      import Dindo.Import.Yesod
       import qualified Dindo.Import.ByteString as B
       import qualified Dindo.Import.Text as T
-      import Dindo.Import.Yesod
 
       import Dindo.Base
       import Dindo.Database
@@ -25,8 +31,8 @@ runPash 0 -> uid
         1 -> name
         2 -> tel
 \begin{code}
-      runPash :: Int -> B.ByteString -> Text -> Text
-      runPash i time pash = pack $ showDigest $ sha512 $ B.fromStrict $ B.concat [pre,encodeUtf8 pash,time]
+      runPash :: Int -> B.ByteString -> T.Text -> T.Text
+      runPash i time pash = T.pack $ showDigest $ sha512 $ B.fromStrict $ B.concat [pre,T.encodeUtf8 pash,time]
         where
           pre = case i of
             0 -> "uid"
@@ -67,30 +73,28 @@ runPash 0 -> uid
       pskAuth :: PgSql site
               => HandlerT site IO AuthResult
       pskAuth = checkTime $ \time -> do
-        pash  <- getPash
+        pash  <- lookupPostParam "pash"
         uid'  <- lookupPostParam "uid"
         name' <- lookupPostParam "name"
-        tel''  <- lookupPostParam "tel"
-        let tel' = fmap (read.unpack) tel'' :: Maybe Int
+        tel'  <- lookupPostParam "tel"
         case (uid',name',tel') of
-          (Nothing,Nothing,Nothing) -> return $ Unauthorized "Who are you!"
           (Just uid,name,tel) -> do
-            let [n,t] = map (pickF "AND".(T.concat.T.words)<$>) [name,tel]
-            rt <- runPgT $ queryPg (T.encodeUtf8 $ T.unwords
+            let [n,t] = map (pickF "AND") $ zip (map ((T.concat.T.words)<$>) [name,tel]) ["key_name","key_tel"]
+            rt <- runPgT $ queryPg (toPgQuery $ T.encodeUtf8 $ T.unwords
               [ "SELECT key_pash"
               , "FROM table_account"
               , "WHERE key_uid = ?"
               , fst n , fst t
-              ]) $ catMaybes [Just uid,snd name,snd tel]
+              ]) (catMaybes [Just uid,snd n,snd t])
             checkPash pash rt (runPash 0 time)
           (Nothing,Just name,tel) -> do
-            let t = pickF "AND" $ (T.concat.T.words) <$> tel
-            rt <- runPgT $ queryPg (T.encodeUtf8 $ T.concat
+            let t = pickF "AND" ((T.concat.T.words) <$> tel,"key_tel")
+            rt <- runPgT $ queryPg (toPgQuery $ T.encodeUtf8 $ T.concat
               [ "SELECT key_pash"
               , "FROM table_account"
               , "WHERE key_name = ?"
               , fst t
-              ]) $ catMaybes [Just name,snd tel]
+              ]) $ catMaybes [Just name,snd t]
             checkPash pash rt (runPash 1 time)
           (Nothing,Nothing,Just tel) -> do
             rt <- runPgT $ queryPg [pgQuery|
@@ -101,18 +105,18 @@ runPash 0 -> uid
             checkPash pash rt (runPash 2 time)
           _ -> return $ Unauthorized "Who are you!"
         where
-          checkPash pash rt f = do
+          checkPash (Just pash) rt f = do
             case rt of
-              usrPash:_ -> if usrPash == pash
+              Only usrPash:_ -> if f usrPash == pash
                   then return Authorized
                   else return $ Unauthorized "Who are you!"
               _ -> return $ Unauthorized "Who are you!"
           checkTime f = do
-            time' <- liftHandlerT $ lookupHeader "TIME-STAMP"
+            time' <- lookupHeader "TIME-STAMP"
             now <- liftIO getCurrentTime
             case time' of
               Just time -> do
-                let t = read.unpack.decodeUtf8 $ time
+                let t = read.T.unpack.T.decodeUtf8 $ time
                 let diff = diffUTCTime now t
                 if diff <= 12 && diff >= (-12)
                   then f time

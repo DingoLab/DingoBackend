@@ -7,26 +7,35 @@
 
 \begin{code}
 module Dindo.Database.Pg
-    (
+    ( module PG
+    , pgQuery
+    , toPgCP
+    , PgC(..),PgCP(..),PgCPA(..),PgCI(..)
+    , PgSql(..)
+    , runPg,runPgT,tryRunPg,tryRunPgT
+    , beginPgT,commitPgT,rollbackPgT
+    , toPgQuery
+    , PgQuery(..)
+    , queryPg,queryPg_
+    , executePg,executePg_
     ) where
 
       import Dindo.Import.Aeson
+      import Dindo.Import.Yesod
       import qualified Dindo.Import.ByteString as B
 
       import Dindo.Exception
       import Dindo.Database.Internal
 
-      import Control.Monad.Status
+      import Control.Monad.IO.Class
       import Data.Pool
       import Data.Int(Int64)
       import Data.Time
-      import qualified Database.PostgreSQL.Simple as PG
-      import qualified Database.PostgreSQL.Simple.Types as PG
-      import qualified Database.PostgreSQL.Simple.SqlQQ as PG
+      import qualified Dindo.Import.Pg as PG
 \end{code}
 
 \begin{code}
-      pgQuery = sql
+      pgQuery = PG.sql
 \end{code}
 
 \begin{code}
@@ -40,14 +49,14 @@ module Dindo.Database.Pg
       toPgCP :: PgCI -> Int -> NominalDiffTime
              -> Int ->  IO PgCP
       toPgCP x = createPool
-        (connect x)
-        close
+        (PG.connect x)
+        PG.close
 
 \end{code}
 
 \begin{code}
       instance FromJSON PgCI where
-        parseJSON (Object v) = PgCI
+        parseJSON (Object v) = PG.ConnectInfo
           <$> v .: "host"
           <*> v .: "port"
           <*> v .: "user"
@@ -57,12 +66,12 @@ module Dindo.Database.Pg
 
 \begin{code}
       class PgSql a where
-        getPgCP :: MonadIO m => HandlerT a m PgCP
-        runPgCPA :: MonadIO m => PgCPA b -> HandlerT a m b
+        getPgCP :: HandlerT a IO PgCP
+        runPgCPA :: PgCPA b -> HandlerT a IO b
         runPgCPA = defRunPgCP
 
-      defRunPgCP :: (PgSql a,MonadIO m)
-                 => PgCPA b -> HandlerT a m b
+      defRunPgCP :: PgSql a
+                 => PgCPA b -> HandlerT a IO b
       defRunPgCP (CPA fm) = do
         cp <- getPgCP
         liftIO $ withResource cp fm
@@ -79,25 +88,25 @@ module Dindo.Database.Pg
 \end{description}
 最基本的查询，没有事务与异常
 \begin{code}
-      runPg :: (PgSql cfg,MonadIO m)
-            => PgCPA b -> HandlerT cfg m b
+      runPg :: PgSql cfg
+            => PgCPA b -> HandlerT cfg IO b
       runPg = runPgCPA
 \end{code}
 带有异常捕获但是没有事务
 \begin{code}
-      tryRunPg :: (PgSql cfg,MonadIO m,Exception e)
-               => PgCPA b -> HandlerT cfg m (Either e b)
+      tryRunPg :: (PgSql cfg,Exception e)
+               => PgCPA b -> HandlerT cfg IO (Either e b)
       tryRunPg action = catchH
         (runPg action >>= (return.Right))
         (\e -> return $ Left e)
 \end{code}
 带有事务，不捕获异常（捕获之后再抛出）
 \begin{code}
-      runPgT :: (PgSql cfg,MonadIO m)
-             => PgCPA b -> HandlerT cfg m b
+      runPgT :: PgSql cfg
+             => PgCPA b -> HandlerT cfg IO b
       runPgT action' = catchH (runPg action) te
         where
-          te :: (PgSql cfg,MonadIO m) => SomeException -> HandlerT cfg m b
+          te :: PgSql cfg => SomeException -> HandlerT cfg IO b
           te e = do
             runPg rollbackPgT
             throw e
@@ -109,8 +118,8 @@ module Dindo.Database.Pg
 \end{code}
 带事务，返回异常
 \begin{code}
-      tryRunPgT :: (PgSql cfg,Exception e,MonadIO m)
-                => PgCPA b -> HandlerT cfg m (Either e b)
+      tryRunPgT :: (PgSql cfg,Exception e)
+                => PgCPA b -> HandlerT cfg IO (Either e b)
       tryRunPgT action' = catchH rv le
         where
           rv = fmap Right $ runPg action
@@ -137,7 +146,7 @@ module Dindo.Database.Pg
 
 \begin{code}
       type PgQuery = PG.Query
-      toQuery = PG.Query
+      toPgQuery = PG.Query
 \end{code}
 
 查询
@@ -147,12 +156,12 @@ PostgreSQL 的查询
 
 Query 函数
 \begin{code}
-      queryPg :: (PG.ToRow q,FromRow r)
+      queryPg :: (PG.ToRow q,PG.FromRow r)
               => PgQuery -> q -> PgCPA [r]
-      queryPg q qq = CPA $ \c -> query c q qq
+      queryPg q qq = CPA $ \c -> PG.query c q qq
       queryPg_ :: PG.FromRow r
               => PgQuery -> PgCPA [r]
-      queryPg_ q = CPA $ \c -> query_ c q
+      queryPg_ q = CPA $ \c -> PG.query_ c q
 \end{code}
 
 
@@ -160,7 +169,7 @@ Execute 函数
 \begin{code}
       executePg :: PG.ToRow q
                 => PgQuery -> q -> PgCPA Int64
-      executePg q qq = CPA $ \c -> execute c q qq
+      executePg q qq = CPA $ \c -> PG.execute c q qq
       executePg_ :: PgQuery -> PgCPA Int64
-      executePg_ q = CPA $ \c -> execute_ c q
+      executePg_ q = CPA $ \c -> PG.execute_ c q
 \end{code}

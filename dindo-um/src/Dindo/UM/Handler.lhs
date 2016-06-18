@@ -7,52 +7,77 @@
 
 \begin{code}
 module Dindo.UM.Handler
-    (
+    ( postRegistR
+    , postUsrinfoR
+    , postLogoutR
+    , postLoginR
+    , postIdentifiedR
+    , postIdentifyR
+    , postUsrinfochangeR
+    , postChangpashR
+    , postUsrhimgR
+    , postUpeaddrR
+    , postGeteaddR
     ) where
+
+      import Dindo.Import.Yesod
+
+      import Dindo.UM.Foundation
 \end{code}
 
 
 
 \begin{code}
-postRegistR = undefined
+      postRegistR :: Handler TypedContent
+      postRegistR = undefined
 \end{code}
 
 \begin{code}
-postUsrinfoR = undefined
+      postUsrinfoR :: Handler TypedContent
+      postUsrinfoR = undefined
 \end{code}
 
 \begin{code}
-postLogoutR = undefined
+      postLogoutR :: Handler TypedContent
+      postLogoutR = undefined
 \end{code}
 
 \begin{code}
-postLoginR = undefined
+      postLoginR :: Handler TypedContent
+      postLoginR = undefined
 \end{code}
 
 \begin{code}
-postIdentified = undefined
+      postIdentifiedR :: Handler TypedContent
+      postIdentifiedR = undefined
 \end{code}
 
 \begin{code}
-postIdentifyR = undefined
+      postIdentifyR :: Handler TypedContent
+      postIdentifyR = undefined
 \end{code}
 
 \begin{code}
-postUsrinfochangeR = undefined
+      postUsrinfochangeR :: Handler TypedContent
+      postUsrinfochangeR = undefined
 \end{code}
 
 \begin{code}
-postChangpashR = undefined
+      postChangpashR :: Handler TypedContent
+      postChangpashR = undefined
 \end{code}
 
 \begin{code}
-postUsrhimgR = undefined
+      postUsrhimgR :: Handler TypedContent
+      postUsrhimgR = undefined
 \end{code}
 
 \begin{code}
-postUpeaddrR = undefined
+      postUpeaddrR :: Handler TypedContent
+      postUpeaddrR = undefined
 \end{code}
 
 \begin{code}
-postGeteaddR = undefined
+      postGeteaddR :: Handler TypedContent
+      postGeteaddR = undefined
 \end{code}

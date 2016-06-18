@@ -7,16 +7,18 @@
 
 \begin{code}
 module Dindo.Rable
-    (
+    ( RtType(..),RtWhere(..),RtStatus(..)
+    , Varable(..),Rable(..)
     ) where
 
       import Dindo.Import.Aeson as A
-      import qualified Dindo.Import.ByteString as B
-      import qualified Dindo.Import.Text as T
       import Dindo.Import.Wai (Status)
       import Dindo.Import.XML as X
+      import Dindo.Import.Wai
       import Dindo.Import.Yaml as Y
       import Dindo.Import.Yesod
+      import qualified Dindo.Import.ByteString as B
+      import qualified Dindo.Import.Text as T
 
       import Control.Monad
       import GHC.Exts(fromList)
@@ -26,7 +28,7 @@ module Dindo.Rable
 \begin{code}
       data RtType = RtJson | RtYaml | RtXml | RtText
         deriving (Eq,Show)
-      data RtWhere = RtBody | RtOther Text
+      data RtWhere = RtBody | RtOther T.Text
         deriving (Eq,Show)
 \end{code}
 
@@ -35,19 +37,19 @@ module Dindo.Rable
       class Show a => Varable a where
         toValue :: a -> Value
         toNodes :: a -> [Node]
-        toContents :: RtType -> a -> BI.ByteString
+        toContents :: RtType -> a -> B.ByteString
         toContents = defToContent
-      defToContent :: Varable a => RtType -> a -> BI.ByteString
+      defToContent :: Varable a => RtType -> a -> B.ByteString
       defToContent RtJson = defToContentJson
       defToContent RtYaml = defToContentYaml
       defToContent RtXml = defToContentXml
-      defToContent RtText = showButf8
-      defToContentJson :: Varable a => a -> BI.ByteString
-      defToContentJson = toStrict. A.encode . toValue
-      defToContentYaml :: Varable a => a -> BI.ByteString
+      defToContent RtText = B.showButf8
+      defToContentJson :: Varable a => a -> B.ByteString
+      defToContentJson = B.toStrict. A.encode . toValue
+      defToContentYaml :: Varable a => a -> B.ByteString
       defToContentYaml = Y.encode . toValue
-      defToContentXml :: Varable a => a -> BI.ByteString
-      defToContentXml  x = toStrict $ renderLBS def $ Document p root []
+      defToContentXml :: Varable a => a -> B.ByteString
+      defToContentXml x = B.toStrict $ renderLBS def $ Document p root []
         where
           root = Element "data" (fromList []) $ toNodes x
           p = Prologue [] Nothing []
@@ -57,7 +59,7 @@ module Dindo.Rable
 \begin{code}
       data RtStatus = RtSucc (Maybe Status)
                     | RtFail (Maybe Status)
-      statusHead :: RtStatus -> Text
+      statusHead :: RtStatus -> T.Text
       statusHead (RtSucc _) = "Success"
       statusHead (RtFail _) = "Failed"
 \end{code}
@@ -66,18 +68,16 @@ module Dindo.Rable
       class Varable a => Rable a where
         toWhere :: a -> RtWhere
         toStatus :: a -> RtStatus
-        returnR :: MonadHandler m => a -> m  TypedContent
+        returnR :: a -> HandlerT site IO TypedContent
         returnR = defReturnR
-      defReturnR :: ( MonadHandler m
-                    , Rable a
-                    )
-                 => a -> m TypedContent
+      defReturnR :: Rable a
+                 => a -> HandlerT site IO TypedContent
       defReturnR x = do
         addHeader "Status" $ status x
         if toWhere x == RtBody
           then addHeader "Context-Where" "Body"
           else addHeader "Context-Where" $ (\(RtOther a)-> a) $ toWhere x
-        addContent >>= sC
+        addContent >>= sC (toStatus x)
         where
           sC (RtSucc (Just x)) = sendResponseStatus x
           sC (RtSucc Nothing) = return
@@ -86,12 +86,12 @@ module Dindo.Rable
           status = statusHead.toStatus
           addContent = case toWhere x of
             RtBody -> selectRep $ do
-              provideRepType "application/json" $ return $ decodeUtf8 $ toContents RtJson x
-              provideRepType "application/yaml" $ return $ decodeUtf8 $ toContents RtYaml x
-              provideRepType "application/xml"  $ return $ decodeUtf8 $ toContents RtXml  x
+              provideRepType "application/json" $ return $ T.decodeUtf8 $ toContents RtJson x
+              provideRepType "application/yaml" $ return $ T.decodeUtf8 $ toContents RtYaml x
+              provideRepType "application/xml"  $ return $ T.decodeUtf8 $ toContents RtXml  x
             RtOther y -> do
-              addHeader y $ pack $ show x
-              selectRep $  provideRep $ return (""::Text)
+              addHeader y $ T.pack $ show x
+              selectRep $  provideRep $ return (""::T.Text)
 \end{code}
 
 
@@ -111,7 +111,7 @@ module Dindo.Rable
           where
             x' = T.unlines x
         toNodes NotAuthenticated = [xml|NotAuthenticated|]
-        toNodes (BadMethod x) = [xml|<BadMethod>#{pack $ show x}|]
+        toNodes (BadMethod x) = [xml|<BadMethod>#{T.pack $ show x}|]
 
       instance Rable ErrorResponse where
         toWhere _ = RtBody
@@ -122,8 +122,8 @@ module Dindo.Rable
 通用成功与失败标志
 \begin{code}
       data RtCommon = RtCommonSucc
-                    | RtCommonSuccT Text
-                    | RtCommonFail Text
+                    | RtCommonSuccT T.Text
+                    | RtCommonFail T.Text
         deriving (Eq,Show)
       instance Varable RtCommon where
         toValue RtCommonSucc = Null
@@ -138,5 +138,5 @@ module Dindo.Rable
         toWhere (RtCommonSuccT _) = RtBody
         toStatus RtCommonSucc = RtSucc Nothing
         toStatus (RtCommonSuccT _) = RtSucc Nothing
-        toStatus (RtCommonFail _) = RtFail status400
+        toStatus (RtCommonFail _) = RtFail $ Just status400
 \end{code}

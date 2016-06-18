@@ -7,12 +7,15 @@
 
 \begin{code}
 module Dindo.Config
-    (
+    ( CfgF(..)
+    , LogPath(..)
     ) where
 
       import Dindo.Import.Wai hiding (getPort)
       import Dindo.Import.Aeson
       import Dindo.Import.ByteString (ByteString)
+      import qualified Dindo.Import.Text as T
+
       import Data.String (fromString)
       import System.Exit
       import System.Signal
@@ -48,7 +51,7 @@ module Dindo.Config
       defSetSettings l = setInstallShutdownHandler (shutDown l)
         . setPort (getPort l)
         . setHost (fromString (getListenType l))
-        . setTimeout (getTimeOut l)
+        . setTimeout (getTimeout l)
         . setServerName (getServerName l)
 \end{code}
 
@@ -56,4 +59,10 @@ module Dindo.Config
       data LogPath = LogStdout
                    | LogStderr
                    | LogFile FilePath
+
+      instance FromJSON LogPath where
+        parseJSON (String v) = pure $ case v of
+          "stdout" -> LogStdout
+          "stderr" -> LogStderr
+          x        -> LogFile $ T.unpack x
 \end{code}

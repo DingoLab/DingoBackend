@@ -7,9 +7,12 @@
 
 \begin{code}
 module Dindo.Database.Internal
-    (
+    ( CPA(..)
+    , getC
+    , runCPA
     ) where
 
+      import Data.Pool
       import Dindo.Import.Yesod
 \end{code}
 

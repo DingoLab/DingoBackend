@@ -7,23 +7,31 @@
 
 \begin{code}
 module Dindo.UM.Data
-    (
+    ( RtRegist(..)
+    , RtIdy(..)
+    , RtIdfed(..)
+    , RtUInfo(..)
+    , RtLogin(..)
+    , RtUImg(..)
+    , RtChPsk(..)
+    , RtEaddr(..)
+    , RtGEadd(..)
     ) where
 
       import Dindo.Rable
       import Dindo.Import.Aeson
+      import Dindo.Import.XML
+      import Dindo.Import.Yesod
       import qualified Dindo.Import.Text as T
       import qualified Dindo.Import.ByteString as B
-      import Dindo.Import.Yesod
-      -- import Dindo.Database
 \end{code}
 
 
 
 用户注册返回数据
 \begin{code}
-      data RtRegist = RtRegist Text
-                    | RtRegistFail Text
+      data RtRegist = RtRegist T.Text
+                    | RtRegistFail T.Text
         deriving (Eq)
       instance Show RtRegist where
         show (RtRegist x) = T.unpack x
@@ -52,7 +60,7 @@ module Dindo.UM.Data
 用户认证信息的返回数据
 \begin{code}
       data RtIdy = RtIdy
-                 | RtIdyFail Text
+                 | RtIdyFail T.Text
         deriving (Eq)
       instance Show RtIdy where
         show (RtIdyFail x) = T.unpack x
@@ -73,8 +81,8 @@ module Dindo.UM.Data
       data RtIdfed = RtIdfedPass | RtIdfedNo
         deriving (Eq,Show)
       instance Varable RtIdfed where
-        toValue RtIdfedPass = object ["status" .= ("pass"::Text)]
-        toValue RtIdfedNo   = object ["status" .= ("no"::Text)]
+        toValue RtIdfedPass = object ["status" .= ("pass"::T.Text)]
+        toValue RtIdfedNo   = object ["status" .= ("no"::T.Text)]
         toNodes RtIdfedPass = [xml|<status>pass|]
         toNodes RtIdfedNo   = [xml|<status>no|]
       instance Rable RtIdfed where
@@ -87,10 +95,10 @@ module Dindo.UM.Data
 用户信息查询返回结果
 \begin{code}
       data RtUInfo = RtUInfo
-          { rtuiUid :: Text
-          , rtuiName :: Text
-          , rtuiTel :: Text
-          , rtuiEmail :: Text
+          { rtuiUid :: T.Text
+          , rtuiName :: T.Text
+          , rtuiTel :: T.Text
+          , rtuiEmail :: T.Text
           }
         | RtUInfoNSU
       instance Show RtUInfo where
@@ -119,8 +127,8 @@ module Dindo.UM.Data
 
 登录
 \begin{code}
-      data RtLogin = RtLoginSucc Text Text
-                   | RtLoginFail Text
+      data RtLogin = RtLoginSucc T.Text T.Text
+                   | RtLoginFail T.Text
         deriving (Show,Eq)
       instance Varable RtLogin where
         toValue (RtLoginSucc u t) = object ["uid".=u,"tmp-token".=t]
@@ -139,7 +147,7 @@ module Dindo.UM.Data
 
 获取用户头像返回内容
 \begin{code}
-      data RtUImg = RtUImg ByteString
+      data RtUImg = RtUImg B.ByteString
                   | RtUImgFail
         deriving (Eq)
       instance Show RtUImg
@@ -150,13 +158,13 @@ module Dindo.UM.Data
         returnR RtUImgFail = do
           addHeader "CONTEXT-WHERE" "CONTEXT"
           addHeader "CONTEXT" "Failed on get image"
-          selectRep $ provideRep $ return (""::Text)
+          selectRep $ provideRep $ return (""::T.Text)
 \end{code}
 
 更改密码的 返回值
 \begin{code}
       data RtChPsk = RtChPsk
-                   | RtChPskFail Text
+                   | RtChPskFail T.Text
         deriving (Eq)
       instance Show RtChPsk where
         show (RtChPskFail x) = T.unpack x
@@ -174,10 +182,10 @@ module Dindo.UM.Data
 
 收货地址的增删 的返回值
 \begin{code}
-      data RtEaddr = RtEaddrAdd Text
+      data RtEaddr = RtEaddrAdd T.Text
                    | RtEaddrChn
                    | RtEaddrDel
-                   | RtEaddrFail Text
+                   | RtEaddrFail T.Text
         deriving (Eq,Show)
       instance Varable RtEaddr where
         toValue (RtEaddrAdd x) = object ["aid" .= x]
@@ -195,19 +203,23 @@ module Dindo.UM.Data
 
 获取地址
 \begin{code}
-      data RtGEadd = RtGEadd [(Text,Text,Text)]
-                   | RtGEaddFail Text
+      data RtGEadd = RtGEadd [(T.Text,T.Text,T.Text)]
+                   | RtGEaddFail T.Text
         deriving (Eq,Show)
       instance Varable RtGEadd where
         toValue (RtGEadd x) = toJSON $
           map (\(a,b,c)->object ["aid".=a,"addr".=b,"zip".=c]) x
         toValue (RtGEaddFail x) = object ["error" .= x]
-        toNodes (RtGEadd xs = [xml|
-          $forall (a,b,c) <- xs
-            <aid>#{a}
-            <addr>#{b}
-            <zip>#{c}
+        toNodes (RtGEadd xs) = [xml|
+          $forall x <- xs
+            <aid>#{fff x}
+            <addr>#{sss x}
+            <zip>#{ttt x}
           |]
+          where
+            fff (a,_,_) = a
+            sss (_,b,_) = b
+            ttt (_,_,t) = t
         toNodes (RtGEaddFail x) = [xml|<error>#{x}|]
       instance Rable RtGEadd where
         toWhere _ = RtBody

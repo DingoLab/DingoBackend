@@ -10,5 +10,5 @@ module Dindo.Import.Digest
     ( module X
     ) where
 
-      import Data.Digest.SHA as X
+      import Data.Digest.Pure.SHA as X
 \end{code}

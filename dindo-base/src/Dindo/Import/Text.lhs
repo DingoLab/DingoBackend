@@ -8,8 +8,7 @@
 \begin{code}
 module Dindo.Import.Text
     ( module X
-    , encodeUtf8
-    , decodeUtf8
+    , encodeUtf8,decodeUtf8
     , showT,readT
     ) where
 
