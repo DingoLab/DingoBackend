@@ -9,6 +9,7 @@
 module Dindo.Rable
     ( RtType(..),RtWhere(..),RtStatus(..)
     , Varable(..),Rable(..)
+    , RtSvrinfo(..)
     ) where
 
       import Dindo.Import.Aeson as A
@@ -16,7 +17,7 @@ module Dindo.Rable
       import Dindo.Import.XML as X
       import Dindo.Import.Wai
       import Dindo.Import.Yaml as Y
-      import Dindo.Import.Yesod
+      import Yesod.Core
       import qualified Dindo.Import.ByteString as B
       import qualified Dindo.Import.Text as T
 
@@ -139,4 +140,16 @@ module Dindo.Rable
         toStatus RtCommonSucc = RtSucc Nothing
         toStatus (RtCommonSuccT _) = RtSucc Nothing
         toStatus (RtCommonFail _) = RtFail $ Just status400
+\end{code}
+
+服务器状态
+\begin{code}
+      data RtSvrinfo = RtSvrinfo T.Text T.Text
+        deriving (Show,Eq)
+      instance Varable RtSvrinfo where
+        toValue (RtSvrinfo t i) = object ["server-time" .= t,"server-info" .= i]
+        toNodes (RtSvrinfo t i) = [xml|<server-time>#{t}<server-info>#{i}|]
+      instance Rable RtSvrinfo where
+        toWhere _ = RtBody
+        toStatus _ = RtSucc Nothing
 \end{code}

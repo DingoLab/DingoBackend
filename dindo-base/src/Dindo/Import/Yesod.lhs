@@ -21,6 +21,8 @@ module Dindo.Import.Yesod
       import Dindo.Import.ByteString(toStrict)
       import Dindo.Import.TH
       import qualified Dindo.Import.Text as T
+
+      import Dindo.Rable
 \end{code}
 
 \begin{code}
@@ -32,7 +34,7 @@ module Dindo.Import.Yesod
 \begin{code}
       mkSvrinfoR :: T.Text -> Q [Dec]
       mkSvrinfoR info = [d|
-        getSvrinfoR :: Yesod site => HandlerT site IO T.Text
+        getSvrinfoR :: Yesod site => HandlerT site IO TypedContent
         getSvrinfoR = infoR info'
         |]
         where
@@ -40,13 +42,10 @@ module Dindo.Import.Yesod
 
       infoR :: Yesod site
             => T.Text
-            -> HandlerT site IO T.Text
+            -> HandlerT site IO TypedContent
       infoR info = do
         addD' <- lookupGetParam "add"
         let addD = fromRational $ toRational $ fromMaybe 0 $ fmap (read.T.unpack) addD'
-        now <- (show.addUTCTime addD) <$> liftIO getCurrentTime
-        return $ T.decodeUtf8 $ toStrict $ encode $ object
-          [ "server-time" .= now
-          , "server-info" .= info
-          ]
+        now <- (T.showT.addUTCTime addD) <$> liftIO getCurrentTime
+        returnR $ RtSvrinfo now info
 \end{code}

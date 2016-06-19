@@ -8,7 +8,7 @@
 \begin{code}
 module Dindo.UM.Foundation
     ( UM(..)
-    , UMCfg
+    , UMCfg(..)
     , Handler(..)
     , Route(..)
     , resourcesUM

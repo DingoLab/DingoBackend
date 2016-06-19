@@ -20,6 +20,7 @@ flag without-utf8
 
 flag dindo-um
   description: Enable the building of dindo-um
+  default: False
 
 executable dindo-um
   main-is:             Main.lhs
