@@ -8,7 +8,7 @@
 % DingoBackend -- Dindo 开发总结报告
 
 
-\documentclass{dindo}
+\documentclass{dingo}
 
 \title{Dindo 开发总结报告}
 
@@ -58,14 +58,16 @@
       \item[master] 主要分支，也是我在某一段时间主要开发的分支。但在开发一段时间之后，发现这个分支并没有能满足开发要求的。
         于是开始发回版本控制软件的威力。当前的提交为：
         \href{https://github.com/DingoLab/DingoBackend/commit/1705b461b8c2d9aa2245c2725006771ad8065995}{1705b46}
-        。
       \item[documents-dev] 这个分支主要是负责文档\footnote{目前这个文档就在这个分支中}。当前提交为：
         \href{https://github.com/DingoLab/DingoBackend/commit/f5d76c0fc408337203fc1fd54393ef41372ac4ea}{f5d76c0}
       \item[dindo-dev] 这个分支是第一次重构时产生的分支，目前已停止开发。当前提交为：
         \href{https://github.com/DingoLab/DingoBackend/commit/235818a90dff38b8276ce53233c0cdaaff7acdf0}{235818a}
       \item[dindo-dev2] 这个分支是第二次重构时产生的分支，为第一次重构“失败”后再次重构产生的，为目前主要开发的分支。当前提交为：
         \href{https://github.com/DingoLab/DingoBackend/commit/3a6a37d1183b270685cee25ad031e707e5e3b7fd}{3a6a37d}
-      \item[part2-development]
-      \item[hoxfix-fork-yesod-persist-pg]
+      \item[part2-development] 这个分支是重构之前，API 第二部分的开发分支，目前完成度一般。当前提交是\href{https://github.com/DingoLab/DingoBackend/commit/10fbe6e39a8cc58e68b247423043d9b9e9012471}{10fbe6e}
+      \item[hoxfix-fork-yesod-persist-pg] 这个分支是在尝试解决引发重构的那个问题发生时，建立的 hotfix 分支，但由于原作者设计上的缺陷与个人经验的不足，暂时无法解决。于是重构。
+      当前的提交为：\href{https://github.com/DingoLab/DingoBackend/commit/2255b7be491450b555b5ac1f58bcb932e909bd1a}{2255b7b}
     \end{description}
+    \subsection*{DockerHub 上的镜像}
+      Docker Hub 上的 Docker 镜像暂时只用于测试。仓库地址为 \href{https://hub.docker.com/r/qinka/dindo/}{qinka/dindo}.
 \end{document}
