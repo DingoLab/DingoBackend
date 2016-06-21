@@ -1,0 +1,70 @@
+
+
+
+
+
+% document/DindoDevNote.tex
+
+% DingoBackend -- Dindo 开发总结报告
+
+
+\documentclass{dindo}
+
+\title{Dindo 开发总结报告}
+
+% 定义封面颜色
+\definecolor{dindoblue}{rgb}{0.00,0.60,1.00}
+
+% 定义字体颜色
+\definecolor{dindowhite}{rgb}{0.93,0.93,0.93}
+
+\titlebgcolor{dindoblue}
+\titlefontcolor{dindowhite}
+\version{0.0.3.0}
+\coverpic{Dingo-A}
+\city{西安, Xi`an}
+\author{李约瀚\\qinka@live.com\\14130140331}
+
+\begin{document}
+  %% 封面
+  \makecover
+  %% 前言
+  \section*{前言}
+   Dindo 是 Dingo 项目的后端，使用微服务架构
+    \footnote{事实上，直接使用微服务架构就像直接使用野生木耳一样，是个糟糕的决定。由于在深刻的了解 微服务架构 之前，
+    认为微服务架构是一个可以直接使用的东西。但是在了解之后，发现微服务架构使用的前提是在单体架构已经达到对业务逻辑划分
+    完善的情况下使用。也就是为服务不是给帅气的小伙子使用的东西，而是老而成熟的男人是用的。微服务架构在一个创业时期（或者与之等同）
+    的项目中是不应该是用的，或者说是，我们应该再有类似于数据库中的 几个范式与实体关系 相类似的 预备范式（pNF）、第一范式（1NF）与
+    第二范式（2NF），和事件与数据驱动关系和调用关系。来指导为服务中最重要的业务模块与逻辑划分。}
+  ，同时使用 Haskell 语言的 Yesod 框架作为后端的框架
+    \footnote{这一部分的感悟会在之后详细讨论。}
+  。后端开发计划使用 CI（Travis-CI），Coverage，Docker，CodeClimate
+    \footnote{CodeClimate 一个代码质量分析软件，在线工具。}
+  ，等工具。但是由于进度仅仅使用到了 Travis-CI 与 Docker。
+
+  整个开发中，经可能遵循敏捷开发模型。然而有序开发时间是课余时间中的业余时间，因此 基本没有遵循开发模型，
+  没有按时写周报什么的。
+
+  然而 Dindo 是一个不错的创业点子，这一点必须感谢我们的铲平经理\footnote{这个称呼是团队中某个同志手抖打错而有的。}
+  想到这样一个点子。当然必须承认，刘西洋老师才是这个点子的根本来源。而同时，这个项目，对我来时还是值得在这一个学期结束后
+  继续做下去的。
+
+  \subsection*{GitHub 上的状态}
+    整个 DingoBackend ，不是整个 Dingo 的大部分内容都是开源的
+      \footnote{剩下的没有开源的，只能说是大家太懒。唯一一个没有开源的是一个储存配置文件的仓库，为了安全，没有开源。
+      可以访问 \href{https://github.com/DingoLab}{DingoLab}}
+    。DingoBackend 至目前\footnote{这个文档编写期间}，在 GitHub 上一共有 6 个分支：
+    \begin{description}
+      \item[master] 主要分支，也是我在某一段时间主要开发的分支。但在开发一段时间之后，发现这个分支并没有能满足开发要求的。
+        于是开始发回版本控制软件的威力。当前的提交为：
+        \href{https://github.com/DingoLab/DingoBackend/commit/1705b461b8c2d9aa2245c2725006771ad8065995}{1705b46}
+        。
+      \item[documents-dev] 这个分支主要是负责文档\footnote{目前这个文档就在这个分支中}。当前提交为：
+        \href{https://github.com/DingoLab/DingoBackend/commit/f5d76c0fc408337203fc1fd54393ef41372ac4ea}{f5d76c0}
+      \item[dindo-dev] 这个分支是第一次重构时产生的分支，目前已停止开发。当前提交为：
+        \href{https://github.com/DingoLab/DingoBackend/commit/235818a90dff38b8276ce53233c0cdaaff7acdf0}{235818a}
+      \item[dindo-dev2] 这个分支是第二次重构时产生的分支，为第一次重构“失败”后再次重构产生的，为目前主要开发的分支。当前提交为：
+        \href{https://github.com/DingoLab/DingoBackend/commit/3a6a37d1183b270685cee25ad031e707e5e3b7fd}{3a6a37d}
+      \item[]
+    \end{description}
+\end{document}
